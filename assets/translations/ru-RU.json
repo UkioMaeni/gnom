@@ -1,0 +1,12 @@
+{
+    "language_variable":"РУССКИЙ",
+    "language_description":"ВЫБЕРИТЕ\nСВОЙ ЯЗЫК",
+    "button_start":"СТАРТ",
+    "msg_named":"Easy localization is written in the {lang} language",
+    "msg_mixed":"{} are written in the {lang} language",
+    "gender":{
+       "male":"Hi man ;) {}",
+       "female":"Hello girl :) {}",
+       "other":"Hello {}"
+    }
+ }

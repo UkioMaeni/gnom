@@ -446,7 +446,7 @@ class _FormContainerState extends State<FormContainer> {
                         fontSize: 24,
                         fontWeight: FontWeight.bold),
                   ),
-                )
+                ),
               ],
             ),
           ),

@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gnom/pages/main_page/tabs/friends_tab.dart';
 import 'package:gnom/pages/main_page/tabs/history_tab.dart';
 import 'package:gnom/pages/main_page/tabs/home_tab/home_tab.dart';
+import 'package:gnom/pages/main_page/tabs/profile_tab/profile_tab.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -26,10 +27,7 @@ class _MainPageState extends State<MainPage> {
     Icons.camera,
     size: 150,
   ),
-  Icon(
-    Icons.camera,
-    size: 150,
-  ),
+  ProfileTab()
 ];
 
 

@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class HistoryTab extends StatefulWidget {
@@ -13,8 +15,31 @@ class _HistoryTabState extends State<HistoryTab> with TickerProviderStateMixin {
 
   // late final AnimationController _heightController;
   // late final Animation<double> _height;
+  double paddingOffset=100;
+    List<Widget> widgets=[];
+
+  startGenerate()async{
+    for(int i=0;i<3;i++){
+      setState(() {
+        if(i==0){
+          widgets.add(
+          Positioned(
+            top: i*105+paddingOffset,
+            child: TextElement()
+          )
+        );
+        }
+        widgets.add(
+           HistoryElement(topOffset: (i)*105+paddingOffset+50, model: HistoryModel(icon: SvgPicture.asset("assets/svg/history.svg",fit: BoxFit.contain,), saved: true, theme: "лог", type: "мат", progress: "progress"),)
+        );
+      });
+      await Future.delayed(Duration(milliseconds: 300));
+    }
+  }
   @override
   void initState() {
+    startGenerate();
+    print("init");
     // _heightController=AnimationController(
     //   duration: Duration(milliseconds: 1000),
     //   vsync: this
@@ -54,16 +79,19 @@ class _HistoryTabState extends State<HistoryTab> with TickerProviderStateMixin {
     });
   }
 
+
+  favorite(){
+     widgets[1]=HistoryElement(topOffset: paddingOffset+50, model: HistoryModel(icon: SvgPicture.asset("assets/svg/history.svg",fit: BoxFit.contain,), saved: true, theme: "лог", type: "мат", progress: "progress"),);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding:  EdgeInsets.only(top: MediaQuery.of(context).padding.top,left: 20,right: 0),
       child: Stack(
         children: [
-          HistoryElement(
-            model: HistoryModel(icon: const Icon(Icons.abc), saved: false, theme: "ЛОГАРИФМЫ", type: "МАТЕМАТИКА",progress: "inProgress"),
-          ),
-
+          
+          for(int i=0;i<widgets.length;i++)widgets[i]
         ],
       ),
     );
@@ -121,24 +149,72 @@ Widget selectType(String title){
 
 }
 
+class TextElement extends StatefulWidget {
+  const TextElement({super.key});
+
+  @override
+  State<TextElement> createState() => _TextElementState();
+}
+
+class _TextElementState extends State<TextElement> {
+
+  double opacity=0;
+
+  @override
+  void initState() {
+    Future.delayed(Duration(milliseconds: 50)).then((value) => setState(() {
+      opacity=1;
+    }));
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    double width=MediaQuery.of(context).size.width;
+    return AnimatedContainer(
+      duration: Duration(milliseconds: 200),
+      width:width-20,
+      alignment: Alignment.center,
+      child: Opacity(
+        opacity: opacity,
+        child: Text(
+          "В ПРОЦЕССЕ",
+          style: TextStyle(
+            color: Colors.white,
+            fontFamily: "NoirPro",
+            fontSize: 25,
+            fontWeight: FontWeight.w700
+          ),
+          ),
+      )
+      );
+  }
+}
+
 
 class HistoryElement extends StatefulWidget {
   final HistoryModel model;
-  const HistoryElement({super.key,required this.model});
+  final double topOffset;
+  const HistoryElement({super.key,required this.model,required this.topOffset});
 
   @override
   State<HistoryElement> createState() => _HistoryElementState();
 }
 
-class _HistoryElementState extends State<HistoryElement> with SingleTickerProviderStateMixin {
+class _HistoryElementState extends State<HistoryElement> with TickerProviderStateMixin {
 
-  double scale=0.3;
-  late final AnimationController _scaleController;
-  late final Animation<double> _scaleAnimation;
+  double scale=0.21;
+  late  AnimationController _scaleController;
+  late  Animation<double> _scaleAnimation;
+
+  late double initOffset;
+  late double? right;
   @override
   void initState() {
+    initOffset=widget.topOffset;
+    right=0;
     _scaleController=AnimationController(
-      duration: const Duration(milliseconds: 2000),
+      duration: const Duration(milliseconds: 300),
       vsync: this
     );
     _scaleAnimation=Tween<double>(begin: 0.3,end: 1).animate(_scaleController);
@@ -152,96 +228,136 @@ class _HistoryElementState extends State<HistoryElement> with SingleTickerProvid
     super.dispose();
   }
 
+  favorite(){
+    _scaleController=AnimationController(
+      duration: const Duration(milliseconds: 1000),
+      vsync: this
+    );
+    _scaleAnimation=Tween<double>(begin: 1,end: 0.4).animate(_scaleController);
+    _scaleController.forward();
+     setState(() {
+       initOffset+=550;
+       right=60;
+     });
+  }
+
   @override
   Widget build(BuildContext context) {
     double width=MediaQuery.of(context).size.width;
-    return AnimatedBuilder(
-      animation:_scaleAnimation,
-      builder: (context, child) {
-        return Transform.scale(
-          scale: _scaleAnimation.value,
-          child: SizedBox(
-            height: 90,
-            width: width-20,
-            child:  Row(
-              children: [
-                Expanded(
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      color: const Color.fromRGBO(196, 114, 137, 0.8),
-                      borderRadius: BorderRadius.circular(15)
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 5),
-                      child: Row(
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+    return AnimatedPositioned(
+      duration: Duration(seconds: 1),
+      top: initOffset,
+      left: right,
+      child: AnimatedBuilder(
+        animation:_scaleAnimation,
+        builder: (context, child) {
+          return  Transform.scale(
+              scale: _scaleAnimation.value,
+              child: SizedBox(
+                height: 95,
+                width: width-20,
+                child:  Row(
+                  children: [
+                    Expanded(
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          color: const Color.fromRGBO(196, 114, 137, 0.8),
+                          borderRadius: BorderRadius.circular(15)
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 5),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
-                                widget.model.type,
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w500,
-                                  fontFamily: "NoirPro",
-                                  height: 1,
-                                  color: Color.fromRGBO(254, 222,181, 1)
-                                  ),
-                              ),
-                              const SizedBox(height: 5,),
-                              RichText(
-                                text: TextSpan(
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const TextSpan(
-                                      text: "ТЕМА ",
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w500,
-                                        fontFamily: "NoirPro",
-                                        height: 1,
-                                        color: Colors.white
+                                    Text(
+                                    widget.model.type,
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w500,
+                                      fontFamily: "NoirPro",
+                                      height: 1,
+                                      color: Color.fromRGBO(254, 222,181, 1)
+                                      ),
+                                  ),
+                                  const SizedBox(height: 5,),
+                                  RichText(
+                                    text: TextSpan(
+                                      children: [
+                                        const TextSpan(
+                                          text: "ТЕМА ",
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w500,
+                                            fontFamily: "NoirPro",
+                                            height: 1,
+                                            color: Colors.white
+                                            ),
                                         ),
+                                        TextSpan(
+                                          text:"\"${widget.model.theme}\"",
+                                          style: const TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w500,
+                                            fontFamily: "NoirPro",
+                                            height: 1,
+                                            letterSpacing: 1,
+                                            color:Colors.white
+                                            ),
+                                        )
+                                      ]
                                     ),
-                                    TextSpan(
-                                      text:"\"${widget.model.theme}\"",
-                                      style: const TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w500,
-                                        fontFamily: "NoirPro",
-                                        height: 1,
-                                        letterSpacing: 1,
-                                        color:Colors.white
-                                        ),
-                                    )
-                                  ]
+                                  )
+                                  ],
                                 ),
-                              )
+                                Align(
+                                  alignment: Alignment.topCenter,
+                                  child: SizedBox(
+                                    width: 70,
+                                    height: 80,
+                                    child: SvgPicture.asset("assets/svg/math.svg",fit: BoxFit.contain,)
+                                  ),
+                                )
+                                // Container(
+                                //     width: 140,
+                                //     height: 60,
+                                //     color: Colors.amber,
+                                //     alignment: Alignment.centerRight,
+                                //     child:  widget.model.icon,
+                                //   ),
+                                
+                               
                               ],
                             ),
-                          ],
                         ),
+                      ),
                     ),
-                  ),
-                ),
-                Container(
-                  color: const Color.fromARGB(0, 255, 193, 7),
-                  width: 50,
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: SizedBox(
-                      width: 25,
-                      height: 25,
-                      child: SvgPicture.asset("assets/svg/saved_tab.svg",color: const Color.fromRGBO(254, 222,181, 1),)
+                    GestureDetector(
+                      onTap: favorite,
+                      child: Container(
+                        color: const Color.fromARGB(0, 255, 193, 7),
+                        width: 50,
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: SizedBox(
+                            width: 25,
+                            height: 25,
+                            child: SvgPicture.asset("assets/svg/saved_tab.svg",color: const Color.fromRGBO(254, 222,181, 1),)
+                          )
+                        ),
+                      ),
                     )
-                  ),
-                )
-              ],
-            ),
+                  ],
+                ),
+                
+              ),
             
-          ),
-        );
-      }, 
+          );
+        }, 
+      ),
     );
   }
 }

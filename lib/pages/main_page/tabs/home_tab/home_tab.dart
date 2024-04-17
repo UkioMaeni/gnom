@@ -13,9 +13,7 @@ class _HomeTabState extends State<HomeTab>  {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding:  EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-      child: Navigator(
+    return  Navigator(
         initialRoute: "/init",
         onGenerateRoute: (settings) {
           if(settings.name=="/init"){
@@ -25,7 +23,7 @@ class _HomeTabState extends State<HomeTab>  {
           }
           return MaterialPageRoute(builder: (context) => const Placeholder());
         },
-      ),
+      
     );
   }
 

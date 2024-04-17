@@ -3,6 +3,9 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:gnom/pages/main_page/tabs/profile_tab/components/profile_list_friends.dart';
+import 'package:gnom/pages/main_page/tabs/profile_tab/components/profile_requests_count.dart';
+import 'package:gnom/pages/main_page/tabs/profile_tab/components/profile_requests_diagramm.dart';
 
 class ProfileTab extends StatefulWidget {
   const ProfileTab({super.key});
@@ -74,17 +77,17 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            gnomTransform(),
+           // gnomTransform(),
             SizedBox(height: 4,),
-            userName(),
+            //userName(),
             SizedBox(height: 20,),
-            requestCount(),
+            ProfileRequestCount(),
             SizedBox(height: 20,),
-            friends(),
+            ProfileListFriends(),
             SizedBox(height: 20,),
-            stats(),
-            SizedBox(height: 20,),
-            planing()
+            ProfileRequestsDiagramm()
+            // SizedBox(height: 20,),
+            // planing()
           ],
         ),
       ),

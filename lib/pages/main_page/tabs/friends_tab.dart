@@ -3,6 +3,8 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 
 class FriendsTab extends StatefulWidget {
@@ -24,19 +26,17 @@ class _FriendsTabState extends State<FriendsTab> with TickerProviderStateMixin {
   final GlobalKey _friendsListKey = GlobalKey();
 
   final List<UserModel> users = [
-    UserModel(name: 'John Doe', status: 'Silver'),
-    UserModel(name: 'Jane Smith', status: 'Gold'),
-    UserModel(name: 'John Doe', status: 'Silver'),
-    UserModel(name: 'Jane Smith', status: 'Platinum'),
-    UserModel(name: 'John Doe', status: 'Silver'),
-    UserModel(name: 'Jane Smith', status: 'Gold'),
-    UserModel(name: 'John Doe', status: 'Gols'),
-    UserModel(name: 'Jane Smith', status: 'Platinum'),
-    UserModel(name: 'John Doe', status: 'Silver'),
-    UserModel(name: 'Jane Smith', status: 'Gold'),
+    
+    // UserModel(name: 'Jane Smith', status: 'Platinum'),
+    // UserModel(name: 'John Doe', status: 'Silver'),
+    // UserModel(name: 'Jane Smith', status: 'Gold'),
+    // UserModel(name: 'John Doe', status: 'Gols'),
+    // UserModel(name: 'Jane Smith', status: 'Platinum'),
+    // UserModel(name: 'John Doe', status: 'Silver'),
+    // UserModel(name: 'Jane Smith', status: 'Gold'),
   ];
 
-  late TextEditingController _searchController;
+  late final TextEditingController _searchController;
   late ScrollController _scrollController;
 
   bool _showDetails = false;
@@ -49,12 +49,35 @@ class _FriendsTabState extends State<FriendsTab> with TickerProviderStateMixin {
     super.initState();
   }
 
+
+  void search(){
+    setState(() {
+      users.addAll([
+        UserModel(name: 'John Doe', status: 'Silver'),
+        UserModel(name: 'Jane Smith', status: 'Gold'),
+        UserModel(name: 'John Doe', status: 'Silver'),
+      ]);
+    });
+  }
+
+  List<Widget> widgets=[];
+  startGenerate()async{
+    for(int i=0;i<3;i++){
+      setState(() {
+        // widgets.add(
+        //    HistoryElement(topOffset: (i)*105+paddingOffset+50, model: HistoryModel(icon: SvgPicture.asset("assets/svg/history.svg",fit: BoxFit.contain,), saved: true, theme: "лог", type: "мат", progress: "progress"),)
+        // );
+      });
+      await Future.delayed(Duration(milliseconds: 300));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
         top: MediaQuery.of(context).padding.top,
-        left: 20,
+        left: 0,
         right: 0,
       ),
       child: Stack(
@@ -62,45 +85,69 @@ class _FriendsTabState extends State<FriendsTab> with TickerProviderStateMixin {
         children: [
           Column(
             children: [
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 10),
-                child: Container(
+              SizedBox(height: 40,),
+               SizedBox(
                   height: 30,
-                  width: MediaQuery.of(context).size.width / 3,
-                  child: TextField(
-                    controller: _searchController,
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Color.fromRGBO(255, 255, 255, 0.3607843137254902),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      suffixIcon: IconButton(
-                        onPressed: () {
-                          debounce(() {
-                            return _searchController.text;
-                          }).then((result) {
-                            print(result);
-                            setState(() {
-                              _showList = _searchController.text.length >= 7;
-                            });
-                          });
-                        },
-                        icon: Icon(Icons.search),
-                      ),
-                      contentPadding: EdgeInsets.only(top: 10.0, bottom: 5.0),
+                  width: MediaQuery.of(context).size.width -100,
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      color: Color.fromARGB(157, 0, 0, 0),
+                      borderRadius: BorderRadius.circular(10)
                     ),
-                    cursorColor: Colors.transparent,
-                    showCursor: false,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: SizedBox(
+                            height: 30,
+                            child: TextField(
+                              controller: _searchController,
+                              maxLength: 9,
+                              style: TextStyle(
+                                            fontFamily: "NoirPro",
+                                            color: Color.fromARGB(144, 209, 204, 204),
+                                            height: 1,
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 14
+                                          ),
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                contentPadding: EdgeInsets.only(bottom: 13,left: 10,right: 10),
+                                counter: SizedBox.shrink(),
+                                //hintText: "USER ID",
+                                hintStyle: TextStyle(
+                                            fontFamily: "NoirPro",
+                                            color: Color.fromARGB(144, 209, 204, 204),
+                                            height: 1,
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 14
+                                          ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: search,
+                          child: SizedBox(
+                            width: 25,
+                            height: 20,
+                            child: SvgPicture.asset("assets/svg/search.svg",color: Color.fromARGB(255, 255, 255, 255),)
+                          ),
+                        ),
+                        SizedBox(width: 10,)
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              if (_showList) ...[
                 Expanded(
                   key: _friendsListKey,
                   child: Stack(
+                    alignment: Alignment.center,
                     children: [
-                      ListView.builder(
+                      ListView.separated(
+                        separatorBuilder: (context, index) {
+                          return SizedBox(height: 5,);
+                        },
                         itemCount: users.length,
                         itemBuilder: (context, index) {
                           final Duration animationDuration =
@@ -109,10 +156,7 @@ class _FriendsTabState extends State<FriendsTab> with TickerProviderStateMixin {
                           Duration(milliseconds: 200 * index);
                           return DelayedAnimation(
                             delay: delay,
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 10, horizontal: 20),
-                              child: FriendsElement(
+                            child: FriendsElement(
                                 user: users[index],
                                 onDetailsPressed: (user) {
                                   setState(() {
@@ -123,7 +167,21 @@ class _FriendsTabState extends State<FriendsTab> with TickerProviderStateMixin {
                                 showList: _showList,
                                 showDetails: _showDetails,
                               ),
-                            ),
+                            // child: Padding(
+                            //   padding: EdgeInsets.symmetric(
+                            //       vertical: 10, horizontal: 20),
+                            //   child: FriendsElement(
+                            //     user: users[index],
+                            //     onDetailsPressed: (user) {
+                            //       setState(() {
+                            //         _selectedUser = user;
+                            //         _showDetails = true;
+                            //       });
+                            //     },
+                            //     showList: _showList,
+                            //     showDetails: _showDetails,
+                            //   ),
+                            // ),
                             duration: animationDuration,
                           );
                         },
@@ -148,10 +206,9 @@ class _FriendsTabState extends State<FriendsTab> with TickerProviderStateMixin {
                   ),
                 ),
               ],
+          )
             ],
           ),
-        ],
-      ),
     );
   }
 
@@ -239,15 +296,14 @@ class _FriendsElementState extends State<FriendsElement>
   @override
   void initState() {
     _scaleController = AnimationController(
-      duration: const Duration(milliseconds: 2000),
+      duration: const Duration(milliseconds: 1000),
       vsync: this,
     );
     _scaleAnimation =
-        Tween<double>(begin: 0.1, end: 1).animate(_scaleController);
+    CurvedAnimation(parent:Tween<double>(begin: 0.1, end: 1).animate(_scaleController) , curve: Curves.easeInOut);
     _scaleController.forward();
     super.initState();
   }
-
   @override
   void dispose() {
     _scaleController.dispose();
@@ -262,104 +318,138 @@ class _FriendsElementState extends State<FriendsElement>
       builder: (context, child) {
         return Transform.scale(
           scale: _scaleAnimation.value,
-          child: SizedBox(
-            height: 95,
-            width: width - 20,
-            child: widget.showList && !widget.showDetails
-                ? Row(
-              children: [
-                Expanded(
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      color: const Color.fromRGBO(196, 114, 137, 0.8),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 15,
-                        vertical: 5,
+          child: AnimatedOpacity(
+            duration: Duration(milliseconds: 200),
+            opacity: widget.showDetails?0.2:1,
+            child: Container(
+              height: 95,
+              width: 150,
+              margin: EdgeInsets.symmetric(horizontal: 30),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: Color.fromARGB(204, 160, 109, 124),
+                        borderRadius: BorderRadius.circular(25),
                       ),
-                      child: Row(
-                        children: [
-                          SvgPicture.asset(
-                            'assets/svg/profile_tab.svg',
-                            width: 100,
-                            height: 100,
-                          ),
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 15,
-                                vertical: 5,
-                              ),
-                              child: Column(
-                                crossAxisAlignment:
-                                CrossAxisAlignment.end,
-                                children: [
-                                  Text(
-                                    widget.user.name,
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w500,
-                                      fontFamily: "NoirPro",
-                                      height: 1,
-                                      color: Color.fromRGBO(
-                                          254, 222, 181, 1),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 5),
-                                  RichText(
-                                    text: TextSpan(
-                                      children: [
-                                        const TextSpan(
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w500,
-                                            fontFamily: "NoirPro",
-                                            height: 1,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                        TextSpan(
-                                          text:
-                                          "\"${widget.user.status}\"",
-                                          style: const TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w500,
-                                            fontFamily: "NoirPro",
-                                            height: 1,
-                                            letterSpacing: 1,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      widget
-                                          .onDetailsPressed(widget.user);
-                                    },
-                                    child: Text(
-                                      'Поделиться',
-                                      style: TextStyle(
-                                          color: Color.fromRGBO(
-                                              254, 222, 181, 1)),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 0,
+                          vertical: 5,
+                        ),
+                        child: Row(
+                          children: [
+                            SvgPicture.asset(
+                              'assets/svg/profile_tab.svg',
+                              width: 100,
+                              height: 100,
+                              color: Colors.white,
                             ),
-                          ),
-                        ],
+                            Expanded(
+                              child:  Column(
+            
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(height: 5,),
+                                    Text(
+                                      widget.user.name,
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w500,
+                                        fontFamily: "NoirPro",
+                                        height: 1,
+                                        color: Color.fromRGBO(254, 222, 181, 1),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 5),
+                                    RichText(
+                                      text: TextSpan(
+                                        children: [
+                                          const TextSpan(
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w500,
+                                              fontFamily: "NoirPro",
+                                              height: 1,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          TextSpan(
+                                            text:
+                                            "\"${widget.user.status}\"",
+                                            style: const TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w500,
+                                              fontFamily: "NoirPro",
+                                              height: 1,
+                                              letterSpacing: 1,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Align(
+                                        alignment: Alignment.bottomRight,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(right: 25),
+                                          child: GestureDetector(
+                                            onTap:()=> widget.onDetailsPressed(widget.user),
+                                            child: SizedBox(
+                                              height: 30,
+                                              width: 165,
+                                              child: DecoratedBox(
+                                                decoration: BoxDecoration(
+                                                  color: Color.fromRGBO(254, 222, 181, 1),
+                                                  borderRadius: BorderRadius.circular(12)
+                                                ),
+                                                child: Align(
+                                                  alignment: Alignment.center,
+                                                  child: Row(
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    children: [
+                                                      Text(
+                                                          'ПОДЕЛИТЬСЯ',
+                                                          style: const TextStyle(
+                                                              fontSize: 16,
+                                                              fontWeight: FontWeight.w500,
+                                                              fontFamily: "NoirPro",
+                                                              height: 1,
+                                                              letterSpacing: 1,
+                                                              color: Colors.white,
+                                                            ),
+                                                        ),
+                                                        SizedBox(width: 5,),
+                                                        SizedBox(
+                                                          width: 30,
+                                                          height: 30,
+                                                          child: SvgPicture.asset("assets/svg/share.svg",color: Colors.white,)
+                                                        )
+                                                    ],
+                                                  ),
+                                                    ),
+                                                ),
+                                              ),
+                                            ),
+                                        ),
+                                      ),
+                                    ),
+                                    
+                                  ],
+                                ),
+                              
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            )
-                : SizedBox(),
+                ],
+              ),
+            ),
           ),
         );
       },
@@ -381,7 +471,7 @@ class FormContainer extends StatefulWidget {
   final UserModel user;
   final VoidCallback onClose;
 
-  FormContainer({required this.user, required this.onClose});
+  const FormContainer({super.key, required this.user, required this.onClose});
 
   @override
   _FormContainerState createState() => _FormContainerState();
@@ -416,26 +506,37 @@ class _FormContainerState extends State<FormContainer> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                Text(
+                    'ЗАПРОСЫ',
+                    style: TextStyle(
+                        color: Color.fromRGBO(254, 222, 181, 1),
+                        fontSize: 35,
+                        fontFamily: "NoirPro",
+                        fontWeight: FontWeight.w800
+                    ),
+                  ),
+                  SizedBox(height: 40,),
                 UserCounter(
-                  userName: 'Математика',
+                  userName: 'МАТЕМАТИКА',
                 ),
                 UserCounter(
-                  userName: 'Русский',
+                  userName: 'РЕФЕРАТ',
                 ),
                 UserCounter(
-                  userName: 'Физика',
+                  userName: 'СОЧИНЕНИЕ',
                 ),
                 UserCounter(
-                  userName: 'Математика',
+                  userName: 'ПРЕЗЕНТАЦИЯ',
                 ),
                 UserCounter(
-                  userName: 'Русский',
+                  userName: 'СОКРАЩЕНИЕ',
                 ),
                 UserCounter(
-                  userName: 'Физика',
+                  userName: 'ПЕРЕФРАЗИРОВАНИЕ',
                 ),
+                
                 SizedBox(
-                  height: 100,
+                  height: 50,
                 ),
                 TextButton(
                   onPressed: widget.onClose,
@@ -443,8 +544,10 @@ class _FormContainerState extends State<FormContainer> {
                     'ПОДЕЛИТЬСЯ',
                     style: TextStyle(
                         color: Color.fromRGBO(254, 222, 181, 1),
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold),
+                        fontSize: 28,
+                        fontFamily: "NoirPro",
+                        fontWeight: FontWeight.w800
+                      ),
                   ),
                 ),
               ],
@@ -469,12 +572,14 @@ class _UserCounterState extends State<UserCounter> {
   int _value = 0;
 
   void _increment() {
+    if(_value==99) return;
     setState(() {
       _value++;
     });
   }
 
   void _decrement() {
+    if(_value==0) return;
     setState(() {
       _value--;
     });
@@ -483,31 +588,47 @@ class _UserCounterState extends State<UserCounter> {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisAlignment:MainAxisAlignment.center,
       children: [
-        Text(
-          widget.userName,
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: Color.fromRGBO(254, 222, 181, 1),
+        SizedBox(
+          width: 200,
+          child: Text(
+            widget.userName,
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              fontFamily: "NoirPro",
+              color: Colors.white,
+            ),
           ),
         ),
-        Spacer(),
+        
         Row(
           children: [
             IconButton(
-              onPressed: _increment,
-              icon: Icon(Icons.add),
-              color: Colors.grey,
+              onPressed: _decrement,
+              icon: Icon(Icons.remove,size: 16,),
+              color: Colors.white,
             ),
-            Text(
-              '$_value',
-              style: TextStyle(color: Colors.grey),
+            SizedBox(
+              width: 25,
+              child: Align(
+                alignment: Alignment.center,
+                child: Text(
+                  '$_value',
+                  style: TextStyle(
+                            color: Color.fromRGBO(254, 222, 181, 1),
+                            fontSize: 20,
+                            fontFamily: "NoirPro",
+                            fontWeight: FontWeight.bold
+                          ),
+                ),
+              ),
             ),
             IconButton(
-              onPressed: _decrement,
-              icon: Icon(Icons.remove),
-              color: Colors.grey,
+              onPressed: _increment,
+              icon: Icon(Icons.add,size: 16,),
+              color: Colors.white,
             ),
           ],
         ),

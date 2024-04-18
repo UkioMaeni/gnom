@@ -43,8 +43,9 @@ class _MainPageState extends State<MainPage> {
     double height=MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Colors.transparent,
+      resizeToAvoidBottomInset: false,
       bottomNavigationBar: SizedBox(
-        
+      
         height: 70,
         child:  BottomNavigationBar(
             backgroundColor: const Color.fromRGBO(155, 13, 13, 0.226),

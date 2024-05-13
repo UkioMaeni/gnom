@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class HOMEInitPage extends StatefulWidget {
-  const HOMEInitPage({super.key});
+  final Function(String) update;
+  const HOMEInitPage({super.key,required this.update});
 
   @override
   State<HOMEInitPage> createState() => _HOMEInitPageState();
@@ -88,7 +89,7 @@ class _HOMEInitPageState extends State<HOMEInitPage> with TickerProviderStateMix
 
   ///navigation
   void goToStudiesPage(){
-    Navigator.of(context).pushNamed('/studies');
+    widget.update("/studies");
   }
 
 
@@ -102,10 +103,15 @@ class _HOMEInitPageState extends State<HOMEInitPage> with TickerProviderStateMix
           alignment: Alignment.center,
           children: [
             Positioned(
+              top: 60,
+              right: 30,
+              child: Icon(Icons.notifications,size: 40,color: Colors.white,)
+            ),
+            Positioned(
               top: 0,
               child: Column(
                 children: [
-                  const SizedBox(height: 40,),
+                  const SizedBox(height: 50,),
                   header("GNOM\nHELPER"),
                   const SizedBox(height: 230,),
                   const Text(

@@ -4,6 +4,7 @@ import 'package:gnom/pages/main_page/tabs/friends_tab.dart';
 import 'package:gnom/pages/main_page/tabs/history_tab.dart';
 import 'package:gnom/pages/main_page/tabs/home_tab/home_tab.dart';
 import 'package:gnom/pages/main_page/tabs/profile_tab/profile_tab.dart';
+import 'package:gnom/store/user_store.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -35,6 +36,12 @@ class _MainPageState extends State<MainPage> {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  @override
+  void initState() {
+    userStore.getRequestsCount();
+    super.initState();
   }
 
   @override

@@ -3,6 +3,7 @@ import 'dart:ui';
 class AppLocalization{
   static const Locale ruLocale = Locale("ru","RU");
   static const Locale enLocale = Locale("en","US");
+  static Locale currentLocale = Locale("en","US");
   static  String getLocaleName(Locale locale){
         if(locale.countryCode==ruLocale.countryCode&&locale.scriptCode==ruLocale.scriptCode){
           return "РУССКИЙ";

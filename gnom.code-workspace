@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../izzi_ride"
+		},
+		{
+			"path": "../markerparse"
+		},
+		{
+			"path": "../mobile_app"
+		}
+	]
+}

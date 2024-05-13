@@ -25,7 +25,7 @@ Future<dynamic> debounce(Function action) {
 class _FriendsTabState extends State<FriendsTab> with TickerProviderStateMixin {
   final GlobalKey _friendsListKey = GlobalKey();
 
-  final List<UserModel> users = [
+   List<UserModel> users = [
     
     // UserModel(name: 'Jane Smith', status: 'Platinum'),
     // UserModel(name: 'John Doe', status: 'Silver'),
@@ -52,9 +52,8 @@ class _FriendsTabState extends State<FriendsTab> with TickerProviderStateMixin {
 
   void search(){
     setState(() {
+      users=[];
       users.addAll([
-        UserModel(name: 'John Doe', status: 'Silver'),
-        UserModel(name: 'Jane Smith', status: 'Gold'),
         UserModel(name: 'John Doe', status: 'Silver'),
       ]);
     });

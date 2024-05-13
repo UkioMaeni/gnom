@@ -4,9 +4,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gnom/store/user_store.dart';
 
 class ProfileRequestsDiagramm extends StatefulWidget {
-  const ProfileRequestsDiagramm({super.key});
+  final RequestsCount requestsCount;
+  const ProfileRequestsDiagramm({super.key,required this.requestsCount});
 
   @override
   State<ProfileRequestsDiagramm> createState() => _ProfileRequestsDiagrammState();
@@ -20,9 +22,7 @@ class _ProfileRequestsDiagrammState extends State<ProfileRequestsDiagramm> with 
   late final Animation<double> _scaleAnimation;
 
   //mockked
-  List<int> req=[
-    68,200,100,700,500,7,400,800
-  ];
+  List<int> req=[];
 
   int maxValue=0;
 
@@ -40,12 +40,13 @@ class _ProfileRequestsDiagrammState extends State<ProfileRequestsDiagramm> with 
    _scaleAnimation=Tween<double>(begin: 0.2,end: 1).animate(_scaleController);
    _scaleController.forward();
    _opacityController.forward();
-     maxValue = req[0];
-    for (int i = 1; i < req.length; i++) {
-      if (req[i] > maxValue) {
-        maxValue = req[i];
-      }
-    }
+     maxValue = widget.requestsCount.maxValue;
+     req.add(widget.requestsCount.math);
+     req.add(widget.requestsCount.referre);
+     req.add(widget.requestsCount.essay);
+     req.add(widget.requestsCount.presentation);
+     req.add(widget.requestsCount.reduction);
+     req.add(widget.requestsCount.paraphrase);
     super.initState();
   }
 
@@ -93,7 +94,7 @@ class _ProfileRequestsDiagrammState extends State<ProfileRequestsDiagramm> with 
                     color: const Color.fromRGBO(196, 114, 137, 0.8)
                   ),
                   height: 180,
-                  width: 300,
+                  width: double.infinity,
                   child: Column(
                     children: [
                       SizedBox(height: 10,),

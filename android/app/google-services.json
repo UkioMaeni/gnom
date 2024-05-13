@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1023731537871",
+    "project_id": "gnom-829d3",
+    "storage_bucket": "gnom-829d3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1023731537871:android:5f5c77c293bc825c3c64ba",
+        "android_client_info": {
+          "package_name": "com.gnom.helper"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDa4kJ8jcsCTh7GD9db_sX1p2ccjoMydBc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

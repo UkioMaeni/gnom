@@ -3,9 +3,11 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:gnom/store/user_store.dart';
 
 class ProfileRequestCount extends StatefulWidget {
-  const ProfileRequestCount({super.key});
+  final RequestsCount requestsCount;
+  const ProfileRequestCount({super.key,required this.requestsCount});
 
   @override
   State<ProfileRequestCount> createState() => _ProfileRequestCountState();
@@ -35,6 +37,7 @@ class _ProfileRequestCountState extends State<ProfileRequestCount> with SingleTi
 
   @override
   Widget build(BuildContext context) {
+    
     return AnimatedBuilder(
       animation: _scaleAnimation,
       builder: (context, child) {
@@ -48,7 +51,7 @@ class _ProfileRequestCountState extends State<ProfileRequestCount> with SingleTi
                 color: const Color.fromRGBO(196, 114, 137, 0.8)
               ),
               height: 140,
-              width: 300,
+              width: double.infinity,
               child: Row(
                 children: [
                   SizedBox(width: 15,),
@@ -82,7 +85,7 @@ class _ProfileRequestCountState extends State<ProfileRequestCount> with SingleTi
                           child: Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
-                            "200/1600",
+                            "${widget.requestsCount.summary}/1600",
                             style: TextStyle(
                               fontFamily: "NoirPro",
                               color: Colors.white,
@@ -98,7 +101,7 @@ class _ProfileRequestCountState extends State<ProfileRequestCount> with SingleTi
                   Expanded(
                     child: Align(
                       alignment: Alignment.center,
-                      child: diagrammRequests(200/1600)
+                      child: diagrammRequests(widget.requestsCount.summary/1600)
                     ),
                   ),
                 ],

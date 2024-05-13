@@ -1,5 +1,13 @@
 import 'dart:math';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:gnom/http/guest.dart';
+import 'package:gnom/pages/language_page/language_page.dart';
+import 'package:gnom/pages/main_page/main_page.dart';
+import 'package:gnom/repositories/locale_storage.dart';
+import 'package:gnom/repositories/token_repo.dart';
+import 'package:gnom/store/user_store.dart';
+import 'package:gnom/tools/phone_info.dart';
 
 class StartPage extends StatefulWidget {
   const StartPage({super.key});
@@ -46,6 +54,11 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin{
     _gnomController.forward();
   }
 
+
+  checkProcedure(){
+
+  }
+
   startTextAnimation()async{
     _textScalecontroller = AnimationController(
       duration: const Duration(milliseconds:200 ),
@@ -64,8 +77,65 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin{
       _textScalecontroller.forward();
   }
 
+
+  void toLangPage(){
+    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LanguagePage(),), (route) => false);
+  }
+  void toMainPage(){
+    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => MainPage(),), (route) => false);
+  }
+
+  checkLanguage()async{
+    await Future.delayed(Duration(seconds: 4));
+    Locale? locale =await localeStorage.appLanguage;
+    if(locale!=null){
+      context.setLocale(locale);
+      toMainPage();
+    }else{
+      toLangPage();
+    }
+  }
+
+
+
+  authorizeUser()async{
+    String? tokenU=await tokenRepo.refreshUserToken;
+   
+    if(tokenU==null){
+      String? tokenG=await tokenRepo.refreshGuestToken;
+     
+      if(tokenG==null){
+        String deviceId=await phoneInfo.getDeviceId();
+        Tokens? tokens=await GuestHttp().auth(deviceId);
+        if(tokens!=null){
+          tokenRepo.accessGuestToken=tokens.access;
+          await localeStorage.saveRefreshGuestToken(tokens.refresh);
+          userStore.role="guest";
+          checkLanguage();
+        }
+      }else{
+        Tokens? tokens=await GuestHttp().refreshToken(tokenG);
+        print(tokens);
+        if(tokens==null){
+          String deviceId=await phoneInfo.getDeviceId();
+          tokens =await GuestHttp().auth(deviceId);
+        }
+        if(tokens!=null){
+          tokenRepo.accessGuestToken=tokens.access;
+          await localeStorage.saveRefreshGuestToken(tokens.refresh);
+          userStore.role="guest";
+          checkLanguage();
+        }
+      }
+    }else{
+      userStore.role="client";
+    }
+    
+  }
+
   @override
   void initState() {
+    authorizeUser();
     startOpacityAnimation();
      startGnomAnimation();
     startTextAnimation();
@@ -79,6 +149,8 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin{
   @override
   void dispose() {
     _textScalecontroller.dispose();
+    _opacityController.dispose();
+    _gnomController.dispose();
     super.dispose();
   }
 

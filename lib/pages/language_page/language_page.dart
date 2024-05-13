@@ -1,7 +1,9 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:gnom/UIKit/UIChevron.dart';
 import 'package:gnom/core/app_localization.dart';
 import 'package:gnom/pages/main_page/main_page.dart';
+import 'package:gnom/repositories/locale_storage.dart';
 
 class LanguagePage extends StatefulWidget {
   const LanguagePage({super.key});
@@ -87,7 +89,7 @@ class _LanguagePageState extends State<LanguagePage> {
                             itemCount: AppLocalization.localeCount(),
                             itemBuilder: (context, index) {
                               final locale=AppLocalization.listlocations[index];
-                              
+                              AppLocalization.currentLocale=AppLocalization.listlocations[index];
                               return Text(
                                         AppLocalization.getLocaleName(locale),
                                         textAlign: TextAlign.center,
@@ -120,7 +122,9 @@ class _LanguagePageState extends State<LanguagePage> {
   }
 Widget setLanguageButton(){
   return GestureDetector(
-    onTap: () {
+    onTap: () async{
+      print(AppLocalization.currentLocale.toString());
+       await localeStorage.saveAppLanguage(AppLocalization.currentLocale.toString());
       Navigator.push(context, MaterialPageRoute(builder: (context) => const MainPage(),));
     },
     child: SizedBox(

@@ -1,11 +1,17 @@
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:gnom/pages/main_page/tabs/profile_tab/components/auth.dart';
+import 'package:gnom/pages/main_page/tabs/profile_tab/components/plaining_subcribtion/plaining_subcribtion.dart';
+import 'package:gnom/pages/main_page/tabs/profile_tab/components/plane_info.dart';
 import 'package:gnom/pages/main_page/tabs/profile_tab/components/profile_list_friends.dart';
 import 'package:gnom/pages/main_page/tabs/profile_tab/components/profile_requests_count.dart';
 import 'package:gnom/pages/main_page/tabs/profile_tab/components/profile_requests_diagramm.dart';
+import 'package:gnom/store/user_store.dart';
 
 class ProfileTab extends StatefulWidget {
   const ProfileTab({super.key});
@@ -71,25 +77,68 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
   }
 
   @override
+  void dispose() {
+    _gnomController.dispose();
+    _opacityController.dispose();
+    _opacityRequestController.dispose();
+    super.dispose();
+  }
+
+  bool isOpen=false;
+  setOpen(bool value){
+    setState(() {
+      isOpen=value;
+    });
+  }
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding:  EdgeInsets.only(top: MediaQuery.of(context).padding.top+10,left: 20,right: 20),
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-           // gnomTransform(),
-            SizedBox(height: 4,),
-            //userName(),
-            SizedBox(height: 20,),
-            ProfileRequestCount(),
-            SizedBox(height: 20,),
-            ProfileListFriends(),
-            SizedBox(height: 20,),
-            ProfileRequestsDiagramm()
-            // SizedBox(height: 20,),
-            // planing()
-          ],
-        ),
+      child: Observer(
+        builder: (context) {
+          // if(userStore.role=="guest"){
+          //   return AuthProfile();
+          // }
+          final requestsCount= userStore.requestsCount;
+          if(requestsCount==null){
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          return Stack(
+            children: [
+              SingleChildScrollView(
+                child: Column(
+                  children: [
+                    gnomTransform(),
+                   // gnomTransform(),
+                    SizedBox(height: 6,),
+                    userName(),
+                    SizedBox(height: 20,),
+                    ProfileRequestCount(requestsCount:requestsCount),
+                    SizedBox(height: 20,),
+                    ProfileListFriends(),
+                    SizedBox(height: 20,),
+                    ProfileRequestsDiagramm(requestsCount:requestsCount),
+                    SizedBox(height: 20,),
+                    ProfileplaningSubcribtion(requestsCount:requestsCount,setOpen:setOpen)
+                    // SizedBox(height: 20,),
+                    // planing()
+                  ],
+                ),
+              ),
+              if(isOpen)
+               Positioned.fill(
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                  child: Center(
+                    child: PlaneInfo(setOpen:setOpen)
+                  ),
+                ),
+              ),
+            ],
+          );
+        }
       ),
     );
   }

@@ -4,20 +4,29 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gnom/pages/main_page/tabs/profile_tab/components/plaining_subcribtion/animations_planings.dart';
+import 'package:gnom/store/user_store.dart';
 
-class ProfileListFriends extends StatefulWidget {
-  const ProfileListFriends({super.key});
+class ProfileplaningSubcribtion extends StatefulWidget {
+  final RequestsCount requestsCount;
+  final Function(bool) setOpen;
+  const ProfileplaningSubcribtion({super.key,required this.requestsCount,required this.setOpen});
 
   @override
-  State<ProfileListFriends> createState() => _ProfileListFriendsState();
+  State<ProfileplaningSubcribtion> createState() => _ProfileplaningSubcribtionState();
 }
 
-class _ProfileListFriendsState extends State<ProfileListFriends> with TickerProviderStateMixin {
+class _ProfileplaningSubcribtionState extends State<ProfileplaningSubcribtion> with TickerProviderStateMixin {
 
   late final AnimationController _opacityController;
   late final AnimationController _scaleController;
   late final Animation<double> _opacityAnimation;
   late final Animation<double> _scaleAnimation;
+
+  //mockked
+  List<int> req=[];
+
+  int maxValue=0;
 
   @override
   void initState() {
@@ -33,6 +42,13 @@ class _ProfileListFriendsState extends State<ProfileListFriends> with TickerProv
    _scaleAnimation=Tween<double>(begin: 0.2,end: 1).animate(_scaleController);
    _scaleController.forward();
    _opacityController.forward();
+     maxValue = widget.requestsCount.maxValue;
+     req.add(widget.requestsCount.math);
+     req.add(widget.requestsCount.referre);
+     req.add(widget.requestsCount.essay);
+     req.add(widget.requestsCount.presentation);
+     req.add(widget.requestsCount.reduction);
+     req.add(widget.requestsCount.paraphrase);
     super.initState();
   }
 
@@ -43,8 +59,26 @@ class _ProfileListFriendsState extends State<ProfileListFriends> with TickerProv
     super.dispose();
   }
 
+
+  Color interpolateColor(double value) {
+  if (value < 0) {
+    value = 0;
+  } else if (value > maxValue) {
+    value = maxValue.toDouble();
+  }
+
+  double normalizedValue =value / maxValue;
+
+  double red = 255 ;
+  double green = 255 *(normalizedValue);
+  double blue = 0;
+  return Color.fromRGBO(red.toInt(), green.toInt(), blue.toInt(),1);
+}
+
+
   @override
   Widget build(BuildContext context) {
+    
     return AnimatedBuilder(
       animation: _scaleAnimation,
       builder: (context, child) {
@@ -52,59 +86,41 @@ class _ProfileListFriendsState extends State<ProfileListFriends> with TickerProv
           scale: _scaleAnimation.value,
           child: AnimatedBuilder(
             animation: _opacityAnimation,
-            builder: (context, child) {
+            builder: (context,_) {
               return Opacity(
-                opacity:_opacityAnimation.value,
+                opacity: _opacityAnimation.value,
                 child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(25),
-                  color: const Color.fromRGBO(196, 114, 137, 0.8)
-                ),
-                height: 80,
-                width: double.infinity,
-                child: Row(
-                  children: [
-                    SizedBox(width: 15,),
-                    SizedBox(
-                      width: 70,
-                      child: SvgPicture.asset("assets/svg/friends.svg",color: Color.fromRGBO(254, 222,181, 1),)
-                    ),
-                    Expanded(child: SizedBox.shrink()),
-                     Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(25),
+                    color: const Color.fromRGBO(196, 114, 137, 0.8)
+                  ),
+                  height: 180,
+                  width: double.infinity,
+                  child: Column(
+                    children: [
+                      SizedBox(height: 10,),
+                      Text(
+                        "ПЛАН ПОДПИСОК",
+                        style: TextStyle(
+                          fontFamily: "NoirPro",
+                          color: Color.fromRGBO(254, 222,181, 1),
+                          height: 1,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 25
+                        ),
+                      ),
+                      SizedBox(height: 20,),
+                      Row(
                         children: [
-                          Text(
-                            "СПИСОК",
-                            style: TextStyle(
-                              fontFamily: "NoirPro",
-                              color: Color.fromRGBO(254, 222,181, 1),
-                              height: 1,
-                              fontWeight: FontWeight.w700,
-                              fontSize: 25
-                            ),
-                        ),
-                        Text(
-                            "ДРУЗЕЙ",
-                            style: TextStyle(
-                              fontFamily: "NoirPro",
-                              color: Colors.white,
-                              height: 1,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 25
-                            ),
-                        ),
+                          FirstElementPlaning(onTap:widget.setOpen)
                         ],
-                      
-                    ),
-                    Expanded(child: SizedBox.shrink()),
-                    
-                  ],
-                )
-                            ),
+                      )
+                    ],
+                  )
+                ),
               );
-            },
-            
+            }
           ),
           );
       },

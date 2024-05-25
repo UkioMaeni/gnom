@@ -5,6 +5,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gnom/pages/auth_page/auth_page.dart';
 import 'package:gnom/pages/main_page/tabs/profile_tab/components/auth.dart';
 import 'package:gnom/pages/main_page/tabs/profile_tab/components/plaining_subcribtion/plaining_subcribtion.dart';
 import 'package:gnom/pages/main_page/tabs/profile_tab/components/plane_info.dart';
@@ -92,13 +94,14 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
   }
   @override
   Widget build(BuildContext context) {
+    double width=MediaQuery.of(context).size.width;
+    double height=MediaQuery.of(context).size.height;
     return Padding(
       padding:  EdgeInsets.only(top: MediaQuery.of(context).padding.top+10,left: 20,right: 20),
       child: Observer(
         builder: (context) {
-          // if(userStore.role=="guest"){
-          //   return AuthProfile();
-          // }
+
+          bool isGuest=userStore.role=="guest";
           final requestsCount= userStore.requestsCount;
           if(requestsCount==null){
             return Center(
@@ -108,24 +111,54 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
           return Stack(
             children: [
               SingleChildScrollView(
-                child: Column(
-                  children: [
-                    gnomTransform(),
-                   // gnomTransform(),
-                    SizedBox(height: 6,),
-                    userName(),
-                    SizedBox(height: 20,),
-                    ProfileRequestCount(requestsCount:requestsCount),
-                    SizedBox(height: 20,),
-                    ProfileListFriends(),
-                    SizedBox(height: 20,),
-                    ProfileRequestsDiagramm(requestsCount:requestsCount),
-                    SizedBox(height: 20,),
-                    ProfileplaningSubcribtion(requestsCount:requestsCount,setOpen:setOpen)
-                    // SizedBox(height: 20,),
-                    // planing()
-                  ],
-                ),
+                child:  Column(
+                    children: [
+                      if(!isGuest)gnomTransform(),
+                      if(!isGuest)SizedBox(height: 6,),
+                      if(!isGuest)userName(),
+                      SizedBox(height: 20,),
+                      ProfileRequestCount(requestsCount:requestsCount),
+                      if(!isGuest)SizedBox(height: 20,),
+                      if(!isGuest)ProfileListFriends(),
+                      SizedBox(height: 20,),
+                      ProfileRequestsDiagramm(requestsCount:requestsCount),
+                      if(!isGuest)SizedBox(height: 20,),
+                      if(!isGuest)ProfileplaningSubcribtion(requestsCount:requestsCount,setOpen:setOpen),
+                      // SizedBox(height: 20,),
+                      // planing()
+                      if(isGuest)Padding(
+                          padding: const EdgeInsets.only(top: 50),
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => AuthPage(),));
+                            },
+                            child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                  height: 45,
+                                  width: 45,
+                                  child: SvgPicture.asset("assets/svg/exit.svg",color: Color.fromRGBO(254, 222,181, 1),)
+                                ),
+                                Text(
+                                  " Войти",
+                                  style: TextStyle(
+                                    fontFamily: "NoirPro",
+                                    color: Colors.white,
+                                    height: 1,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 25
+                                  ),
+                              ),
+                              
+                              ],
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                
               ),
               if(isOpen)
                Positioned.fill(
@@ -310,7 +343,7 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
         return Opacity(
           opacity: _opacity.value,
           child: Text(
-            "__OWNER__",
+            userStore.profile?.nickname??"",
             style: TextStyle(
               color: Colors.white
             ),

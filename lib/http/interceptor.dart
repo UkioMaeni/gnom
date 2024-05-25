@@ -27,16 +27,16 @@ class AuthInterceptor extends Interceptor {
     }
 
 
-    if (err.response?.statusCode == 401&&repeatCounter.isEven) {
-      repeatCounter++;
-      return  await dio.request(
-          err.requestOptions.path, 
-          data:  err.requestOptions.data,
-          queryParameters: err.requestOptions.queryParameters,
-          options: Options(method:  err.requestOptions.method),
+    // if (err.response?.statusCode == 401&&repeatCounter.isEven) {
+    //   repeatCounter++;
+    //   return  await dio.request(
+    //       err.requestOptions.path, 
+    //       data:  err.requestOptions.data,
+    //       queryParameters: err.requestOptions.queryParameters,
+    //       options: Options(method:  err.requestOptions.method),
          
-          );  
-    }
+    //       );  
+    // }
     repeatCounter=0;
     if (err.response?.statusCode == 400) {
 

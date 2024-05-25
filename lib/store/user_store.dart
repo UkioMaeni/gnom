@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:gnom/http/guest.dart';
+import 'package:gnom/http/user.dart';
 import 'package:mobx/mobx.dart';
 
 part 'user_store.g.dart';
@@ -30,9 +31,36 @@ abstract class _UserStore with Store {
   }
   @action
   Future<void>getRequestsCount()async{
-    final result=await GuestHttp().getRequestsCount();
+    if(_role=="guest"){
+      final result=await GuestHttp().getRequestsCount();
+      if(result!=null){
+        requestsCount=result;
+      }
+    }else if(_role=="client"){
+      final result=await UserHttp().getRequestsCount();
+      if(result!=null){
+        requestsCount=result;
+      }
+    }
+  }
+
+  @observable
+  Profile? profile=null;
+
+  @action
+  void requiredData(){
+    if(_role=="guest"){
+
+    }else if(_role=="client"){
+      requairedUserData();
+    }
+  }
+
+  @action
+  Future<void> requairedUserData()async{
+    final result=await UserHttp().profile();
     if(result!=null){
-      requestsCount=result;
+      profile=result;
     }
   }
   

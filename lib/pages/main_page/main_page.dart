@@ -41,6 +41,7 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     userStore.getRequestsCount();
+    userStore.requiredData();
     super.initState();
   }
 

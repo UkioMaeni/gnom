@@ -40,6 +40,21 @@ mixin _$UserStore on _UserStore, Store {
     });
   }
 
+  late final _$profileAtom = Atom(name: '_UserStore.profile', context: context);
+
+  @override
+  Profile? get profile {
+    _$profileAtom.reportRead();
+    return super.profile;
+  }
+
+  @override
+  set profile(Profile? value) {
+    _$profileAtom.reportWrite(value, super.profile, () {
+      super.profile = value;
+    });
+  }
+
   late final _$getUserDataInfoAsyncAction =
       AsyncAction('_UserStore.getUserDataInfo', context: context);
 
@@ -64,10 +79,33 @@ mixin _$UserStore on _UserStore, Store {
     return _$getRequestsCountAsyncAction.run(() => super.getRequestsCount());
   }
 
+  late final _$requairedUserDataAsyncAction =
+      AsyncAction('_UserStore.requairedUserData', context: context);
+
+  @override
+  Future<void> requairedUserData() {
+    return _$requairedUserDataAsyncAction.run(() => super.requairedUserData());
+  }
+
+  late final _$_UserStoreActionController =
+      ActionController(name: '_UserStore', context: context);
+
+  @override
+  void requiredData() {
+    final _$actionInfo = _$_UserStoreActionController.startAction(
+        name: '_UserStore.requiredData');
+    try {
+      return super.requiredData();
+    } finally {
+      _$_UserStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
   @override
   String toString() {
     return '''
-requestsCount: ${requestsCount}
+requestsCount: ${requestsCount},
+profile: ${profile}
     ''';
   }
 }

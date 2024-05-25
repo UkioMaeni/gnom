@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:gnom/http/guest.dart';
+import 'package:gnom/http/user.dart';
 import 'package:gnom/pages/language_page/language_page.dart';
 import 'package:gnom/pages/main_page/main_page.dart';
 import 'package:gnom/repositories/locale_storage.dart';
@@ -100,7 +101,7 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin{
 
   authorizeUser()async{
     String? tokenU=await tokenRepo.refreshUserToken;
-   
+    print(tokenU);
     if(tokenU==null){
       String? tokenG=await tokenRepo.refreshGuestToken;
      
@@ -128,7 +129,35 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin{
         }
       }
     }else{
-      userStore.role="client";
+      final tokens=await UserHttp().refreshToken(tokenU);
+      if(tokens!=null){
+        tokenRepo.accessUserToken=tokens.access;
+        await localeStorage.saveRefreshUserToken(tokens.refresh);
+        userStore.role="client";
+      }else{
+        final tokenG =await localeStorage.refreshGuestToken;
+        if(tokenG!=null){
+          Tokens? tokens=await GuestHttp().refreshToken(tokenG);
+          if(tokens==null){
+            String deviceId=await phoneInfo.getDeviceId();
+            tokens =await GuestHttp().auth(deviceId);
+          }
+          if(tokens!=null){
+            tokenRepo.accessGuestToken=tokens.access;
+            await localeStorage.saveRefreshGuestToken(tokens.refresh);
+          }
+        }else{
+          String deviceId=await phoneInfo.getDeviceId();
+          final tokens =await GuestHttp().auth(deviceId);
+          if(tokens!=null){
+            tokenRepo.accessGuestToken=tokens.access;
+            await localeStorage.saveRefreshGuestToken(tokens.refresh);
+            
+          }
+        }
+        userStore.role="guest";
+      }
+      checkLanguage();
     }
     
   }

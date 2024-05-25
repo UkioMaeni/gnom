@@ -45,67 +45,119 @@ class _ProfileRequestCountState extends State<ProfileRequestCount> with SingleTi
           scale: _scaleAnimation.value,
           child: Opacity(
             opacity: _scaleAnimation.value,
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(25),
-                color: const Color.fromRGBO(196, 114, 137, 0.8)
-              ),
-              height: 140,
-              width: double.infinity,
-              child: Row(
-                children: [
-                  SizedBox(width: 15,),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+            child: Stack(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(25),
+                    color: const Color.fromRGBO(196, 114, 137, 0.8)
+                  ),
+                  height: 180,
+                  width: double.infinity,
+                  child: Row(
                     children: [
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Text(
-                        "ОБЩИЙ",
-                        style: TextStyle(
-                          fontFamily: "NoirPro",
-                          color: Color.fromRGBO(254, 222,181, 1),
-                          height: 1,
-                          fontWeight: FontWeight.w800,
-                          fontSize: 16
-                        ),
-                        ),
-                        Text(
-                        "ОСТАТОК ЗАПРОСОВ",
-                        style: TextStyle(
-                          fontFamily: "NoirPro",
-                          color: Color.fromRGBO(254, 222,181, 1),
-                          height: 1.4,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 12
-                        ),
-                        ),
-                        Expanded(
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                            "${widget.requestsCount.summary}/1600",
+                      SizedBox(width: 15,),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Text(
+                            "ОБЩИЙ",
                             style: TextStyle(
                               fontFamily: "NoirPro",
-                              color: Colors.white,
+                              color: Color.fromRGBO(254, 222,181, 1),
                               height: 1,
                               fontWeight: FontWeight.w800,
                               fontSize: 25
                             ),
                             ),
-                          ),
-                        ),
+                            Text(
+                            "ОСТАТОК ЗАПРОСОВ",
+                            style: TextStyle(
+                              fontFamily: "NoirPro",
+                              color: Color.fromRGBO(254, 222,181, 1),
+                              height: 1.4,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 17
+                            ),
+                            ),
+                            SizedBox(height: 10,),
+                            ClipOval(
+                              child: Container(
+                                  width: 120,
+                                  height: 70,
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey
+                                    
+                                  ),
+                                  alignment: Alignment.center,
+                                  child: ClipOval(
+                                    child: Container(
+                                      width: 118,
+                                      height: 60,
+                                      decoration: BoxDecoration(
+                                        color: const Color.fromRGBO(196, 114, 137, 0.85),
+                                        
+                                      ),
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        widget.requestsCount.summary.toString(),
+                                        style: TextStyle(
+                                          fontFamily: "NoirPro",
+                                          color: Colors.white,
+                                          height: 1.4,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 40
+                                        ),
+                                        ),
+                                    ),
+                                  ),
+                              ),
+                            )
+                        ],
+                      ),
                     ],
-                  ),
-                  Expanded(
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: diagrammRequests(widget.requestsCount.summary/1600)
+                  )
+                ),
+                Positioned(
+                  bottom: -1,
+                  right: -30,
+                  child: Transform.rotate(
+                    angle: 3*pi/4,
+                    child: Container(
+                      width: 160,
+                      height: 5,
+                      color: Colors.yellow,
                     ),
-                  ),
-                ],
-              )
+                  )
+                ),
+                Positioned(
+                  bottom: -1,
+                  right: -40,
+                  child: Transform.rotate(
+                    angle: 3*pi/4,
+                    child: Container(
+                      width: 270,
+                      height: 7,
+                      color: Colors.orange,
+                    ),
+                  )
+                ),
+                Positioned(
+                  bottom: -1,
+                  right: -70,
+                  child: Transform.rotate(
+                    angle: 3*pi/4,
+                    child: Container(
+                      width: 420,
+                      height: 9,
+                      color: const Color.fromARGB(255, 212, 57, 45),
+                    ),
+                  )
+                )
+              ],
             ),
           ),
           );

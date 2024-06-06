@@ -17,13 +17,13 @@ class _HOMEStudiesPageState extends State<HOMEStudiesPage> {
 
 
   List<StudiesModel> stadies=[
-    StudiesModel(sub: "РЕЗУЛЬТАТ В ТЕЧЕНИЕ 20 СЕК.",title: "МАТЕМАТИКА",type: "math",icon: SizedBox.shrink()),
-    StudiesModel(sub: "РЕЗУЛЬТАТ В ТЕЧЕНИЕ 5 МИНУТ",title: "РЕФЕРАТ",type: "math",icon: SizedBox.shrink()),
-    StudiesModel(sub: "РЕЗУЛЬТАТ В ТЕЧЕНИЕ 3 МИНУТ",title: "СОЧИНЕНИЕ",type: "math",icon: SizedBox.shrink()),
-    StudiesModel(sub: "РЕЗУЛЬТАТ В ТЕЧЕНИЕ 5 МИНУТ.",title: "ПРЕЗЕНТАЦИЯ",type: "math",icon: SizedBox.shrink()),
-    StudiesModel(sub: "РЕЗУЛЬТАТ В ТЕЧЕНИЕ 30 СЕК.",title: "СОКРАЩЕНИЕ",type: "math",icon: SizedBox.shrink()),
-    StudiesModel(sub: "РЕЗУЛЬТАТ В ТЕЧЕНИЕ 30 СЕК.",title: "ПЕРЕФРАЗИРОВАНИЕ",type: "math",icon: SizedBox.shrink()),
-    StudiesModel(sub: "РЕЗУЛЬТАТ В ТЕЧЕНИЕ 10 СЕК",title: "ДАЙ СОВЕТ",type: "math",icon: SizedBox.shrink()),
+    StudiesModel(sub: "РЕЗУЛЬТАТ В ТЕЧЕНИЕ 20 СЕК.",title: "МАТЕМАТИКА",type: EChatPageType.math,icon: SizedBox.shrink()),
+    StudiesModel(sub: "РЕЗУЛЬТАТ В ТЕЧЕНИЕ 5 МИНУТ",title: "РЕФЕРАТ",type: EChatPageType.referat,icon: SizedBox.shrink()),
+    StudiesModel(sub: "РЕЗУЛЬТАТ В ТЕЧЕНИЕ 3 МИНУТ",title: "СОЧИНЕНИЕ",type: EChatPageType.essay,icon: SizedBox.shrink()),
+    StudiesModel(sub: "РЕЗУЛЬТАТ В ТЕЧЕНИЕ 5 МИНУТ.",title: "ПРЕЗЕНТАЦИЯ",type: EChatPageType.presentation,icon: SizedBox.shrink()),
+    StudiesModel(sub: "РЕЗУЛЬТАТ В ТЕЧЕНИЕ 30 СЕК.",title: "СОКРАЩЕНИЕ",type: EChatPageType.reduce,icon: SizedBox.shrink()),
+    StudiesModel(sub: "РЕЗУЛЬТАТ В ТЕЧЕНИЕ 30 СЕК.",title: "ПЕРЕФРАЗИРОВАНИЕ",type: EChatPageType.parafrase,icon: SizedBox.shrink()),
+    StudiesModel(sub: "РЕЗУЛЬТАТ В ТЕЧЕНИЕ 10 СЕК",title: "ДАЙ СОВЕТ",type: EChatPageType.sovet,icon: SizedBox.shrink()),
   ];
 
   List<Widget> widgets=[];
@@ -61,30 +61,33 @@ class _HOMEStudiesPageState extends State<HOMEStudiesPage> {
       child: Column(
         children: [
           SizedBox(height: 50,),
-          Row(
-            children: [
-              Container(
-                height: 30,
-                width: 30,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(15)
-                ),
-                child: Icon(Icons.arrow_back)
-              ),
-              SizedBox(width: 10,),
-              Text(
-                "Учеба",
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.w400,
-                  fontFamily: "NoirPro",
-                  height: 1,
-                  color: Colors.white
+          GestureDetector(
+            onTap: ()=>widget.update("/init"),
+            child: Row(
+              children: [
+                Container(
+                  height: 30,
+                  width: 30,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(15)
                   ),
-              ),
-            ],
+                  child: Icon(Icons.arrow_back)
+                ),
+                SizedBox(width: 10,),
+                Text(
+                  "Учеба",
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.w400,
+                    fontFamily: "NoirPro",
+                    height: 1,
+                    color: Colors.white
+                    ),
+                ),
+              ],
+            ),
           ),
           Expanded(
             child: ListView(
@@ -102,7 +105,7 @@ class _HOMEStudiesPageState extends State<HOMEStudiesPage> {
 
 
 class StudiesModel{
-  String type;
+  EChatPageType type;
   String title;
   String sub;
   Widget icon;
@@ -157,7 +160,7 @@ class _StudiesElementState extends State<StudiesElement> with TickerProviderStat
     double width=MediaQuery.of(context).size.width;
     return  GestureDetector(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => ChatPage(type: EChatPageType.math,),));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => ChatPage(type: widget.model.type,title:widget.model.title),));
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10),

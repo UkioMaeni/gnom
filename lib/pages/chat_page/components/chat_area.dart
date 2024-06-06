@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:gnom/pages/chat_page/chat_page.dart';
-import 'package:gnom/store/chat_store.dart';
+import 'package:gnom/pages/chat_page/store/chat_store.dart';
 class ChatPageChatArea extends StatefulWidget {
   final EChatPageType type;
   const ChatPageChatArea({super.key,required this.type});
@@ -22,7 +22,7 @@ class _ChatPageChatAreaState extends State<ChatPageChatArea> {
           reverse: true,
           itemCount: messages.length,
           itemBuilder: (context, index) {
-            return messageItem(messages[index]);
+            return messageItem(messages[(messages.length-1)-index]);
           },
         );
       }
@@ -51,7 +51,7 @@ class _ChatPageChatAreaState extends State<ChatPageChatArea> {
           SizedBox(width: 10,),
           Container(
             constraints: BoxConstraints(
-              maxWidth: 200,
+              maxWidth: MediaQuery.of(context).size.width-150,
               minWidth: 50
             ),
             padding: EdgeInsets.all(5),
@@ -74,7 +74,30 @@ class _ChatPageChatAreaState extends State<ChatPageChatArea> {
       ),
     );
     }
-
+    if(message.fileBuffer!=null && message.fileBuffer!.isNotEmpty){
+     return Container(
+        margin: EdgeInsets.symmetric(vertical: 10),
+        padding: EdgeInsets.only(right: 20),
+        width: 160,
+        height: 200,
+        child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.end,
+         children: [
+           Image.memory(message.fileBuffer!),
+            SizedBox(width: 10,),
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: Color.fromARGB(157, 43, 42, 42),
+                borderRadius: BorderRadius.circular(20)
+              ),
+            ),
+         ],
+       ),
+     );
+    }
     return Container(
       //alignment: message.sender=="bot"?Alignment.centerLeft:Alignment.centerRight,
       margin: EdgeInsets.symmetric(vertical: 10),

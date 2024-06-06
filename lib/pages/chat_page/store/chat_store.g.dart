@@ -24,10 +24,36 @@ mixin _$ChatStore on _ChatStore, Store {
     });
   }
 
+  late final _$requiredCompleteAtom =
+      Atom(name: '_ChatStore.requiredComplete', context: context);
+
+  @override
+  ObservableMap<String, RequiredRequest> get requiredComplete {
+    _$requiredCompleteAtom.reportRead();
+    return super.requiredComplete;
+  }
+
+  @override
+  set requiredComplete(ObservableMap<String, RequiredRequest> value) {
+    _$requiredCompleteAtom.reportWrite(value, super.requiredComplete, () {
+      super.requiredComplete = value;
+    });
+  }
+
+  late final _$addMessageAsyncAction =
+      AsyncAction('_ChatStore.addMessage', context: context);
+
+  @override
+  Future addMessage(EChatPageType chatType, String message, XFile? file) {
+    return _$addMessageAsyncAction
+        .run(() => super.addMessage(chatType, message, file));
+  }
+
   @override
   String toString() {
     return '''
-chats: ${chats}
+chats: ${chats},
+requiredComplete: ${requiredComplete}
     ''';
   }
 }

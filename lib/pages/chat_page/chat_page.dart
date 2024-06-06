@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:dio/dio.dart';
@@ -7,15 +8,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gnom/http/guest.dart';
 import 'package:gnom/pages/chat_page/components/chat_area.dart';
+import 'package:gnom/pages/chat_page/store/chat_store.dart';
 import 'package:image_picker/image_picker.dart';
 enum EChatPageType{
-  math
+  math,parafrase,referat,essay,presentation,reduce,sovet
 }
 
 
 class ChatPage extends StatefulWidget {
   final EChatPageType type;
-  const ChatPage({super.key,required this.type});
+  final String title;
+  const ChatPage({super.key,required this.type,required this.title});
 
   @override
   State<ChatPage> createState() => _ChatPageState();
@@ -24,20 +27,34 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
 
 
-void sendRequest()async{
-  FormData formData=FormData();
-  formData.fields.add(MapEntry("lang", "ru_RU"));
-  formData.fields.add(MapEntry("type", widget.type.name));
-  final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
-  if (pickedFile == null) {
-    return;
-  }
-  // Добавление файла
-  //var file = File(pickedFile.path).openRead();
-  formData.files.add(MapEntry('file',await MultipartFile.fromFile(pickedFile.path,)));
-  GuestHttp().request(formData);
-}
+ final TextEditingController _controller=TextEditingController();
 
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+void attachment()async{
+  FormData formData=FormData();
+  // formData.fields.add(MapEntry("lang", "ru_RU"));
+  // formData.fields.add(MapEntry("type", widget.type.name));
+  final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+  
+  if(pickedFile!=null){
+    chatStore.addMessage(widget.type, _controller.text,pickedFile);
+  }
+  _controller.text="";
+  // // Добавление файла
+  //var file = File(pickedFile.path).openRead();
+  // formData.files.add(MapEntry('file',await MultipartFile.fromFile(pickedFile.path,)));
+  // GuestHttp().request(formData);
+  
+}
+  sendMessage(){
+    chatStore.addMessage(widget.type, _controller.text,null);
+    _controller.text="";
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,12 +91,9 @@ void sendRequest()async{
                       const SizedBox(width: 10,),
                       Builder(
                         builder: (context) {
-                          String title="Заявка";
-                          if(widget.type==EChatPageType.math){
-                            title="Математика";
-                          }
+                          
                           return Text(
-                            title,
+                            widget.title,
                             textAlign: TextAlign.center,
                             style: const TextStyle(
                               fontSize: 30,
@@ -103,42 +117,52 @@ void sendRequest()async{
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
-                      padding: EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(157, 43, 42, 42),
-                        borderRadius: BorderRadius.circular(14)
+                    GestureDetector(
+                      onTap: () {
+                        chatStore.addMessage(widget.type, "да",null);
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(157, 43, 42, 42),
+                          borderRadius: BorderRadius.circular(14)
+                        ),
+                        child: Text(
+                              "ДА",
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                fontSize: 30,
+                                fontWeight: FontWeight.w400,
+                                fontFamily: "NoirPro",
+                                height: 1,
+                                color: Colors.white
+                                ),
+                            ),
                       ),
-                      child: Text(
-                            "ДА",
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              fontSize: 30,
-                              fontWeight: FontWeight.w400,
-                              fontFamily: "NoirPro",
-                              height: 1,
-                              color: Colors.white
-                              ),
-                          ),
                     ),
                     SizedBox(width: 50,),
-                    Container(
-                      padding: EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(157, 43, 42, 42),
-                        borderRadius: BorderRadius.circular(14)
+                    GestureDetector(
+                      onTap: () {
+                        chatStore.addMessage(widget.type, "нет",null);
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(157, 43, 42, 42),
+                          borderRadius: BorderRadius.circular(14)
+                        ),
+                        child: Text(
+                              "НЕТ",
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                fontSize: 30,
+                                fontWeight: FontWeight.w400,
+                                fontFamily: "NoirPro",
+                                height: 1,
+                                color: Colors.white
+                                ),
+                            ),
                       ),
-                      child: Text(
-                            "НЕТ",
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              fontSize: 30,
-                              fontWeight: FontWeight.w400,
-                              fontFamily: "NoirPro",
-                              height: 1,
-                              color: Colors.white
-                              ),
-                          ),
                     )
                   ],
                 ),
@@ -164,13 +188,21 @@ void sendRequest()async{
         child: Row(
           children: [
             const SizedBox(width: 10,),
-            GestureDetector(
-              onTap: sendRequest,
-              child: const Icon(Icons.attachment,color: Color.fromARGB(255, 255, 255, 255),size: 30,)
+            Builder(
+              builder: (context) {
+                if(widget.type==EChatPageType.sovet||widget.type==EChatPageType.presentation||widget.type==EChatPageType.essay||widget.type==EChatPageType.referat){
+                  return SizedBox.shrink();
+                }
+                return GestureDetector(
+                  onTap: attachment,
+                  child: const Icon(Icons.attachment,color: Color.fromARGB(255, 255, 255, 255),size: 30,)
+                );
+              }
             ),
             
-            const Expanded(
+             Expanded(
               child: TextField(
+                controller: _controller,
                 maxLines: 5,
                 minLines: 1,
                 style: TextStyle(
@@ -198,7 +230,7 @@ void sendRequest()async{
               ),
             ),
             GestureDetector(
-              onTap: sendRequest,
+              onTap: sendMessage,
               child: const Icon(Icons.send,color: Colors.white,size: 30,)
             ),
             const SizedBox(width: 10,)

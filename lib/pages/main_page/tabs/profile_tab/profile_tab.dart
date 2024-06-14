@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -342,12 +343,56 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
       builder: (context, child) {
         return Opacity(
           opacity: _opacity.value,
-          child: Text(
-            userStore.profile?.nickname??"",
-            style: TextStyle(
-              color: Colors.white
-            ),
-            ),
+          child: Column(
+            children: [
+              Text(
+                userStore.profile?.nickname??"",
+                style: TextStyle(
+                  color: Colors.white
+                ),
+                ),
+                  GestureDetector(
+                                onTap: () async{
+                                  await Clipboard.setData(ClipboardData(text: userStore.profile?.login??""));
+                                },
+                                child: Container(
+                                  height: 30,
+                                  width: 150,
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey,
+                                    borderRadius: BorderRadius.circular(5),
+                                    
+                              
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "ID:"+(userStore.profile?.login??""),
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontFamily: "Inter",
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w600
+                                        ),
+                                      ),
+                                      SizedBox(width: 10,),
+                                      Icon(Icons.copy,size: 15,),
+                                      Text(
+                                      "copy",
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontFamily: "Inter",
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w400
+                                      ),
+                                    ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+            ],
+          ),
           );
       },
       

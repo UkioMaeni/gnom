@@ -1,13 +1,32 @@
 {
   "project_info": {
-    "project_number": "1023731537871",
-    "project_id": "gnom-829d3",
-    "storage_bucket": "gnom-829d3.appspot.com"
+    "project_number": "348196236558",
+    "project_id": "gnom-394b0",
+    "storage_bucket": "gnom-394b0.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1023731537871:android:5f5c77c293bc825c3c64ba",
+        "mobilesdk_app_id": "1:348196236558:android:c6e758b7d27ce2f25c7b5f",
+        "android_client_info": {
+          "package_name": "com.easyride.ezride"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDiggkNok0XSM9oTCCtN-AkMHsMhSrgHGA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:348196236558:android:d4904423576b723e5c7b5f",
         "android_client_info": {
           "package_name": "com.gnom.helper"
         }
@@ -15,7 +34,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDa4kJ8jcsCTh7GD9db_sX1p2ccjoMydBc"
+          "current_key": "AIzaSyDiggkNok0XSM9oTCCtN-AkMHsMhSrgHGA"
         }
       ],
       "services": {

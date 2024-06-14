@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:gnom/http/user.dart';
+import 'package:gnom/store/user_store.dart';
 
 class FriendsTab extends StatefulWidget {
   const FriendsTab({Key? key}) : super(key: key);
@@ -36,6 +38,8 @@ class _FriendsTabState extends State<FriendsTab> with TickerProviderStateMixin {
     // UserModel(name: 'Jane Smith', status: 'Gold'),
   ];
 
+  bool notFind=false;
+
   late final TextEditingController _searchController;
   late ScrollController _scrollController;
 
@@ -50,12 +54,20 @@ class _FriendsTabState extends State<FriendsTab> with TickerProviderStateMixin {
   }
 
 
-  void search(){
-    setState(() {
-      users=[];
+  void search()async{
+    users=[];
+    notFind=false;
+    final result = await UserHttp().findUser(_searchController.text);
+    print(result);
+    if(result!=null){
       users.addAll([
-        UserModel(name: 'John Doe', status: 'Silver'),
+        UserModel(name: result.nickname, status: 'Silver'),
       ]);
+    }else{
+      notFind=true;
+    }
+    setState(() {
+      
     });
   }
 
@@ -73,6 +85,21 @@ class _FriendsTabState extends State<FriendsTab> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    if(userStore.role=="guest"){
+      return Center(
+        child: Text(
+                "НЕДОСТУПНО ДЛЯ ГОСТЕВОГО РЕЖИМА",
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500,
+                  fontFamily: "NoirPro",
+                  height: 1,
+                  color: Color.fromRGBO(254, 222, 181, 1),
+                ),
+              ),
+      );
+    }
     return Padding(
       padding: EdgeInsets.only(
         top: MediaQuery.of(context).padding.top,
@@ -101,6 +128,12 @@ class _FriendsTabState extends State<FriendsTab> with TickerProviderStateMixin {
                             height: 30,
                             child: TextField(
                               controller: _searchController,
+                              onChanged: (value) {
+                                setState(() {
+                                  users=[];
+                                  notFind=false;
+                                });
+                              },
                               maxLength: 9,
                               style: TextStyle(
                                             fontFamily: "NoirPro",
@@ -143,7 +176,19 @@ class _FriendsTabState extends State<FriendsTab> with TickerProviderStateMixin {
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
-                      ListView.separated(
+                     notFind? 
+                     Text(
+                        "НЕ НАЙДЕНО",
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500,
+                          fontFamily: "NoirPro",
+                          height: 1,
+                          color: Color.fromRGBO(254, 222, 181, 1),
+                        ),
+                      )
+                     :ListView.separated(
                         separatorBuilder: (context, index) {
                           return SizedBox(height: 5,);
                         },

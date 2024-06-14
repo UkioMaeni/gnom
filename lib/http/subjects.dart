@@ -22,12 +22,12 @@ class SubjectsHttp{
       
       print(data);
       if(data["result"]==null){
-        return null;
+        return "";
       }
       return data["result"];
     } catch (e) {
       print(e);
-      return "";
+      return null;
     }
   }
   Future sendOtp(String email)async{

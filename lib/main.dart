@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:gnom/core/app_localization.dart';
 import 'package:gnom/pages/language_page/language_page.dart';
@@ -11,6 +12,8 @@ void main()async {
   await Firebase.initializeApp(
   options: DefaultFirebaseOptions.currentPlatform,
 );
+final notificationSettings = await FirebaseMessaging.instance.requestPermission(provisional: true);
+
 
   runApp(
     EasyLocalization(

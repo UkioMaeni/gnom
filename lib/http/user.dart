@@ -10,7 +10,21 @@ class UserHttp{
   Dio dio=Dio();
   UserHttp(){
     dio.interceptors.add(AuthInterceptor(dio));
-  }          
+  }     
+  Future<int> checkUnreadMessages()async{
+    try {
+      Response response=await dio.post(
+        "${httpConfig.baseUrl}/user/unread_messages",
+      );
+      final data=response.data;
+      
+      print(data);
+      return 0;
+    } catch (e) {
+      print(e);
+      return -1;
+    }
+  }       
   Future<Profile?> profile()async{
     try {
       Response response=await dio.post(
@@ -25,6 +39,26 @@ class UserHttp{
       return null;
     }
   }  
+  Future<Profile?> findUser(String login)async{
+    try {
+      Response response=await dio.get(
+        "${httpConfig.baseUrl}/user/find",
+        queryParameters: {
+          "login":login
+        }
+      );
+      final data=response.data;
+      print(response.data);
+      if(data is String){
+        return null;
+      }
+      
+      return Profile(id: data["id"],login: data["login"],nickname: data["nickname"]);
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  } 
   Future<Tokens?> refreshToken(String token)async{
     try {
       Response response=await dio.put(

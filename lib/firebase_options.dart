@@ -50,19 +50,20 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDa4kJ8jcsCTh7GD9db_sX1p2ccjoMydBc',
-    appId: '1:1023731537871:android:5f5c77c293bc825c3c64ba',
-    messagingSenderId: '1023731537871',
-    projectId: 'gnom-829d3',
-    storageBucket: 'gnom-829d3.appspot.com',
+    apiKey: 'AIzaSyDiggkNok0XSM9oTCCtN-AkMHsMhSrgHGA',
+    appId: '1:348196236558:android:d4904423576b723e5c7b5f',
+    messagingSenderId: '348196236558',
+    projectId: 'gnom-394b0',
+    storageBucket: 'gnom-394b0.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyC47ptHqnE8Xmz8SkLwujM3iuQmYtVo2vg',
-    appId: '1:1023731537871:ios:ccdcc86cab975bdf3c64ba',
-    messagingSenderId: '1023731537871',
-    projectId: 'gnom-829d3',
-    storageBucket: 'gnom-829d3.appspot.com',
+    apiKey: 'AIzaSyBxBm-yXUDzMCmLR8H79-ILZjeU3aJ0h2I',
+    appId: '1:348196236558:ios:1d351d8fcc5667b55c7b5f',
+    messagingSenderId: '348196236558',
+    projectId: 'gnom-394b0',
+    storageBucket: 'gnom-394b0.appspot.com',
     iosBundleId: 'com.example.gnom',
   );
+
 }

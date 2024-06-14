@@ -70,6 +70,7 @@ class AuthInterceptor extends Interceptor {
     }else if(userStore.role=='guest'){
       token=  tokenRepo.accessGuestToken;
     }
+    print(token);
    options.headers.addEntries({
     MapEntry("Authorization",token)
    });

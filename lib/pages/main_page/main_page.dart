@@ -1,5 +1,9 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gnom/http/fcm.dart';
+import 'package:gnom/pages/chat_page/chat_page.dart';
+import 'package:gnom/pages/chat_page/store/chat_store.dart';
 import 'package:gnom/pages/main_page/tabs/friends_tab.dart';
 import 'package:gnom/pages/main_page/tabs/history_tab.dart';
 import 'package:gnom/pages/main_page/tabs/home_tab/home_tab.dart';
@@ -38,8 +42,26 @@ class _MainPageState extends State<MainPage> {
     });
   }
 
+  void initFirebase()async{
+    final apnsToken = await FirebaseMessaging.instance.getToken();
+    await FCMHttp().setFcmToken(apnsToken??"");
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('Got a message whilst in the foreground!');
+      print('Message data: ${message.data}');
+      final data=message.data;
+      String messageType=data['messageType'];
+      
+      chatStore.addMessageFromNotify(messageType);
+      if (message.notification != null) {
+        print('Message also contained a notification: ${message.notification}');
+      }
+    });
+  }
+
+
   @override
   void initState() {
+    initFirebase();
     userStore.getRequestsCount();
     userStore.requiredData();
     super.initState();

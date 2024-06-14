@@ -166,7 +166,7 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin{
   void initState() {
     authorizeUser();
     startOpacityAnimation();
-     startGnomAnimation();
+    startGnomAnimation();
     startTextAnimation();
     
 

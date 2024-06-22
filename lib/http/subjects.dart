@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:gnom/config/http_config.dart';
 import 'package:gnom/http/guest.dart';
 import 'package:gnom/http/interceptor.dart';
+import 'package:gnom/pages/chat_page/store/chat_store.dart';
 import 'package:gnom/store/user_store.dart';
 
 class SubjectsHttp{
@@ -24,6 +25,8 @@ class SubjectsHttp{
       if(data["result"]==null){
         return "";
       }
+      String messageId=data["messageId"];
+      chatStore.updateStatusHistory([messageId]);
       return data["result"];
     } catch (e) {
       print(e);

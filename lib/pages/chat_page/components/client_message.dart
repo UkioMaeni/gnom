@@ -24,7 +24,10 @@ class _ClientMessageState extends State<ClientMessage> {
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.end,
          children: [
-           Image.memory(widget.message.fileBuffer!),
+           SizedBox(
+            width: MediaQuery.of(context).size.width-100,
+            child: Image.memory(widget.message.fileBuffer!)
+          ),
             SizedBox(width: 10,),
             Container(
               width: 40,

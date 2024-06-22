@@ -1,5 +1,7 @@
 
 import 'package:dio/dio.dart';
+import 'package:gnom/http/guest.dart';
+import 'package:gnom/http/user.dart';
 import 'package:gnom/repositories/token_repo.dart';
 import 'package:gnom/store/user_store.dart';
 
@@ -27,16 +29,31 @@ class AuthInterceptor extends Interceptor {
     }
 
 
-    // if (err.response?.statusCode == 401&&repeatCounter.isEven) {
-    //   repeatCounter++;
-    //   return  await dio.request(
-    //       err.requestOptions.path, 
-    //       data:  err.requestOptions.data,
-    //       queryParameters: err.requestOptions.queryParameters,
-    //       options: Options(method:  err.requestOptions.method),
+    if (err.response?.statusCode == 401&&repeatCounter.isEven) {
+      repeatCounter++;
+      
+      // if(userStore.role=="client"){
+      //   String? token=await TokenRepo().refreshUserToken;
+      //   if(token!=null){
+      //     await UserHttp().refreshToken(token);
+      //   }
+        
+
+      // }else if(userStore.role=="guest"){
+      //   String? token=await TokenRepo().refreshGuestToken;
+      //   if(token!=null){
+      //     await GuestHttp().refreshToken(token);
+      //   }
+        
+      // }
+      // return  await dio.request(
+      //     err.requestOptions.path, 
+      //     data:  err.requestOptions.data,
+      //     queryParameters: err.requestOptions.queryParameters,
+      //     options: Options(method:  err.requestOptions.method),
          
-    //       );  
-    // }
+      //     );  
+    }
     repeatCounter=0;
     if (err.response?.statusCode == 400) {
 

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gnom/pages/chat_page/store/chat_store.dart';
 
 class HistoryTab extends StatefulWidget {
   const HistoryTab({super.key});
@@ -19,18 +20,37 @@ class _HistoryTabState extends State<HistoryTab> with TickerProviderStateMixin {
     List<Widget> widgets=[];
 
   startGenerate()async{
-    for(int i=0;i<3;i++){
+    final histories= chatStore.history;
+    final processList= histories.where((element) => element.progress=="process").toList();
+    final completedList= histories.where((element) => element.progress=="completed").toList();
+    for(int i=0;i<processList.length;i++){
       setState(() {
         if(i==0){
           widgets.add(
           Positioned(
             top: i*105+paddingOffset,
-            child: TextElement()
+            child: TextElement(title: "В ПРОЦЕССЕ",)
           )
         );
         }
         widgets.add(
-           HistoryElement(topOffset: (i)*105+paddingOffset+50, model: HistoryModel(icon: SvgPicture.asset("assets/svg/history.svg",fit: BoxFit.contain,), saved: true, theme: "лог", type: "мат", progress: "progress"),)
+           HistoryElement(topOffset: (i)*105+paddingOffset+50, model:processList[i],)
+        );
+      });
+      await Future.delayed(Duration(milliseconds: 300));
+    }
+    for(int i=0;i<completedList.length;i++){
+      setState(() {
+        if(i==0){
+          widgets.add(
+          Positioned(
+            top: (i+processList.length)*105+paddingOffset+50,
+            child: TextElement(title: "ГОТОВО",)
+          )
+        );
+        }
+        widgets.add(
+           HistoryElement(topOffset: (i+processList.length)*105+paddingOffset+100, model:completedList[i],)
         );
       });
       await Future.delayed(Duration(milliseconds: 300));
@@ -80,9 +100,7 @@ class _HistoryTabState extends State<HistoryTab> with TickerProviderStateMixin {
   }
 
 
-  favorite(){
-     widgets[1]=HistoryElement(topOffset: paddingOffset+50, model: HistoryModel(icon: SvgPicture.asset("assets/svg/history.svg",fit: BoxFit.contain,), saved: true, theme: "лог", type: "мат", progress: "progress"),);
-  }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -150,7 +168,8 @@ Widget selectType(String title){
 }
 
 class TextElement extends StatefulWidget {
-  const TextElement({super.key});
+  final String title;
+  const TextElement({super.key,required this.title});
 
   @override
   State<TextElement> createState() => _TextElementState();
@@ -178,7 +197,7 @@ class _TextElementState extends State<TextElement> {
       child: Opacity(
         opacity: opacity,
         child: Text(
-          "В ПРОЦЕССЕ",
+          widget.title,
           style: TextStyle(
             color: Colors.white,
             fontFamily: "NoirPro",
@@ -229,16 +248,7 @@ class _HistoryElementState extends State<HistoryElement> with TickerProviderStat
   }
 
   favorite(){
-    _scaleController=AnimationController(
-      duration: const Duration(milliseconds: 1000),
-      vsync: this
-    );
-    _scaleAnimation=Tween<double>(begin: 1,end: 0.4).animate(_scaleController);
-    _scaleController.forward();
-     setState(() {
-       initOffset+=550;
-       right=60;
-     });
+   
   }
 
   @override
@@ -366,13 +376,15 @@ class HistoryModel{
   String type;
   String theme;
   Widget icon;
-  bool saved;
+  bool favorite;
   String progress;
+  String messageId;
   HistoryModel({
     required this.icon,
-    required this.saved,
+    required this.favorite,
     required this.theme,
     required this.type,
-    required this.progress
+    required this.progress,
+    required this.messageId
   });
 }

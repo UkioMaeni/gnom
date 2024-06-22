@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gnom/pages/push/push_page.dart';
 
 class HOMEInitPage extends StatefulWidget {
   final Function(String) update;
@@ -105,7 +106,12 @@ class _HOMEInitPageState extends State<HOMEInitPage> with TickerProviderStateMix
             Positioned(
               top: 60,
               right: 30,
-              child: Icon(Icons.notifications,size: 40,color: Colors.white,)
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder:  (context) => PushPage(),));
+                },
+                child: Icon(Icons.notifications,size: 40,color: Colors.white,)
+              )
             ),
             Positioned(
               top: 0,

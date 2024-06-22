@@ -40,6 +40,36 @@ mixin _$ChatStore on _ChatStore, Store {
     });
   }
 
+  late final _$pushsAtom = Atom(name: '_ChatStore.pushs', context: context);
+
+  @override
+  ObservableList<PushModel> get pushs {
+    _$pushsAtom.reportRead();
+    return super.pushs;
+  }
+
+  @override
+  set pushs(ObservableList<PushModel> value) {
+    _$pushsAtom.reportWrite(value, super.pushs, () {
+      super.pushs = value;
+    });
+  }
+
+  late final _$historyAtom = Atom(name: '_ChatStore.history', context: context);
+
+  @override
+  ObservableList<HistoryModel> get history {
+    _$historyAtom.reportRead();
+    return super.history;
+  }
+
+  @override
+  set history(ObservableList<HistoryModel> value) {
+    _$historyAtom.reportWrite(value, super.history, () {
+      super.history = value;
+    });
+  }
+
   late final _$addMessageAsyncAction =
       AsyncAction('_ChatStore.addMessage', context: context);
 
@@ -49,11 +79,45 @@ mixin _$ChatStore on _ChatStore, Store {
         .run(() => super.addMessage(chatType, message, file));
   }
 
+  late final _$addMessageFromDbAsyncAction =
+      AsyncAction('_ChatStore.addMessageFromDb', context: context);
+
+  @override
+  Future addMessageFromDb() {
+    return _$addMessageFromDbAsyncAction.run(() => super.addMessageFromDb());
+  }
+
+  late final _$updateStatusForDownloadFileAsyncAction =
+      AsyncAction('_ChatStore.updateStatusForDownloadFile', context: context);
+
+  @override
+  Future<bool> updateStatusForDownloadFile(
+      String id, String pathFile, String type) {
+    return _$updateStatusForDownloadFileAsyncAction
+        .run(() => super.updateStatusForDownloadFile(id, pathFile, type));
+  }
+
+  late final _$_ChatStoreActionController =
+      ActionController(name: '_ChatStore', context: context);
+
+  @override
+  dynamic updateStatusHistory(List<String> ids) {
+    final _$actionInfo = _$_ChatStoreActionController.startAction(
+        name: '_ChatStore.updateStatusHistory');
+    try {
+      return super.updateStatusHistory(ids);
+    } finally {
+      _$_ChatStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
   @override
   String toString() {
     return '''
 chats: ${chats},
-requiredComplete: ${requiredComplete}
+requiredComplete: ${requiredComplete},
+pushs: ${pushs},
+history: ${history}
     ''';
   }
 }

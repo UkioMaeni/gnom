@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:gnom/db/sql_lite.dart';
 import 'package:gnom/http/guest.dart';
 import 'package:gnom/http/user.dart';
 import 'package:gnom/pages/language_page/language_page.dart';
@@ -89,6 +90,11 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin{
   checkLanguage()async{
     await Future.delayed(Duration(seconds: 4));
     Locale? locale =await localeStorage.appLanguage;
+    await instanceDb.getPath();
+    //await instanceDb.dropDatabase();
+    
+    await instanceDb.createDB();
+    
     if(locale!=null){
       context.setLocale(locale);
       toMainPage();

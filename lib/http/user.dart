@@ -4,25 +4,32 @@ import 'package:dio/dio.dart';
 import 'package:gnom/config/http_config.dart';
 import 'package:gnom/http/guest.dart';
 import 'package:gnom/http/interceptor.dart';
+import 'package:gnom/pages/chat_page/store/chat_store.dart';
 import 'package:gnom/store/user_store.dart';
+import 'package:uuid/uuid.dart';
 
 class UserHttp{
   Dio dio=Dio();
   UserHttp(){
     dio.interceptors.add(AuthInterceptor(dio));
   }     
-  Future<int> checkUnreadMessages()async{
+  Future<List<SubjectTypedMessage>> checkUnreadMessages()async{
     try {
-      Response response=await dio.post(
+      Response response=await dio.get(
         "${httpConfig.baseUrl}/user/unread_messages",
       );
-      final data=response.data;
-      
+      List<dynamic> data=response.data;
       print(data);
-      return 0;
+      String id()=> Uuid().v4();
+      List<String> lastMessagesId=data.map<String>((e) => e["message_id"]??"none").toList();
+      chatStore.updateStatusHistory(lastMessagesId);
+      print(lastMessagesId);
+      return data.map((element)=>SubjectTypedMessage(message: Message(id: id(), status: "", text: "",link: element["text"], sender: "bot", fileBuffer: null),subjectType: element["subject_type"])).toList();
+      
+      
     } catch (e) {
       print(e);
-      return -1;
+      return [];
     }
   }       
   Future<Profile?> profile()async{

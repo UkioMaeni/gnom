@@ -64,6 +64,7 @@ class _MainPageState extends State<MainPage> {
     initFirebase();
     userStore.getRequestsCount();
     userStore.requiredData();
+    chatStore.addMessageFromDb();
     super.initState();
   }
 

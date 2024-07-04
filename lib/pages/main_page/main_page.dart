@@ -4,8 +4,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gnom/http/fcm.dart';
 import 'package:gnom/pages/chat_page/chat_page.dart';
 import 'package:gnom/pages/chat_page/store/chat_store.dart';
+import 'package:gnom/pages/main_page/tabs/favorite_tab/favorite_tab.dart';
 import 'package:gnom/pages/main_page/tabs/friends_tab.dart';
-import 'package:gnom/pages/main_page/tabs/history_tab.dart';
+import 'package:gnom/pages/main_page/tabs/history_tab/history_tab.dart';
 import 'package:gnom/pages/main_page/tabs/home_tab/home_tab.dart';
 import 'package:gnom/pages/main_page/tabs/profile_tab/profile_tab.dart';
 import 'package:gnom/store/user_store.dart';
@@ -28,10 +29,7 @@ class _MainPageState extends State<MainPage> {
   HomeTab(),
   HistoryTab(),
   FriendsTab(),
-  Icon(
-    Icons.camera,
-    size: 150,
-  ),
+  FavoriteTab(),
   ProfileTab()
 ];
 
@@ -65,6 +63,7 @@ class _MainPageState extends State<MainPage> {
     userStore.getRequestsCount();
     userStore.requiredData();
     chatStore.addMessageFromDb();
+    chatStore.addHistoryFromDb();
     super.initState();
   }
 

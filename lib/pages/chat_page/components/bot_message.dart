@@ -17,7 +17,7 @@ import 'package:uuid/uuid.dart';
 import 'package:open_file/open_file.dart';
 class BotMessage extends StatefulWidget {
   final Message message;
-  final EChatPageType  type;
+  final String  type;
   const BotMessage({super.key,required this.message,required this.type});
 
   @override
@@ -133,7 +133,7 @@ class _BotMessageState extends State<BotMessage> {
                       final file = File(gnomDirectory.path+"/${id}.${fileExchange}");
                       
                       file.writeAsBytesSync(response.data);
-                      chatStore.updateStatusForDownloadFile(widget.message.id, gnomDirectory.path+"/${id}.${fileExchange}",widget.type.name);
+                      chatStore.updateStatusForDownloadFile(widget.message.id, gnomDirectory.path+"/${id}.${fileExchange}",widget.type);
                       
                     } catch (e) {
                       print(e);

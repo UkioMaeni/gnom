@@ -5,7 +5,8 @@ import 'package:gnom/pages/main_page/tabs/profile_tab/components/plaining_subcri
 
 class PlaneInfo extends StatefulWidget {
   final Function(bool) setOpen;
-  const PlaneInfo({super.key,required this.setOpen});
+  final int openTypeIndex;
+  const PlaneInfo({super.key,required this.setOpen,required this.openTypeIndex});
 
   @override
   State<PlaneInfo> createState() => _PlaneInfoState();
@@ -15,16 +16,20 @@ class _PlaneInfoState extends State<PlaneInfo> {
   @override
   Widget build(BuildContext context) {
     return Stack(
+      alignment: Alignment.center,
       children: [
         Positioned.fill(
           child: GestureDetector(
             onTap: () {
               widget.setOpen(false);
             },
+            onVerticalDragUpdate: (details) {
+              
+            },
           ),
         ),
         Positioned(
-          top: 40,
+          top: 80,
           left: 30,
           right: 30,
           child: Container(
@@ -134,6 +139,36 @@ class _PlaneInfoState extends State<PlaneInfo> {
             ),
           ),
         ),
+        Builder(
+          builder: (context) {
+            print(widget.openTypeIndex);
+            if(widget.openTypeIndex==1){
+              return Positioned(
+                bottom: 92,
+                left: 45,
+                child: FirstElementPlaning(onTap: (_){},color: Colors.amber,scaleView: 1,)
+
+              );
+            }
+            if(widget.openTypeIndex==2){
+              return Positioned(
+                bottom: 83,
+                child: FirstElementPlaning(onTap: (_){},color: Colors.amber,scaleView: 1.3,)
+
+              );
+            }
+            if(widget.openTypeIndex==3){
+              return Positioned(
+                bottom: 92,
+                right: 45,
+                child: FirstElementPlaning(onTap: (_){},color: Colors.amber,scaleView: 1,)
+
+              );
+            }
+            return SizedBox.shrink();
+          },
+        )
+        
         // Positioned(
         //   bottom: 86,
         //   left: 20,

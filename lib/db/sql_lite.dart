@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:gnom/pages/chat_page/store/chat_store.dart';
+import 'package:gnom/pages/main_page/tabs/history_tab/history_tab.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -35,28 +37,18 @@ class SQLLite{
         await db.execute(
           '''
           CREATE TABLE IF NOT EXISTS
-          push(
+          favorite(
             id INTEGER PRIMARY KEY, 
-            type TEXT
+            favorite TEXT, 
+            theme TEXT, 
+            type TEXT, 
+            progress TEXT, 
+            messageId TEXT, 
+            answer TEXT, 
+            answerMessageId TEXT
             )
           ''',
         );
-        // await db.execute(
-        //   '''
-        //   CREATE TABLE IF NOT EXIST
-        //   favorite(
-        //     id INTEGER PRIMARY KEY, 
-        //     name TEXT, 
-        //     razdel TEXT, 
-        //     category TEXT, 
-        //     subcategory TEXT, 
-        //     type TEXT, 
-        //     price TEXT, 
-        //     article TEXT, 
-        //     img TEXT
-        //     )
-        //   ''',
-        // );
       },
     );
     print("created");
@@ -85,6 +77,19 @@ class SQLLite{
     }
     return mess;
   }
+  Future<List<HistoryModel>> getHistory()async{
+    final Database db = await openDatabase(path);
+    final List<Map<String, dynamic>> historyesFromDb = await db.query('favorite');
+    List<HistoryModel> historyes=[];
+    
+    for(var element in historyesFromDb){
+      print(element["favorite"]);
+      print("///");
+      final HistoryModel his=HistoryModel(answer: element["answer"],answerMessageId: element["answerMessageId"], favorite: element["favorite"]=="true"?true:false, icon: SizedBox.shrink(), messageId: element["messageId"],progress: element["progress"],theme: element["theme"],type: element["type"]);
+      historyes.add(his);
+    }
+    return historyes;
+  }
   Future<bool> updateStatusForDownloadFile(String id,String pathFile)async{
     try {
       final Database db = await openDatabase(path);
@@ -102,6 +107,38 @@ class SQLLite{
       return false;
     }
   }
+  Future<bool> addHistory(HistoryModel model)async{
+    try {
+      final Database db = await openDatabase(path);
+      await db.insert(
+          "favorite",
+          model.toMap(),
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+  Future<bool> updateHistoryFavorite(String id,bool favorite)async{
+    try {
+      final Database db = await openDatabase(path);
+      print(favorite.toString());
+      print("+");
+      db.update(
+        "favorite", 
+        {
+          "favorite":favorite.toString(),
+        },
+        where: 'messageId = ?',
+        whereArgs: [id]
+      );
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   Future<void> dropDatabase() async {
    
     

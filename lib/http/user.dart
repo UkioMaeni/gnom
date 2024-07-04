@@ -22,7 +22,7 @@ class UserHttp{
       print(data);
       String id()=> Uuid().v4();
       List<String> lastMessagesId=data.map<String>((e) => e["message_id"]??"none").toList();
-      chatStore.updateStatusHistory(lastMessagesId);
+      //chatStore.updateStatusHistory(lastMessagesId);
       print(lastMessagesId);
       return data.map((element)=>SubjectTypedMessage(message: Message(id: id(), status: "", text: "",link: element["text"], sender: "bot", fileBuffer: null),subjectType: element["subject_type"])).toList();
       

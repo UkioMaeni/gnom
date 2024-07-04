@@ -1,8 +1,11 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gnom/pages/chat_page/store/chat_store.dart';
+import 'package:gnom/pages/main_page/tabs/history_tab/history_info.dart';
 
 class HistoryTab extends StatefulWidget {
   const HistoryTab({super.key});
@@ -21,8 +24,10 @@ class _HistoryTabState extends State<HistoryTab> with TickerProviderStateMixin {
 
   startGenerate()async{
     final histories= chatStore.history;
+    
     final processList= histories.where((element) => element.progress=="process").toList();
     final completedList= histories.where((element) => element.progress=="completed").toList();
+    print(processList.length);
     for(int i=0;i<processList.length;i++){
       setState(() {
         if(i==0){
@@ -247,126 +252,135 @@ class _HistoryElementState extends State<HistoryElement> with TickerProviderStat
     super.dispose();
   }
 
-  favorite(){
-   
+  favorite()async{
+   await chatStore.updateFavoriteHistory(widget.model.messageId);
+    setState(() {
+      
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    print(widget.model.favorite);
     double width=MediaQuery.of(context).size.width;
     return AnimatedPositioned(
       duration: Duration(seconds: 1),
       top: initOffset,
       left: right,
-      child: AnimatedBuilder(
-        animation:_scaleAnimation,
-        builder: (context, child) {
-          return  Transform.scale(
-              scale: _scaleAnimation.value,
-              child: SizedBox(
-                height: 95,
-                width: width-20,
-                child:  Row(
-                  children: [
-                    Expanded(
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(
-                          color: const Color.fromRGBO(196, 114, 137, 0.8),
-                          borderRadius: BorderRadius.circular(15)
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 5),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                    widget.model.type,
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w500,
-                                      fontFamily: "NoirPro",
-                                      height: 1,
-                                      color: Color.fromRGBO(254, 222,181, 1)
-                                      ),
-                                  ),
-                                  const SizedBox(height: 5,),
-                                  RichText(
-                                    text: TextSpan(
-                                      children: [
-                                        const TextSpan(
-                                          text: "ТЕМА ",
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w500,
-                                            fontFamily: "NoirPro",
-                                            height: 1,
-                                            color: Colors.white
-                                            ),
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context) => HistoryInfo(model: widget.model,)));
+        },
+        child: AnimatedBuilder(
+          animation:_scaleAnimation,
+          builder: (context, child) {
+            return  Transform.scale(
+                scale: _scaleAnimation.value,
+                child: SizedBox(
+                  height: 95,
+                  width: width-20,
+                  child:  Row(
+                    children: [
+                      Expanded(
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                            color: const Color.fromRGBO(196, 114, 137, 0.8),
+                            borderRadius: BorderRadius.circular(15)
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 5),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                      widget.model.type,
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w500,
+                                        fontFamily: "NoirPro",
+                                        height: 1,
+                                        color: Color.fromRGBO(254, 222,181, 1)
                                         ),
-                                        TextSpan(
-                                          text:"\"${widget.model.theme}\"",
-                                          style: const TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w500,
-                                            fontFamily: "NoirPro",
-                                            height: 1,
-                                            letterSpacing: 1,
-                                            color:Colors.white
-                                            ),
-                                        )
-                                      ]
+                                    ),
+                                    const SizedBox(height: 5,),
+                                    RichText(
+                                      text: TextSpan(
+                                        children: [
+                                          const TextSpan(
+                                            text: "ТЕМА ",
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w500,
+                                              fontFamily: "NoirPro",
+                                              height: 1,
+                                              color: Colors.white
+                                              ),
+                                          ),
+                                          TextSpan(
+                                            text:"\"${widget.model.theme}\"",
+                                            style: const TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w500,
+                                              fontFamily: "NoirPro",
+                                              height: 1,
+                                              letterSpacing: 1,
+                                              color:Colors.white
+                                              ),
+                                          )
+                                        ]
+                                      ),
+                                    )
+                                    ],
+                                  ),
+                                  Align(
+                                    alignment: Alignment.topCenter,
+                                    child: SizedBox(
+                                      width: 70,
+                                      height: 80,
+                                      child: SvgPicture.asset("assets/svg/math.svg",fit: BoxFit.contain,)
                                     ),
                                   )
-                                  ],
-                                ),
-                                Align(
-                                  alignment: Alignment.topCenter,
-                                  child: SizedBox(
-                                    width: 70,
-                                    height: 80,
-                                    child: SvgPicture.asset("assets/svg/math.svg",fit: BoxFit.contain,)
-                                  ),
-                                )
-                                // Container(
-                                //     width: 140,
-                                //     height: 60,
-                                //     color: Colors.amber,
-                                //     alignment: Alignment.centerRight,
-                                //     child:  widget.model.icon,
-                                //   ),
-                                
-                               
-                              ],
-                            ),
+                                  // Container(
+                                  //     width: 140,
+                                  //     height: 60,
+                                  //     color: Colors.amber,
+                                  //     alignment: Alignment.centerRight,
+                                  //     child:  widget.model.icon,
+                                  //   ),
+                                  
+                                 
+                                ],
+                              ),
+                          ),
                         ),
                       ),
-                    ),
-                    GestureDetector(
-                      onTap: favorite,
-                      child: Container(
-                        color: const Color.fromARGB(0, 255, 193, 7),
-                        width: 50,
-                        child: Align(
-                          alignment: Alignment.center,
-                          child: SizedBox(
-                            width: 25,
-                            height: 25,
-                            child: SvgPicture.asset("assets/svg/saved_tab.svg",color: const Color.fromRGBO(254, 222,181, 1),)
-                          )
+                      GestureDetector(
+                        onTap: favorite,
+                        child: Container(
+                          color: const Color.fromARGB(0, 255, 193, 7),
+                          width: 50,
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: SizedBox(
+                              width: 25,
+                              height: 25,
+                              child: widget.model.favorite?Container(height: 25,width: 25,color: Colors.red,): SvgPicture.asset("assets/svg/saved_tab.svg",color: const Color.fromRGBO(254, 222,181, 1))
+                            )
+                          ),
                         ),
-                      ),
-                    )
-                  ],
+                      )
+                    ],
+                  ),
+                  
                 ),
-                
-              ),
-            
-          );
-        }, 
+              
+            );
+          }, 
+        ),
       ),
     );
   }
@@ -379,12 +393,27 @@ class HistoryModel{
   bool favorite;
   String progress;
   String messageId;
+  String answer;
+  String answerMessageId;
   HistoryModel({
     required this.icon,
     required this.favorite,
     required this.theme,
     required this.type,
     required this.progress,
-    required this.messageId
+    required this.messageId,
+    required this.answer,
+    required this.answerMessageId
   });
+  Map<String,dynamic> toMap(){
+    return {
+      "favorite":favorite,
+      "theme":theme,
+      "type":type,
+      "progress":progress,
+      "messageId":messageId,
+      "answer":answer,
+      "answerMessageId":answerMessageId,
+    };
+  }
 }

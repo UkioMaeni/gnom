@@ -9,8 +9,9 @@ import 'package:gnom/store/user_store.dart';
 
 class ProfileplaningSubcribtion extends StatefulWidget {
   final RequestsCount requestsCount;
-  final Function(bool) setOpen;
-  const ProfileplaningSubcribtion({super.key,required this.requestsCount,required this.setOpen});
+  final Function(int) setOpen;
+  final ScrollController controller;
+  const ProfileplaningSubcribtion({super.key,required this.requestsCount,required this.setOpen,req,required this.controller});
 
   @override
   State<ProfileplaningSubcribtion> createState() => _ProfileplaningSubcribtionState();
@@ -95,7 +96,7 @@ class _ProfileplaningSubcribtionState extends State<ProfileplaningSubcribtion> w
                     borderRadius: BorderRadius.circular(25),
                     color: const Color.fromRGBO(196, 114, 137, 0.8)
                   ),
-                  height: 180,
+                  height: 200,
                   width: double.infinity,
                   child: Column(
                     children: [
@@ -112,8 +113,32 @@ class _ProfileplaningSubcribtionState extends State<ProfileplaningSubcribtion> w
                       ),
                       SizedBox(height: 20,),
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          FirstElementPlaning(onTap:widget.setOpen)
+                          FirstElementPlaning(
+                            color: Colors.amber,
+                            scaleView: 1,
+                            onTap:(_)async{
+                            print(widget.controller.offset);
+                            await widget.controller.animateTo(300, duration: Duration(milliseconds: 300), curve: Curves.linear);
+                            widget.setOpen(1);
+                          }),
+                          FirstElementPlaning(
+                            color: Colors.amber,
+                            scaleView: 1.3,
+                            onTap:(_)async{
+                            print(widget.controller.offset);
+                            await widget.controller.animateTo(300, duration: Duration(milliseconds: 300), curve: Curves.linear);
+                            widget.setOpen(2);
+                          }),
+                          FirstElementPlaning(
+                            color: Colors.amber,
+                            scaleView: 1,
+                            onTap:(_)async{
+                            print(widget.controller.offset);
+                            await widget.controller.animateTo(300, duration: Duration(milliseconds: 300), curve: Curves.linear);
+                            widget.setOpen(3);
+                          }),
                         ],
                       )
                     ],

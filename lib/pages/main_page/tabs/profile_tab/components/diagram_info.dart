@@ -3,98 +3,195 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gnom/pages/main_page/tabs/profile_tab/components/plaining_subcribtion/animations_planings.dart';
+import 'package:gnom/pages/main_page/tabs/profile_tab/components/profile_requests_diagramm.dart';
 import 'package:gnom/store/user_store.dart';
 
-class ProfileRequestsDiagramm extends StatefulWidget {
+class DiagramInfo extends StatefulWidget {
+  final Function() close;
+  final int openTypeIndex;
   final RequestsCount requestsCount;
-  final Function() setOpen;
-  const ProfileRequestsDiagramm({super.key,required this.requestsCount,required this.setOpen});
+  const DiagramInfo({super.key,required this.close,required this.openTypeIndex,required this.requestsCount});
 
   @override
-  State<ProfileRequestsDiagramm> createState() => _ProfileRequestsDiagrammState();
+  State<DiagramInfo> createState() => _DiagramInfoState();
 }
 
-class _ProfileRequestsDiagrammState extends State<ProfileRequestsDiagramm> with TickerProviderStateMixin {
+class _DiagramInfoState extends State<DiagramInfo> with SingleTickerProviderStateMixin {
 
-  late final AnimationController _opacityController;
-  late final AnimationController _scaleController;
-  late final Animation<double> _opacityAnimation;
-  late final Animation<double> _scaleAnimation;
 
-  //mockked
+  late int maxValue;
   List<int> req=[];
+  double currentHeight=0;
 
-  int maxValue=0;
+  late final AnimationController _scaleController;
+  late Animation<double> _scaleAnimation;
+  get _height => MediaQuery.of(context).size.height;
 
   @override
   void initState() {
-    _opacityController=AnimationController(
-    vsync: this,
-    duration: Duration(milliseconds: 300)
-   );
-   _scaleController=AnimationController(
-    vsync: this,
-    duration: Duration(milliseconds: 400)
-   );
-   _opacityAnimation=Tween<double>(begin: 0.2,end: 1).animate(_opacityController);
-   _scaleAnimation=Tween<double>(begin: 0.2,end: 1).animate(_scaleController);
-   _scaleController.forward();
-   _opacityController.forward();
-     maxValue = widget.requestsCount.maxValue;
+    _scaleController=AnimationController(vsync: this,duration: Duration(milliseconds: 300));
+    _scaleAnimation=Tween<double>(begin: 0,end: 1).animate(_scaleController);
+    _scaleController.forward();
+    maxValue=widget.requestsCount.maxValue;
      req.add(widget.requestsCount.math);
      req.add(widget.requestsCount.referre);
      req.add(widget.requestsCount.essay);
      req.add(widget.requestsCount.presentation);
      req.add(widget.requestsCount.reduction);
      req.add(widget.requestsCount.paraphrase);
+     WidgetsBinding.instance.addPostFrameCallback((_){
+      setState(() {
+        currentHeight=_height;
+      });
+     });
     super.initState();
   }
 
   @override
   void dispose() {
     _scaleController.dispose();
-    _opacityController.dispose();
     super.dispose();
   }
 
-
-  Color interpolateColor(double value) {
-  if (value < 0) {
-    value = 0;
-  } else if (value > maxValue) {
-    value = maxValue.toDouble();
-  }
-
-  double normalizedValue = value / maxValue;
-  double red = 255 *(1-normalizedValue);
-  double green = 255 *(normalizedValue);
-  
-  double blue = 0;
-  return Color.fromRGBO(red.toInt(), green.toInt(), blue.toInt(),1);
-}
-
-
   @override
   Widget build(BuildContext context) {
-    print(maxValue);
-    return GestureDetector(
-      onTap: widget.setOpen,
-      child: AnimatedBuilder(
-        animation: _scaleAnimation,
-        builder: (context, child) {
-          return Transform.scale(
-            scale: _scaleAnimation.value,
+    print("start");
+    return SizedBox(
+      height:_height,
+      width: MediaQuery.of(context).size.width,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Positioned.fill(
+            child: GestureDetector(
+              onTap: () {
+                print("object");
+                widget.close();
+              },
+              onVerticalDragUpdate: (details) {
+                
+              },
+              child: ColoredBox(
+                color: Color.fromARGB(113, 0, 0, 0),
+              ),
+            ),
+          ),
+          Positioned(
+            top: 150,
+            left: 20,
+            right: 20,
             child: AnimatedBuilder(
-              animation: _opacityAnimation,
+              animation: _scaleAnimation,
               builder: (context,_) {
-                return Opacity(
-                  opacity: _opacityAnimation.value,
-                  child: Container(
+                return Transform.scale(
+                  scale: _scaleAnimation.value,
+                  child: Opacity(
+                    opacity: _scaleAnimation.value,
+                    child: SizedBox(
+                      height:currentHeight,
+                      child: Column(
+                          children: [
+                           miniDiagram(req),
+                           SizedBox(height: 10,),
+                           Container(
+                            alignment: Alignment.center,
+                            width: MediaQuery.of(context).size.width-80,
+                            padding: EdgeInsets.symmetric(horizontal: 10,vertical: 5),
+                            decoration: BoxDecoration(
+                              color: Color.fromARGB(204, 194, 145, 159),
+                              borderRadius: BorderRadius.circular(25)
+                            ),
+                            child: Column(
+                              children: [
+                                punkt("Генерация картинки",1),
+                                punkt("Сочинение",2),
+                                punkt("Презентация",3),
+                                punkt("Дай совет",4),
+                                punkt("Сокращение",5),
+                                punkt("Реферат",6),
+                                punkt("Математика",7),
+                                punkt("Перефразирование",8)
+                              ],
+                            ),
+                           )
+                          ],
+                        ),
+                    ),
+                  ),
+                );
+              }
+            ),
+          ),
+          
+          // Positioned(
+          //   bottom: 86,
+          //   left: 20,
+          //   child: FirstElementPlaning(onTap: (_){},)
+          // )
+        ],
+      ),
+    );
+  }
+
+  
+
+  Widget punkt(String title,int number){
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 0),
+      child: SizedBox(
+        child: Row(
+          children: [
+            Container(
+              margin: EdgeInsets.symmetric(vertical: 2),
+              width: 30,
+              height: 30,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                border: Border.all(
+                  color: const Color.fromRGBO(254, 222,181, 1),
+                  width: 4
+                )
+              ),
+              child: Align(
+                alignment: Alignment.center,
+                child: Text(
+                  (number).toString(),
+                  style: TextStyle(
+                    fontFamily: "NoirPro",
+                    color: Colors.white,
+                    height: 1,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14
+                  ),
+                )
+              ),
+          ),
+          SizedBox(width: 10,),
+          Text(
+                  title,
+                  style: TextStyle(
+                    fontFamily: "NoirPro",
+                    color: Colors.white,
+                    height: 1,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14
+                  ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+
+  Widget miniDiagram(List<int> req){
+    return Container(
                     padding: EdgeInsets.symmetric(horizontal: 10),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(25),
-                      color: const Color.fromRGBO(196, 114, 137, 0.8)
+                      color: Color.fromARGB(204, 194, 145, 159)
                     ),
                     height: 200,
                     width: double.infinity,
@@ -194,113 +291,20 @@ class _ProfileRequestsDiagrammState extends State<ProfileRequestsDiagramm> with 
                         SizedBox(height: 20,)
                       ],
                     )
-                  ),
-                );
-              }
-            ),
-            );
-        },
-        
-      ),
-    );
+                  );
   }
+  Color interpolateColor(double value) {
+      if (value < 0) {
+        value = 0;
+      } else if (value > maxValue) {
+        value = maxValue.toDouble();
+      }
 
-
-
-  Widget diagrammRequests(double percent){
-    return Container(
-      width: 100,
-      height: 100,
-      margin: EdgeInsets.only(bottom: 10),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(50),
-        gradient: LinearGradient(colors: [Colors.yellow,Colors.red],transform: GradientRotation(pi/4))
-      ),
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          SizedBox(
-            width: 60,
-            height: 60,
-            child: CustomPaint(
-              painter: ArcPainter(percent:percent),
-            ),
-          ),
-           Container(
-          width: 80,
-          height: 80,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(40),
-            color: Color.fromARGB(255, 196, 114, 137)
-          ),
-        ),
-        ],
-        
-      ),
-    );
-  }
-}
-
-class ArcPainter extends CustomPainter {
-  late double percent;
-  double startAngle=0;
-  double endAngle=0;
-  ArcPainter({required double percent}){
-    endAngle=percent*360;
-    startAngle=270-percent*360;
-  }
-  double radius = 50;
-  Color color = Color.fromARGB(255, 94, 94, 94);
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = color
-      ..style = PaintingStyle.fill;
-
-    final path = Path()
-      ..moveTo(size.width / 2, size.height / 2)
-      ..arcTo(
-          Rect.fromCircle(
-              center: Offset(size.width / 2, size.height / 2),
-              radius: radius),
-          startAngle / 360 * 2 * pi,
-          endAngle / 360 * 2 * pi,
-          false);
-
-    canvas.drawPath(path, paint);
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) => true;
-}
-
-
-
-
-class EquilateralTrianglePainter extends CustomPainter {
-  final Color color;
-  final bool reverse;
-  EquilateralTrianglePainter({required this.color,required this.reverse});
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()..color = color;
-
-    final path = Path();
-    if(reverse){
-      path.moveTo(0, size.height); // Перевернутая вершина
-      path.lineTo(size.width / 2, size.height);
-      path.lineTo(size.width, size.height);
-    }else{
-      path.moveTo(size.width / 2, 0);
-      path.lineTo(0, size.height);
-      path.lineTo(size.width, size.height);
-      path.close();
+      double normalizedValue = value / maxValue;
+      double red = 255 *(1-normalizedValue);
+      double green = 255 *(normalizedValue);
+      
+      double blue = 0;
+      return Color.fromRGBO(red.toInt(), green.toInt(), blue.toInt(),1);
     }
-    
-
-    canvas.drawPath(path, paint);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }

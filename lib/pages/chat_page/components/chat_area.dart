@@ -34,7 +34,7 @@ class _ChatPageChatAreaState extends State<ChatPageChatArea> {
   Widget messageItem(Message message){
 
     if(message.sender=="bot"){
-      return BotMessage(message: message,type:widget.type);
+      return BotMessage(message: message,type:widget.type.name);
     }else{
       return ClientMessage(message: message);
     }

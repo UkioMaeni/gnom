@@ -6,7 +6,7 @@ import 'package:gnom/db/sql_lite.dart';
 import 'package:gnom/http/subjects.dart';
 import 'package:gnom/http/user.dart';
 import 'package:gnom/pages/chat_page/chat_page.dart';
-import 'package:gnom/pages/main_page/tabs/history_tab.dart';
+import 'package:gnom/pages/main_page/tabs/history_tab/history_tab.dart';
 import 'package:gnom/pages/push/push_page.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mobx/mobx.dart';
@@ -65,19 +65,22 @@ abstract class _ChatStore with Store {
             final messBot=Message(id: messageId,status: "send",text: "Запрос отправлен, ожидайте",sender: "bot",fileBuffer: null);
             chats[chatType.name]!.add(messBot);
             instanceDb.addMessage(SubjectTypedMessage(message: messBot, subjectType: chatType.name));
-            history.add(HistoryModel(icon: SizedBox.shrink(),progress: "process",theme: requiredComplete[chatType.name]!.message!.text,type: "math",favorite: false,messageId:requiredComplete[chatType.name]!.message!.id));
+            history.add(HistoryModel(icon: SizedBox.shrink(),progress: "process",theme: requiredComplete[chatType.name]!.message!.text,type:chatType.name ,favorite: false,messageId:requiredComplete[chatType.name]!.message!.id,answer: "",answerMessageId: ""));
             history=ObservableList.of(history);
             chats=ObservableMap.of(chats);
             final result= await SubjectsHttp().sendRequest(formData);
+            final messageBotId=Uuid().v4();
             if(result!=null){  
-              if(result.isEmpty){
-                final messBot=Message(id: messageId,status: "send",text: "Запрос требует временени на обработку.следите за уведомлениями",sender: "bot",fileBuffer: null);
+              if(result.long==true){
+                final messBot=Message(id: messageBotId,status: "send",text: "Запрос требует временени на обработку.следите за уведомлениями",sender: "bot",fileBuffer: null);
                 chats[chatType.name]!.add(messBot);
                 instanceDb.addMessage(SubjectTypedMessage(message: messBot, subjectType: chatType.name));
               }else{
-                final messBot=Message(id: messageId,status: "send",text:"Ответ:\n"+ result,sender: "bot",fileBuffer: null);
+                final messBot=Message(id: messageBotId,status: "send",text:"Ответ:\n"+ result.result,sender: "bot",fileBuffer: null);
+                updateStatusHistory(result.messageId,result.result,messageBotId);
                 chats[chatType.name]!.add(messBot);
                 instanceDb.addMessage(SubjectTypedMessage(message: messBot, subjectType: chatType.name));
+                
               }
               chats=ObservableMap.of(chats);
               
@@ -133,7 +136,16 @@ abstract class _ChatStore with Store {
     
     if(result.isNotEmpty){
       for(var element in result){
+        print(element.message.id);
+        print("////");
         chats[element.subjectType]!.add(element.message);
+        for(var h in history){
+          if(h.messageId==element.message.id){
+            h.progress="completed";
+            print(h.messageId);
+          }
+        }
+        history=ObservableList.of(history);
         instanceDb.addMessage(element);
       }
     }
@@ -150,7 +162,11 @@ abstract class _ChatStore with Store {
    pushs=ObservableList.of(pushs);
    chats=ObservableMap.of(chats);
   }
-
+  @action
+  addHistoryFromDb()async{
+   final historyes=await instanceDb.getHistory();
+   history=ObservableList.of(historyes);
+  }
   addMessageFromNotify(String messageType){
     if(messageType=="unread"){
       return checkUnread();
@@ -194,18 +210,29 @@ abstract class _ChatStore with Store {
   ]);
   @observable
   ObservableList<HistoryModel> history=ObservableList<HistoryModel>.of([
-    
+
   ]);
 
+
+
   @action
-  updateStatusHistory(List<String> ids){
-    for(var id in ids){
-      history.firstWhere((element) => element.messageId==id).progress="completed";
-    }
-    
+  updateStatusHistory(String id,String answer,String answerMessageId )async{
+    var historyModel= history.firstWhere((element) => element.messageId==id);
+    historyModel.progress="completed";
+    historyModel.answer=answer;
+    historyModel.answerMessageId=answerMessageId;
+    await instanceDb.addHistory(historyModel);
     history=ObservableList.of(history);
   }
-
+  @action
+  Future<void> updateFavoriteHistory(String id)async{
+     var historyModel = history.firstWhere((element) => element.messageId==id);
+     historyModel.favorite=!historyModel.favorite;
+     bool currentValue=historyModel.favorite;
+     print(currentValue);
+    await  instanceDb.updateHistoryFavorite(id,currentValue);
+    history=ObservableList.of(history);
+  }
   getPush(){
 
   }

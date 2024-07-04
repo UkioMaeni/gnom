@@ -9,11 +9,13 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gnom/pages/auth_page/auth_page.dart';
 import 'package:gnom/pages/main_page/tabs/profile_tab/components/auth.dart';
+import 'package:gnom/pages/main_page/tabs/profile_tab/components/diagram_info.dart';
 import 'package:gnom/pages/main_page/tabs/profile_tab/components/plaining_subcribtion/plaining_subcribtion.dart';
 import 'package:gnom/pages/main_page/tabs/profile_tab/components/plane_info.dart';
 import 'package:gnom/pages/main_page/tabs/profile_tab/components/profile_list_friends.dart';
 import 'package:gnom/pages/main_page/tabs/profile_tab/components/profile_requests_count.dart';
 import 'package:gnom/pages/main_page/tabs/profile_tab/components/profile_requests_diagramm.dart';
+import 'package:gnom/pages/setting_page/setting_page.dart';
 import 'package:gnom/store/user_store.dart';
 
 class ProfileTab extends StatefulWidget {
@@ -47,7 +49,7 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
   }
  startGnomAnimation(){
      _gnomController=AnimationController(
-      duration: const Duration(seconds: 4),
+      duration: const Duration(milliseconds: 1000),
       vsync: this,
     );
     _gnom = CurvedAnimation(
@@ -79,18 +81,25 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
     super.initState();
   }
 
+  final ScrollController _scrollController = ScrollController();
+
   @override
   void dispose() {
     _gnomController.dispose();
     _opacityController.dispose();
     _opacityRequestController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
-  bool isOpen=false;
-  setOpen(bool value){
+  bool isOpenDiagram=false;
+
+
+
+  int openTypeIndex=0;
+  setOpen(int index){
     setState(() {
-      isOpen=value;
+      openTypeIndex=index;
     });
   }
   @override
@@ -98,7 +107,7 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
     double width=MediaQuery.of(context).size.width;
     double height=MediaQuery.of(context).size.height;
     return Padding(
-      padding:  EdgeInsets.only(top: MediaQuery.of(context).padding.top+10,left: 20,right: 20),
+      padding:  EdgeInsets.only(top: 0,left: 0,right: 0),
       child: Observer(
         builder: (context) {
 
@@ -111,65 +120,110 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
           }
           return Stack(
             children: [
-              SingleChildScrollView(
-                child:  Column(
-                    children: [
-                      if(!isGuest)gnomTransform(),
-                      if(!isGuest)SizedBox(height: 6,),
-                      if(!isGuest)userName(),
-                      SizedBox(height: 20,),
-                      ProfileRequestCount(requestsCount:requestsCount),
-                      if(!isGuest)SizedBox(height: 20,),
-                      if(!isGuest)ProfileListFriends(),
-                      SizedBox(height: 20,),
-                      ProfileRequestsDiagramm(requestsCount:requestsCount),
-                      if(!isGuest)SizedBox(height: 20,),
-                      if(!isGuest)ProfileplaningSubcribtion(requestsCount:requestsCount,setOpen:setOpen),
-                      // SizedBox(height: 20,),
-                      // planing()
-                      if(isGuest)Padding(
-                          padding: const EdgeInsets.only(top: 50),
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => AuthPage(),));
-                            },
-                            child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                SizedBox(
-                                  height: 45,
-                                  width: 45,
-                                  child: SvgPicture.asset("assets/svg/exit.svg",color: Color.fromRGBO(254, 222,181, 1),)
-                                ),
-                                Text(
-                                  " Войти",
-                                  style: TextStyle(
-                                    fontFamily: "NoirPro",
-                                    color: Colors.white,
-                                    height: 1,
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 25
+              Padding(
+                padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top+10,left: 20,right: 20),
+                child: NotificationListener<ScrollNotification>(
+                  onNotification: (scrollNotification) {
+                    
+                    if (scrollNotification is ScrollEndNotification &&
+                      scrollNotification.depth == 0) {
+                    return true;
+                  }
+                  
+                    return true;
+                  },
+                  child: SingleChildScrollView(
+                    controller: _scrollController,
+                    
+                    physics: ClampingScrollPhysics(),
+                    child:  Column(
+                        children: [
+                          if(!isGuest)gnomTransform(),
+                          if(!isGuest)SizedBox(height: 6,),
+                          if(!isGuest)userName(),
+                          SizedBox(height: 20,),
+                          ProfileRequestCount(requestsCount:requestsCount),
+                          if(!isGuest)SizedBox(height: 20,),
+                          if(!isGuest)ProfileListFriends(),
+                          SizedBox(height: 20,),
+                          ProfileRequestsDiagramm(requestsCount:requestsCount,setOpen:(){
+                            setState(() {
+                              isOpenDiagram=true;
+                            });
+                          }),
+                          if(!isGuest)SizedBox(height: 20,),
+                          if(!isGuest)ProfileplaningSubcribtion(requestsCount:requestsCount,setOpen:setOpen,controller: _scrollController,),
+                          SizedBox(height: 40,),
+                          // SizedBox(height: 20,),
+                          // planing()
+                          if(isGuest)Padding(
+                              padding: const EdgeInsets.only(top: 50),
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => AuthPage(),));
+                                },
+                                child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    SizedBox(
+                                      height: 45,
+                                      width: 45,
+                                      child: SvgPicture.asset("assets/svg/exit.svg",color: Color.fromRGBO(254, 222,181, 1),)
+                                    ),
+                                    Text(
+                                      " Войти",
+                                      style: TextStyle(
+                                        fontFamily: "NoirPro",
+                                        color: Colors.white,
+                                        height: 1,
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 25
+                                      ),
                                   ),
+                                  
+                                  ],
+                                ),
                               ),
-                              
-                              ],
                             ),
-                          ),
-                        ),
-                    ],
+                        ],
+                      ),
+                    
                   ),
-                
+                ),
               ),
-              if(isOpen)
+              if(openTypeIndex!=0)
                Positioned.fill(
                 child: BackdropFilter(
                   filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
                   child: Center(
-                    child: PlaneInfo(setOpen:setOpen)
+                    child: PlaneInfo(
+                      openTypeIndex:openTypeIndex,
+                      setOpen:(_){
+                      setState(() {
+                        openTypeIndex=0;
+                      });
+                    })
                   ),
                 ),
               ),
+              if(isOpenDiagram)
+              Positioned.fill(
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                  child: Center(
+                    child: DiagramInfo(
+                      requestsCount: requestsCount,
+                      openTypeIndex:openTypeIndex,
+                      close: (){
+                        setState(() {
+                          isOpenDiagram=false;
+                        });
+                      }
+                    )
+                  ),
+                ),
+              )
             ],
           );
         }
@@ -401,34 +455,64 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
 
 
   Widget gnomTransform(){
-    return AnimatedBuilder(
-      animation: _gnomController,
-      builder: (context,_) {
-        return Transform.rotate(
-          angle: pi/2-(_gnom.value*pi/2),
-          
-          child: Transform.scale(
-            scale: _gnom.value,
-            child: Stack(
-              alignment: Alignment.bottomCenter,
-              children: [
-                 SizedBox(
-                    height: 120,
-                    width: 120,
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 255, 254, 254),
-                        borderRadius: BorderRadius.circular(125)
-                      ),
-                    ),
-                  ),
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Align(),
+        Padding(
+          padding: const EdgeInsets.only(top: 10),
+          child: AnimatedBuilder(
+            animation: _gnomController,
+            builder: (context,_) {
+              return Transform.rotate(
+                angle: -pi/2+pi/4+(_gnom.value*pi/4),
                 
-                Image.asset("assets/png/gnome_sticker.png",height: 120,)
-              ],
-            ),
+                child: Transform.scale(
+                  scale: _gnom.value,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      
+                       SizedBox(
+                          height: 120,
+                          width: 120,
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(
+                              color: const Color.fromARGB(255, 255, 254, 254),
+                              borderRadius: BorderRadius.circular(125)
+                            ),
+                          ),
+                        ),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(125),
+                        child: Image.asset("assets/png/gnome_profile.jpg",height: 118,width: 118,)
+                      ),
+                      
+                    ],
+                  ),
+                ),
+              );
+            }
           ),
-        );
-      }
+        ),
+        
+        Positioned(
+          right: 10,
+          top: 5,
+          child: GestureDetector(
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => SettingPage(),));
+            },
+            child: SizedBox(
+              height: 40,
+              width: 40,
+              child: SvgPicture.asset("assets/svg/setting.svg",color: Colors.white,),
+            ),
+          )
+        )
+      ],
     );
   }
 }
+
+

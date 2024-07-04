@@ -13,7 +13,7 @@ class SubjectsHttp{
     dio.interceptors.add(AuthInterceptor(dio));
   }          
 
-  Future<String?> sendRequest(FormData formData)async{
+  Future<SubjectRequestInfo?> sendRequest(FormData formData)async{
     try {
       Response response=await dio.post(
         "${httpConfig.baseUrl}/subject",
@@ -22,12 +22,22 @@ class SubjectsHttp{
       final data=response.data;
       
       print(data);
-      if(data["result"]==null){
-        return "";
+      if(data!=null){
+        SubjectRequestInfo info=SubjectRequestInfo(messageId: "", result: "", long: false);
+        if(data["result"]==null){
+          info.long=true;
+        }else{
+          info.result=data["result"];
+        }
+        if(data["messageId"]!=null){
+          info.messageId=data["messageId"];
+        }
+        return info;
       }
-      String messageId=data["messageId"];
-      chatStore.updateStatusHistory([messageId]);
-      return data["result"];
+
+      
+      
+      return null;
     } catch (e) {
       print(e);
       return null;
@@ -112,3 +122,14 @@ class Profile{
   });
 }
 
+
+class SubjectRequestInfo{
+  String result;
+  String messageId;
+  bool long;
+  SubjectRequestInfo({
+    required this.messageId,
+    required this.result,
+    required this.long
+  });
+}

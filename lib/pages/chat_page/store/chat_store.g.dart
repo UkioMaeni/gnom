@@ -87,6 +87,14 @@ mixin _$ChatStore on _ChatStore, Store {
     return _$addMessageFromDbAsyncAction.run(() => super.addMessageFromDb());
   }
 
+  late final _$addHistoryFromDbAsyncAction =
+      AsyncAction('_ChatStore.addHistoryFromDb', context: context);
+
+  @override
+  Future addHistoryFromDb() {
+    return _$addHistoryFromDbAsyncAction.run(() => super.addHistoryFromDb());
+  }
+
   late final _$updateStatusForDownloadFileAsyncAction =
       AsyncAction('_ChatStore.updateStatusForDownloadFile', context: context);
 
@@ -97,18 +105,22 @@ mixin _$ChatStore on _ChatStore, Store {
         .run(() => super.updateStatusForDownloadFile(id, pathFile, type));
   }
 
-  late final _$_ChatStoreActionController =
-      ActionController(name: '_ChatStore', context: context);
+  late final _$updateStatusHistoryAsyncAction =
+      AsyncAction('_ChatStore.updateStatusHistory', context: context);
 
   @override
-  dynamic updateStatusHistory(List<String> ids) {
-    final _$actionInfo = _$_ChatStoreActionController.startAction(
-        name: '_ChatStore.updateStatusHistory');
-    try {
-      return super.updateStatusHistory(ids);
-    } finally {
-      _$_ChatStoreActionController.endAction(_$actionInfo);
-    }
+  Future updateStatusHistory(String id, String answer, String answerMessageId) {
+    return _$updateStatusHistoryAsyncAction
+        .run(() => super.updateStatusHistory(id, answer, answerMessageId));
+  }
+
+  late final _$updateFavoriteHistoryAsyncAction =
+      AsyncAction('_ChatStore.updateFavoriteHistory', context: context);
+
+  @override
+  Future<void> updateFavoriteHistory(String id) {
+    return _$updateFavoriteHistoryAsyncAction
+        .run(() => super.updateFavoriteHistory(id));
   }
 
   @override

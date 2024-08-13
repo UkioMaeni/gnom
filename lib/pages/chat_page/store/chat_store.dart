@@ -29,6 +29,7 @@ abstract class _ChatStore with Store {
     EChatPageType.reduce.name:[],
     EChatPageType.parafrase.name:[],
     EChatPageType.sovet.name:[],
+    EChatPageType.generation.name:[],
   });
   @observable
   ObservableMap<String,RequiredRequest> requiredComplete=ObservableMap<String,RequiredRequest>.of({
@@ -39,6 +40,7 @@ abstract class _ChatStore with Store {
     EChatPageType.reduce.name:RequiredRequest(required: false,message: null),
     EChatPageType.parafrase.name:RequiredRequest(required: false,message: null),
     EChatPageType.sovet.name:RequiredRequest(required: false,message: null),
+    EChatPageType.generation.name:RequiredRequest(required: false,message: null),
   });
   
   @action
@@ -64,10 +66,13 @@ abstract class _ChatStore with Store {
             }
             final messBot=Message(id: messageId,status: "send",text: "Запрос отправлен, ожидайте",sender: "bot",fileBuffer: null);
             chats[chatType.name]!.add(messBot);
+            
             instanceDb.addMessage(SubjectTypedMessage(message: messBot, subjectType: chatType.name));
-            history.add(HistoryModel(icon: SizedBox.shrink(),progress: "process",theme: requiredComplete[chatType.name]!.message!.text,type:chatType.name ,favorite: false,messageId:requiredComplete[chatType.name]!.message!.id,answer: "",answerMessageId: ""));
+            history.add(HistoryModel(fileBuffer: requiredComplete[chatType.name]!.message!.fileBuffer, icon: SizedBox.shrink(),progress: "process",theme: requiredComplete[chatType.name]!.message!.text,type:chatType.name ,favorite: false,messageId:requiredComplete[chatType.name]!.message!.id,answer: "",answerMessageId: "",));
             history=ObservableList.of(history);
             chats=ObservableMap.of(chats);
+            requiredComplete[chatType.name]!.required=false;
+            requiredComplete=ObservableMap.of(requiredComplete);
             final result= await SubjectsHttp().sendRequest(formData);
             final messageBotId=Uuid().v4();
             if(result!=null){  
@@ -142,6 +147,7 @@ abstract class _ChatStore with Store {
         for(var h in history){
           if(h.messageId==element.message.id){
             h.progress="completed";
+            h.answerBuffer=element.message.fileBuffer;
             print(h.messageId);
           }
         }
@@ -236,6 +242,18 @@ abstract class _ChatStore with Store {
   getPush(){
 
   }
+  Message? searchMessage(String messageId,String type){
+      if(chats[type]!=null){
+        for (var element in chats[type]!) {
+          if(element.id==messageId){
+            return element;
+          }
+        }
+      }else{
+        return null;
+      }
+      return null;
+  }
 }
 
 ChatStore chatStore = ChatStore();
@@ -251,6 +269,7 @@ class Message{
   Uint8List? fileBuffer;
   String? name;
   String? link;
+  String? reply;
   Message({
     required this.id,
     required this.status,
@@ -258,7 +277,8 @@ class Message{
     required this.sender,
     required this.fileBuffer,
     this.name,
-    this.link
+    this.link,
+    this.reply
   });
 
   Map<String,dynamic> toMap(){

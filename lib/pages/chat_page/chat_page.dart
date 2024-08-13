@@ -6,12 +6,13 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:gnom/http/guest.dart';
 import 'package:gnom/pages/chat_page/components/chat_area.dart';
 import 'package:gnom/pages/chat_page/store/chat_store.dart';
 import 'package:image_picker/image_picker.dart';
 enum EChatPageType{
-  math,parafrase,referat,essay,presentation,reduce,sovet
+  math,parafrase,referat,essay,presentation,reduce,sovet,generation
 }
 
 
@@ -114,7 +115,9 @@ void attachment()async{
                   child: ChatPageChatArea(type: widget.type,)
                 ),
                 SizedBox(height: 10,),
-                Row(
+                Observer(builder: (context) {
+                  if(chatStore.requiredComplete[widget.type.name]!.required)
+                  return Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     GestureDetector(
@@ -165,7 +168,10 @@ void attachment()async{
                       ),
                     )
                   ],
-                ),
+                );
+                return SizedBox();
+                },),
+                
                 SizedBox(height: 10,),
                 textField(),
                 const SizedBox(height: 20,)

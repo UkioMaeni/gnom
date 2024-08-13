@@ -1,6 +1,8 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:gnom/http/fcm.dart';
 import 'package:gnom/http/user.dart';
 import 'package:gnom/pages/main_page/main_page.dart';
 import 'package:gnom/repositories/locale_storage.dart';
@@ -100,6 +102,11 @@ class _CodeSceneState extends State<CodeScene> {
       );
     }
 
+  initFirebase()async{
+    final apnsToken = await FirebaseMessaging.instance.getToken();
+    await FCMHttp().setFcmToken(apnsToken??"");
+  }
+
     Widget button(){
     return GestureDetector(
       onTap: () async{
@@ -108,7 +115,9 @@ class _CodeSceneState extends State<CodeScene> {
         localeStorage.saveRefreshUserToken(tokens.refresh);
         tokenRepo.accessUserToken=tokens.access;
         userStore.role="client";
+        
         Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => MainPage(),), (route) => false);
+        await initFirebase();
         userStore.getRequestsCount();
         userStore.requiredData();
        }

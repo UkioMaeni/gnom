@@ -24,7 +24,7 @@ class UserHttp{
       List<String> lastMessagesId=data.map<String>((e) => e["message_id"]??"none").toList();
       //chatStore.updateStatusHistory(lastMessagesId);
       print(lastMessagesId);
-      return data.map((element)=>SubjectTypedMessage(message: Message(id: id(), status: "", text: "",link: element["text"], sender: "bot", fileBuffer: null),subjectType: element["subject_type"])).toList();
+      return data.map((element)=>SubjectTypedMessage(message: Message(id: id(),reply: element["message_id"], status: "", text: "",link: element["text"], sender: "bot", fileBuffer: null),subjectType: element["subject_type"])).toList();
       
       
     } catch (e) {
@@ -68,6 +68,7 @@ class UserHttp{
   } 
   Future<Tokens?> refreshToken(String token)async{
     try {
+      dio.interceptors.clear();
       Response response=await dio.put(
         "${httpConfig.baseUrl}/user/refresh",
         data: {
@@ -124,7 +125,7 @@ class UserHttp{
         "${httpConfig.baseUrl}/user/requests_info",
       );
       final data=response.data;
-      RequestsCount requestsCount=RequestsCount(essay: data["essay"], math: data["math"], paraphrase: data["paraphrase"], presentation: data["presentation"], reduction: data["reduction"], referre: data["referre"]);
+      RequestsCount requestsCount=RequestsCount(essay: data["essay"], math: data["math"], paraphrase: data["paraphrase"], presentation: data["presentation"], reduction: data["reduction"], referre: data["referre"],sovet: data["sovet"],generation: data["generation"]);
       print(response);
       return requestsCount;
     } catch (e) {

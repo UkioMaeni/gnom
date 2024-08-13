@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gnom/core/localization/localization_bloc.dart';
 
 class FirstElementPlaning extends StatefulWidget {
   final Function(int) onTap;
@@ -77,25 +79,30 @@ class _FirstElementPlaningState extends State<FirstElementPlaning> with SingleTi
                                 Text(
                                   "\u20BD",
                                   style: TextStyle(
-                                    fontFamily: "NoirPro",
+                                    
                                     color: Colors.white,
                                     height: 1,
                                     fontWeight: FontWeight.w700,
-                                    fontSize: 25
+                                    fontSize: 18
                                   ),
                                 ),
                               ],
                             ),
-                            Text(
-                                  "МЕСЯЦ",
-                                  style: TextStyle(
-                                    fontFamily: "NoirPro",
-                                    color: Colors.white,
-                                    height: 1,
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 10
-                                  ),
-                                ),
+                            Builder(
+                              builder: (context) {
+                                final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
+                                return Text(
+                                      state.locale.month,
+                                      style: TextStyle(
+                                        fontFamily: "NoirPro",
+                                        color: Colors.white,
+                                        height: 1,
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 10
+                                      ),
+                                    );
+                              }
+                            ),
                           ],
                         ),
                       ),

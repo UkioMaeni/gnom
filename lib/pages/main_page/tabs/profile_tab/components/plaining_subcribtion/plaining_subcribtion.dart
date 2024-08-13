@@ -3,7 +3,9 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gnom/core/localization/localization_bloc.dart';
 import 'package:gnom/pages/main_page/tabs/profile_tab/components/plaining_subcribtion/animations_planings.dart';
 import 'package:gnom/store/user_store.dart';
 
@@ -101,15 +103,20 @@ class _ProfileplaningSubcribtionState extends State<ProfileplaningSubcribtion> w
                   child: Column(
                     children: [
                       SizedBox(height: 10,),
-                      Text(
-                        "ПЛАН ПОДПИСОК",
-                        style: TextStyle(
-                          fontFamily: "NoirPro",
-                          color: Color.fromRGBO(254, 222,181, 1),
-                          height: 1,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 25
-                        ),
+                      Builder(
+                        builder: (context) {
+                          final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
+                          return Text(
+                            state.locale.subscriptionPlan,
+                            style: TextStyle(
+                              fontFamily: "NoirPro",
+                              color: Color.fromRGBO(254, 222,181, 1),
+                              height: 1,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 25
+                            ),
+                          );
+                        }
                       ),
                       SizedBox(height: 20,),
                       Row(

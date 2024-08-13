@@ -1,6 +1,9 @@
 import 'dart:math';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gnom/core/localization/custom_localization.dart';
+import 'package:gnom/core/localization/localization_bloc.dart';
 import 'package:gnom/db/sql_lite.dart';
 import 'package:gnom/http/guest.dart';
 import 'package:gnom/http/user.dart';
@@ -81,7 +84,7 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin{
 
 
   void toLangPage(){
-    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LanguagePage(),), (route) => false);
+    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LanguagePage(initial: true,),), (route) => false);
   }
   void toMainPage(){
     Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => MainPage(),), (route) => false);
@@ -96,7 +99,16 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin{
     await instanceDb.createDB();
     
     if(locale!=null){
-      context.setLocale(locale);
+      if(locale.languageCode=="ru"){
+        context.read<LocalizationBloc>().add(LocalizationSetLocaleEvent(locale: RuLocale()));
+      }else if(locale.languageCode=="en"){
+        context.read<LocalizationBloc>().add(LocalizationSetLocaleEvent(locale: EnLocale()));
+      }else if(locale.languageCode=="ar"){
+        context.read<LocalizationBloc>().add(LocalizationSetLocaleEvent(locale: ArLocale()));
+      }else{
+        context.read<LocalizationBloc>().add(LocalizationSetLocaleEvent(locale: EnLocale()));
+      }
+
       toMainPage();
     }else{
       toLangPage();
@@ -110,7 +122,7 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin{
     print(tokenU);
     if(tokenU==null){
       String? tokenG=await tokenRepo.refreshGuestToken;
-     
+     print(tokenG);
       if(tokenG==null){
         String deviceId=await phoneInfo.getDeviceId();
         Tokens? tokens=await GuestHttp().auth(deviceId);
@@ -121,6 +133,7 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin{
           checkLanguage();
         }
       }else{
+        print("put refG");
         Tokens? tokens=await GuestHttp().refreshToken(tokenG);
         print(tokens);
         if(tokens==null){
@@ -141,6 +154,7 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin{
         await localeStorage.saveRefreshUserToken(tokens.refresh);
         userStore.role="client";
       }else{
+        await localeStorage.saveRefreshUserToken("");
         final tokenG =await localeStorage.refreshGuestToken;
         if(tokenG!=null){
           Tokens? tokens=await GuestHttp().refreshToken(tokenG);

@@ -55,6 +55,22 @@ mixin _$UserStore on _UserStore, Store {
     });
   }
 
+  late final _$_selectedIndexAtom =
+      Atom(name: '_UserStore._selectedIndex', context: context);
+
+  @override
+  int get _selectedIndex {
+    _$_selectedIndexAtom.reportRead();
+    return super._selectedIndex;
+  }
+
+  @override
+  set _selectedIndex(int value) {
+    _$_selectedIndexAtom.reportWrite(value, super._selectedIndex, () {
+      super._selectedIndex = value;
+    });
+  }
+
   late final _$getUserDataInfoAsyncAction =
       AsyncAction('_UserStore.getUserDataInfo', context: context);
 

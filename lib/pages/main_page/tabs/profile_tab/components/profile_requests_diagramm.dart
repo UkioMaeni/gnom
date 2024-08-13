@@ -48,6 +48,8 @@ class _ProfileRequestsDiagrammState extends State<ProfileRequestsDiagramm> with 
      req.add(widget.requestsCount.presentation);
      req.add(widget.requestsCount.reduction);
      req.add(widget.requestsCount.paraphrase);
+     req.add(widget.requestsCount.sovet);
+     req.add(widget.requestsCount.generation);
     super.initState();
   }
 
@@ -65,12 +67,13 @@ class _ProfileRequestsDiagrammState extends State<ProfileRequestsDiagramm> with 
   } else if (value > maxValue) {
     value = maxValue.toDouble();
   }
-
+//255,88,0
   double normalizedValue = value / maxValue;
-  double red = 255 *(1-normalizedValue);
-  double green = 255 *(normalizedValue);
-  
-  double blue = 0;
+  double red = 234+ (255-234)*(normalizedValue) ;
+  double green = 88+(213-88)*(1-normalizedValue);
+  double blue = 0+ 26*(1-normalizedValue);
+  Color.fromRGBO(234, 213, 26,1);
+  print(255);
   return Color.fromRGBO(red.toInt(), green.toInt(), blue.toInt(),1);
 }
 
@@ -130,17 +133,17 @@ class _ProfileRequestsDiagrammState extends State<ProfileRequestsDiagramm> with 
                                         
                                         
                                     Positioned(
-                                      top: 11,
+                                      top: 11+(80/maxValue)*(maxValue- req[i].clamp(6,2000).toDouble()),
                                       child: Container(
                                           width: 35,
-                                          height:(80/maxValue)*req[i],
+                                          height:(80/maxValue)*req[i].clamp(6,2000),
                                           decoration: BoxDecoration(
                                             color: interpolateColor(req[i].toDouble())
                                           ),
                                       ),
                                     ),
                                     Positioned(
-                                          top: 0.2,
+                                          top: 0.2+ (80/maxValue)*(maxValue- req[i].clamp(6,2000) .toDouble()),
                                           child: CustomPaint(
                                           painter: EquilateralTrianglePainter(color:interpolateColor(req[i].toDouble()),reverse:false),
                                           size: Size(35, 11),

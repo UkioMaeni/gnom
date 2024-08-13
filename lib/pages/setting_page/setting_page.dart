@@ -1,10 +1,16 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gnom/UIKit/UIChevron.dart';
 import 'package:gnom/core/app_localization.dart';
+import 'package:gnom/core/localization/localization_bloc.dart';
+import 'package:gnom/pages/chat_support_page/chat_support_page.dart';
+import 'package:gnom/pages/language_page/language_page.dart';
 import 'package:gnom/pages/main_page/main_page.dart';
 import 'package:gnom/repositories/locale_storage.dart';
+import 'package:gnom/repositories/token_repo.dart';
+import 'package:gnom/store/user_store.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
@@ -36,6 +42,11 @@ class _SettingPageState extends State<SettingPage> {
   void rightClick(){
     if(page>=AppLocalization.localeCount()-1) return;
     _pageController.animateToPage(page+1, duration: const Duration(milliseconds: 200), curve: Curves.linear);
+  }
+
+
+   void toLangPage(){
+    Navigator.push(context, MaterialPageRoute(builder: (context) => LanguagePage(initial: false,),));
   }
 
   int page=0;
@@ -88,41 +99,61 @@ class _SettingPageState extends State<SettingPage> {
                     SizedBox(
                       height: 200,
                     ),
-                    settingItem(
-                      icon: SvgPicture.asset("assets/svg/setting_user.svg",color: Color.fromRGBO(254, 222,181, 1),),
-                      title: "Смена пользователя",
-                      onTap: () {
+                    // settingItem(
+                    //   icon: SvgPicture.asset("assets/svg/setting_user.svg",color: Color.fromRGBO(254, 222,181, 1),),
+                    //   title: "Смена пользователя",
+                    //   onTap: () {
                         
-                      },
+                    //   },
+                    // ),
+                    //SizedBox(height: 30,),
+                    Builder(
+                      builder: (context) {
+                        
+                        final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
+                        
+                        return settingItem(
+                          icon: SvgPicture.asset("assets/svg/setting_sub.svg",color: Color.fromRGBO(254, 222,181, 1),),
+                          title:state.locale.subscriptions ,
+                          onTap: () {
+                            
+                          },
+                        );
+                      }
                     ),
                     SizedBox(height: 30,),
-                    settingItem(
-                      icon: SvgPicture.asset("assets/svg/setting_sub.svg",color: Color.fromRGBO(254, 222,181, 1),),
-                      title: "Подписки",
-                      onTap: () {
-                        
-                      },
+                    Builder(
+                      builder: (context) {
+                        final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
+                        return settingItem(
+                          icon: SvgPicture.asset("assets/svg/setting_lang.svg",color: Color.fromRGBO(254, 222,181, 1),),
+                          title: state.locale.language,
+                          onTap: toLangPage,
+                        );
+                      }
                     ),
                     SizedBox(height: 30,),
-                    settingItem(
-                      icon: SvgPicture.asset("assets/svg/setting_lang.svg",color: Color.fromRGBO(254, 222,181, 1),),
-                      title: "Смена языка",
-                      onTap: () {
-                        
-                      },
-                    ),
-                    SizedBox(height: 30,),
-                    settingItem(
-                      icon: SvgPicture.asset("assets/svg/setting_sup.svg",color: Color.fromRGBO(254, 222,181, 1),),
-                      title: "Чат с поддержкой",
-                      onTap: () {
-                        
-                      },
+                    Builder(
+                      builder: (context) {
+                        final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
+                        return settingItem(
+                          icon: SvgPicture.asset("assets/svg/setting_sup.svg",color: Color.fromRGBO(254, 222,181, 1),),
+                          title: state.locale.chatSupport,
+                          onTap: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => ChatSupportPage(title: "Поддержка"),));
+                          },
+                        );
+                      }
                     ),
                     SizedBox(height: 50,),
                     GestureDetector(
                               onTap: () {
-                                //Navigator.push(context, MaterialPageRoute(builder: (context) => AuthPage(),));
+                                localeStorage.saveRefreshUserToken("");
+                                tokenRepo.accessUserToken="";
+                                userStore.role="guest";
+                                userStore.selectedIndex=4;
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => MainPage(),));
+                                
                               },
                               child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -133,16 +164,21 @@ class _SettingPageState extends State<SettingPage> {
                                     width: 45,
                                     child: SvgPicture.asset("assets/svg/exit.svg",color: Color.fromRGBO(254, 222,181, 1),)
                                   ),
-                                  Text(
-                                    " Выйти",
-                                    style: TextStyle(
-                                      fontFamily: "NoirPro",
-                                      color: Colors.white,
-                                      height: 1,
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 25
-                                    ),
-                                ),
+                                  Builder(
+                                    builder: (context) {
+                                      final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
+                                      return Text(
+                                        " "+state.locale.logOut,
+                                        style: TextStyle(
+                                          fontFamily: "NoirPro",
+                                          color: Colors.white,
+                                          height: 1,
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 25
+                                        ),
+                                                                      );
+                                    }
+                                  ),
                                 
                                 ],
                               ),

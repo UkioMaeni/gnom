@@ -13,6 +13,16 @@ class HistoryInfo extends StatefulWidget {
 }
 
 class _HistoryInfoState extends State<HistoryInfo> {
+
+
+  Future<Message?> searchReply()async{
+    print("start");
+    final mess= chatStore.searchMessage(widget.model.reply??"",widget.model.type);
+    print(mess);
+    print("end");
+    return mess;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,7 +37,9 @@ class _HistoryInfoState extends State<HistoryInfo> {
               child: SizedBox(
                 width: MediaQuery.of(context).size.width,
                 child: Align(
-                  child: Column(
+                  
+                  child: ListView(
+                    
                     children: [
                       Text(
                             "Вопрос:",
@@ -42,8 +54,12 @@ class _HistoryInfoState extends State<HistoryInfo> {
                           ),
                      Builder(
                        builder: (context) {
+                        if(widget.model.fileBuffer!=null){
+                          return Image.memory(widget.model.fileBuffer!);
+                        }
                         Message mess= Message(id: widget.model.messageId, status: "", text: widget.model.theme, sender: "client", fileBuffer: null);
-                         return Align(child: ClientMessage(message: mess),alignment: Alignment.centerRight,);
+                        
+                         return ClientMessage(message: mess);
                        }
                      ),
                      Text(
@@ -57,10 +73,15 @@ class _HistoryInfoState extends State<HistoryInfo> {
                               color: Colors.white
                               ),
                           ),
+                          
                      Builder(
                        builder: (context) {
+                        if(widget.model.answerBuffer!=null){
+                          print("buffer");
+                          return Image.memory(widget.model.fileBuffer!);
+                        }
                         Message mess= Message(id: widget.model.messageId, status: "", text: widget.model.answer, sender: "client", fileBuffer: null);
-                         return BotMessage(message: mess,type: widget.model.type,);
+                         return Align(child: BotMessage(message: mess,type: widget.model.type,),alignment: Alignment.centerLeft,);
                        }
                      )
                     ],

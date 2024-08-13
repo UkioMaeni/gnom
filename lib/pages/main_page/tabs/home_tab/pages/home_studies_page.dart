@@ -17,13 +17,13 @@ class _HOMEStudiesPageState extends State<HOMEStudiesPage> {
 
 
   List<StudiesModel> stadies=[
-    StudiesModel(sub: "РЕЗУЛЬТАТ В ТЕЧЕНИЕ 20 СЕК.",title: "МАТЕМАТИКА",type: EChatPageType.math,icon: SizedBox.shrink()),
-    StudiesModel(sub: "РЕЗУЛЬТАТ В ТЕЧЕНИЕ 5 МИНУТ",title: "РЕФЕРАТ",type: EChatPageType.referat,icon: SizedBox.shrink()),
-    StudiesModel(sub: "РЕЗУЛЬТАТ В ТЕЧЕНИЕ 3 МИНУТ",title: "СОЧИНЕНИЕ",type: EChatPageType.essay,icon: SizedBox.shrink()),
-    StudiesModel(sub: "РЕЗУЛЬТАТ В ТЕЧЕНИЕ 5 МИНУТ.",title: "ПРЕЗЕНТАЦИЯ",type: EChatPageType.presentation,icon: SizedBox.shrink()),
-    StudiesModel(sub: "РЕЗУЛЬТАТ В ТЕЧЕНИЕ 30 СЕК.",title: "СОКРАЩЕНИЕ",type: EChatPageType.reduce,icon: SizedBox.shrink()),
-    StudiesModel(sub: "РЕЗУЛЬТАТ В ТЕЧЕНИЕ 30 СЕК.",title: "ПЕРЕФРАЗИРОВАНИЕ",type: EChatPageType.parafrase,icon: SizedBox.shrink()),
-    StudiesModel(sub: "РЕЗУЛЬТАТ В ТЕЧЕНИЕ 10 СЕК",title: "ДАЙ СОВЕТ",type: EChatPageType.sovet,icon: SizedBox.shrink()),
+    StudiesModel(sub: "РЕЗУЛЬТАТ В ТЕЧЕНИЕ 20 СЕК.",title: "МАТЕМАТИКА",type: EChatPageType.math,icon: SvgPicture.asset("assets/svg/math.svg",fit: BoxFit.contain,)),
+    StudiesModel(sub: "РЕЗУЛЬТАТ В ТЕЧЕНИЕ 5 МИНУТ",title: "РЕФЕРАТ",type: EChatPageType.referat,icon: Image.asset("assets/png/referer.png",fit: BoxFit.contain,)),
+    StudiesModel(sub: "РЕЗУЛЬТАТ В ТЕЧЕНИЕ 3 МИНУТ",title: "СОЧИНЕНИЕ",type: EChatPageType.essay,icon: Image.asset("assets/png/essay.png",fit: BoxFit.contain,)),
+    StudiesModel(sub: "РЕЗУЛЬТАТ В ТЕЧЕНИЕ 5 МИНУТ.",title: "ПРЕЗЕНТАЦИЯ",type: EChatPageType.presentation,icon: Image.asset("assets/png/presentation.png",fit: BoxFit.contain,)),
+    StudiesModel(sub: "РЕЗУЛЬТАТ В ТЕЧЕНИЕ 30 СЕК.",title: "СОКРАЩЕНИЕ",type: EChatPageType.reduce,icon: Image.asset("assets/png/reduce1.png",fit: BoxFit.contain,)),
+    StudiesModel(sub: "РЕЗУЛЬТАТ В ТЕЧЕНИЕ 30 СЕК.",title: "ПЕРЕФРАЗИРОВАНИЕ",type: EChatPageType.parafrase,icon: Image.asset("assets/png/paraphrase1.png",fit: BoxFit.contain,)),
+    StudiesModel(sub: "РЕЗУЛЬТАТ В ТЕЧЕНИЕ 10 СЕК",title: "ДАЙ СОВЕТ",type: EChatPageType.sovet,icon: Image.asset("assets/png/sovet.png",fit: BoxFit.contain,)),
   ];
 
   List<Widget> widgets=[];
@@ -190,7 +190,7 @@ class _StudiesElementState extends State<StudiesElement> with TickerProviderStat
                                       child: SizedBox(
                                         width: 70,
                                         height: 80,
-                                        child: SvgPicture.asset("assets/svg/math.svg",fit: BoxFit.contain,)
+                                        child: widget.model.icon
                                       ),
                                     ),
                                     SizedBox(width: 20,),

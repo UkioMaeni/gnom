@@ -43,12 +43,13 @@ class _BotMessageState extends State<BotMessage> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: Color.fromARGB(157, 43, 42, 42),
-              borderRadius: BorderRadius.circular(20)
+          ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: Container(
+              width: 40,
+              height: 40,
+              
+              child: Image.asset("assets/png/gnome_profile.jpg",height: 118,width: 118,),
             ),
           ),
           SizedBox(width: 10,),
@@ -69,16 +70,19 @@ class _BotMessageState extends State<BotMessage> {
                     if(widget.message.text=="file" && widget.message.link!=null){
                       List<String> splits=widget.message.link!.split(".");
                       print(splits[splits.length-1]);
-                      return Text(
-                        splits[splits.length-1],
-                        style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w400,
-                                fontFamily: "NoirPro",
-                                height: 1,
-                                color: Colors.white
-                                ),
-                      );
+                      if(widget.type=="presentation"){
+                        return Image.asset("assets/png/power_point_icon.png");
+                      }
+                      return  Image.asset("assets/jpg/pdf_icon.jpg");
+                    }
+                    if(widget.message.link!=null&&widget.message.text==""){
+                      if(widget.type=="presentation"){
+                        return Image.asset("assets/png/power_point_icon.png");
+                      }
+                      return Image.asset("assets/jpg/pdf_icon.jpg");
+                    }
+                    if(widget.message.text.contains("http")){
+                      return Image.network(widget.message.text.substring(7));
                     }
                     return Text(
                       widget.message.text,
@@ -127,7 +131,11 @@ class _BotMessageState extends State<BotMessage> {
                          "http://45.12.237.135/"+widget.message.link!,
                          options: Options(responseType: ResponseType.bytes)
                       );
+                      print(response.headers["content-type"]);
                       String fileExchange=response.headers["content-type"]?[0].replaceAll("application/", "")??"none";
+                      if(fileExchange.contains("officedocument")){
+                        fileExchange="pptx";
+                      }
                       print(fileExchange);
                       String id= Uuid().v4();
                       final file = File(gnomDirectory.path+"/${id}.${fileExchange}");

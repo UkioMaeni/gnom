@@ -63,7 +63,12 @@ abstract class _UserStore with Store {
       profile=result;
     }
   }
-  
+  @observable
+  int _selectedIndex=0;
+  int get selectedIndex=>_selectedIndex;
+  set selectedIndex(int value){
+    _selectedIndex=value;
+  }
 }
 
 UserStore userStore = UserStore();
@@ -75,17 +80,22 @@ class RequestsCount{
   int presentation;
   int reduction;
   int paraphrase;
+  int sovet;
+  int generation;
   RequestsCount({
     required this.essay,
     required this.math,
     required this.paraphrase,
     required this.presentation,
     required this.reduction,
-    required this.referre
+    required this.referre,
+    required this.sovet,
+    required this.generation
   });
 
-  get summary => math+referre+essay+presentation+reduction+paraphrase;
+  get summary => math+referre+essay+presentation+reduction+paraphrase+sovet+generation;
 
+ 
   int get maxValue{
     int max=math;
     if(referre>max){

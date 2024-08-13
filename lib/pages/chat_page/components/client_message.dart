@@ -47,7 +47,8 @@ class _ClientMessageState extends State<ClientMessage> {
       padding: EdgeInsets.only(right: 20),
       constraints: BoxConstraints(
         maxWidth: 200,
-        minWidth: 50
+        minWidth: 50,
+        minHeight: 50
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -59,16 +60,22 @@ class _ClientMessageState extends State<ClientMessage> {
               color:Color.fromARGB(157, 43, 42, 42),
               borderRadius: BorderRadius.circular(10)
             ),
-            child: Text(
-              widget.message.text,
-              style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: "NoirPro",
-                      height: 1,
-                      color: Colors.white
-                      ),
+            constraints: BoxConstraints(
+              maxWidth: 200,
+              minWidth: 50,
+              minHeight: 50
             ),
+            child: Text(
+                widget.message.text,
+                style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w400,
+                        fontFamily: "NoirPro",
+                        height: 1,
+                        color: Colors.white
+                        ),
+              ),
+            
           ),
           SizedBox(width: 10,),
           Container(

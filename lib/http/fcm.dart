@@ -15,7 +15,7 @@ class FCMHttp{
     try {
       Response response=await dio.post(
         "${httpConfig.baseUrl}/set_token",
-        data: {
+        data: { 
           "token":fcm
         }
       );

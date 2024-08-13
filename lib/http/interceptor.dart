@@ -2,6 +2,7 @@
 import 'package:dio/dio.dart';
 import 'package:gnom/http/guest.dart';
 import 'package:gnom/http/user.dart';
+import 'package:gnom/repositories/locale_storage.dart';
 import 'package:gnom/repositories/token_repo.dart';
 import 'package:gnom/store/user_store.dart';
 
@@ -28,10 +29,48 @@ class AuthInterceptor extends Interceptor {
       return ErrorTypeTimeout();
     }
 
-
+  print(repeatCounter);
     if (err.response?.statusCode == 401&&repeatCounter.isEven) {
       repeatCounter++;
-      
+      String token="";
+      if(userStore.role=="guest"){
+        token=(await localeStorage.refreshGuestToken)??"";
+        final tokens= await GuestHttp().refreshToken(token);
+        if(tokens!=null){
+          tokenRepo.accessGuestToken=tokens.access;
+          await localeStorage.saveRefreshGuestToken(tokens.refresh);
+        }
+        
+      }else{
+        token=(await localeStorage.refreshUserToken)??"";
+        final tokens=await UserHttp().refreshToken(token);
+        if(tokens!=null){
+          tokenRepo.accessUserToken=tokens.access;
+          await localeStorage.saveRefreshUserToken(tokens.refresh);
+        }
+      }
+      String access='';
+      if(userStore.role=="guest"){
+        access= tokenRepo.accessGuestToken;
+      }else{
+        access= tokenRepo.accessUserToken;
+      }
+      dio.options.headers["Authorization"]=access;
+      try {
+        dio.interceptors.clear();
+        final result=  await dio.request(
+          
+          err.requestOptions.path, 
+          data:  err.requestOptions.data,
+          queryParameters: err.requestOptions.queryParameters,
+          options: Options(method:  err.requestOptions.method),
+          );  
+          print(result);
+          return handler.resolve(result);
+      } catch (e) {
+        return handler.reject(err);
+      }
+          
       // if(userStore.role=="client"){
       //   String? token=await TokenRepo().refreshUserToken;
       //   if(token!=null){
@@ -54,7 +93,7 @@ class AuthInterceptor extends Interceptor {
          
       //     );  
     }
-    repeatCounter=0;
+    
     if (err.response?.statusCode == 400) {
 
 

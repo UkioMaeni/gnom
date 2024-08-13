@@ -1,7 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gnom/core/app_localization.dart';
+import 'package:gnom/core/localization/localization_bloc.dart';
 import 'package:gnom/pages/language_page/language_page.dart';
 import 'package:gnom/pages/start_page/start_page.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -16,17 +18,7 @@ final notificationSettings = await FirebaseMessaging.instance.requestPermission(
 
 
   runApp(
-    EasyLocalization(
-      supportedLocales:const [
-        AppLocalization.ruLocale,
-        AppLocalization.enLocale,
-      ],
-      path: AppLocalization.translationsPath,
-      saveLocale: true,
-      fallbackLocale: AppLocalization.enLocale,
-      startLocale: AppLocalization.ruLocale,
-      child: const MyApp()
-      )
+    BlocProvider(create: (context) => LocalizationBloc(), child: const MyApp())
     );
 }
 
@@ -42,13 +34,10 @@ class MyApp extends StatelessWidget {
         indicatorColor: Colors.white,
         useMaterial3: true,
       ),
-      localizationsDelegates: context.localizationDelegates,
-      supportedLocales: context.supportedLocales,
-      locale: context.locale,
       initialRoute: "/start",
       routes: {
         "/start":(context) => const StartPage(),
-        "/language":(context) => const LanguagePage()
+        "/language":(context) => const LanguagePage(initial: true,)
       },
     );
   }

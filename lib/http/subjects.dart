@@ -24,7 +24,7 @@ class SubjectsHttp{
       print(data);
       if(data!=null){
         SubjectRequestInfo info=SubjectRequestInfo(messageId: "", result: "", long: false);
-        if(data["result"]==null){
+        if(data["result"]==null || data["result"]==""){
           info.long=true;
         }else{
           info.result=data["result"];
@@ -84,7 +84,7 @@ class SubjectsHttp{
         "${httpConfig.baseUrl}/user/requests_info",
       );
       final data=response.data;
-      RequestsCount requestsCount=RequestsCount(essay: data["essay"], math: data["math"], paraphrase: data["paraphrase"], presentation: data["presentation"], reduction: data["reduction"], referre: data["referre"]);
+      RequestsCount requestsCount=RequestsCount(essay: data["essay"], math: data["math"], paraphrase: data["paraphrase"], presentation: data["presentation"], reduction: data["reduction"], referre: data["referre"],sovet: data["sovet"],generation: data["generation"]);
       print(response);
       return requestsCount;
     } catch (e) {

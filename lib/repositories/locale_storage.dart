@@ -6,12 +6,12 @@ class LocaleStorage{
   Future<String?> get refreshGuestToken async{
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token= prefs.getString("g_refresh_token");
-    return token;
+    return token==""?null:token;
   }
   Future<String?> get refreshUserToken async{
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token= prefs.getString("u_refresh_token");
-    return token;
+    return token==""?null:token;
   }
   Future<void> saveRefreshGuestToken(String token)async{
     final SharedPreferences prefs = await SharedPreferences.getInstance();

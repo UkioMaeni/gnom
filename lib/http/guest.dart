@@ -32,7 +32,7 @@ class GuestHttp{
         "${httpConfig.baseUrl}/guest/requests_info",
       );
       final data=response.data;
-      RequestsCount requestsCount=RequestsCount(essay: data["essay"], math: data["math"], paraphrase: data["paraphrase"], presentation: data["presentation"], reduction: data["reduction"], referre: data["referre"]);
+      RequestsCount requestsCount=RequestsCount(essay: data["essay"], math: data["math"], paraphrase: data["paraphrase"], presentation: data["presentation"], reduction: data["reduction"], referre: data["referre"],sovet: data["sovet"],generation: data["generation"]);
       print(response);
       return requestsCount;
     } catch (e) {
@@ -58,6 +58,8 @@ class GuestHttp{
   }
   Future<Tokens?> refreshToken(String token)async{
     try {
+      print("response");
+      dio.interceptors.clear();
       Response response=await dio.put(
         "${httpConfig.baseUrl}/guest/refresh",
         data: {
@@ -65,10 +67,12 @@ class GuestHttp{
         }
       );
       final data=response.data;
-      print(response);
+      print("response");
+      print(response.data);
       return Tokens(access: data["accessToken"],refresh: data["refreshToken"]);
     } catch (e) {
       print(e);
+      print("err");
       return null;
     }
   }

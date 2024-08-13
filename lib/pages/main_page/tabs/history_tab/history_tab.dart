@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -50,7 +51,7 @@ class _HistoryTabState extends State<HistoryTab> with TickerProviderStateMixin {
           widgets.add(
           Positioned(
             top: (i+processList.length)*105+paddingOffset+50,
-            child: TextElement(title: "ГОТОВО",)
+            child: TextElement(title: "ВЫПОЛНЕНО",)
           )
         );
         }
@@ -253,7 +254,7 @@ class _HistoryElementState extends State<HistoryElement> with TickerProviderStat
   }
 
   favorite()async{
-   await chatStore.updateFavoriteHistory(widget.model.messageId);
+    await chatStore.updateFavoriteHistory(widget.model.messageId);
     setState(() {
       
     });
@@ -284,8 +285,9 @@ class _HistoryElementState extends State<HistoryElement> with TickerProviderStat
                       Expanded(
                         child: DecoratedBox(
                           decoration: BoxDecoration(
-                            color: const Color.fromRGBO(196, 114, 137, 0.8),
-                            borderRadius: BorderRadius.circular(15)
+                            color: widget.model.type=="math"?Color.fromARGB(80, 196, 114, 137): const Color.fromRGBO(196, 114, 137, 0.8),
+                            borderRadius: BorderRadius.circular(15),
+                            border: widget.model.type=="math"?Border.all(color: const Color.fromRGBO(196, 114, 137, 0.8),width: 3):null
                           ),
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 5),
@@ -294,26 +296,46 @@ class _HistoryElementState extends State<HistoryElement> with TickerProviderStat
                                 children: [
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisAlignment: widget.model.type=="math"? MainAxisAlignment.center:MainAxisAlignment.start,
                                     children: [
-                                      Text(
-                                      widget.model.type,
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w500,
-                                        fontFamily: "NoirPro",
-                                        height: 1,
-                                        color: Color.fromRGBO(254, 222,181, 1)
-                                        ),
-                                    ),
+                                      Builder(
+                                        builder: (context) {
+                                          String name="Неизвестно";
+                                          if(widget.model.type=="reduce"){
+                                            name="сокращение";
+                                          }else if(widget.model.type=="math"){
+                                            name="математика";
+                                          }
+                                          else if(widget.model.type=="generation"){
+                                            name="генерация\nкартинки";
+                                          }
+                                          else if(widget.model.type=="essay"){
+                                            name="сочинение";
+                                          }
+                                          else if(widget.model.type=="presentation"){
+                                            name="презентация";
+                                          }
+                                          return Text(
+                                          name,
+                                          textAlign: TextAlign.left,
+                                          style: const TextStyle(
+                                            fontSize: 28,
+                                            fontWeight: FontWeight.w500,
+                                            fontFamily: "NoirPro",
+                                            height: 1,
+                                            color: Color.fromRGBO(254, 222,181, 1)
+                                            ),
+                                                                              );
+                                        }
+                                      ),
                                     const SizedBox(height: 5,),
-                                    RichText(
+                                    if(widget.model.type!="math") RichText(
                                       text: TextSpan(
                                         children: [
                                           const TextSpan(
                                             text: "ТЕМА ",
                                             style: TextStyle(
-                                              fontSize: 12,
+                                              fontSize: 15,
                                               fontWeight: FontWeight.w500,
                                               fontFamily: "NoirPro",
                                               height: 1,
@@ -321,7 +343,7 @@ class _HistoryElementState extends State<HistoryElement> with TickerProviderStat
                                               ),
                                           ),
                                           TextSpan(
-                                            text:"\"${widget.model.theme}\"",
+                                            text:"\"${widget.model.theme.length>15?widget.model.theme.substring(0,12)+"...":widget.model.theme}\"",
                                             style: const TextStyle(
                                               fontSize: 18,
                                               fontWeight: FontWeight.w500,
@@ -341,7 +363,30 @@ class _HistoryElementState extends State<HistoryElement> with TickerProviderStat
                                     child: SizedBox(
                                       width: 70,
                                       height: 80,
-                                      child: SvgPicture.asset("assets/svg/math.svg",fit: BoxFit.contain,)
+                                      child: Builder(
+                                        builder: (context) {
+                                          Widget wid = SvgPicture.asset("assets/svg/math.svg",fit: BoxFit.contain,color: Color.fromRGBO(254, 222,181, 1),);
+                                          
+                                          if(widget.model.type=="reduce"){
+                                           wid= SvgPicture.asset("assets/svg/reduce.svg",fit: BoxFit.contain,color: Color.fromRGBO(254, 222,181, 1),);
+                                            
+                                          }else if(widget.model.type=="math"){
+                                            wid=Image.asset("assets/png/math.png");
+                                          }else if(widget.model.type=="essay"){
+                                             wid=Image.asset("assets/png/essay.png");
+                                          }
+                                          else if(widget.model.type=="generation"){
+                                            wid=Image.asset("assets/png/generation.png");
+                                          }
+                                          else if(widget.model.type=="generation"){
+                                            wid=Image.asset("assets/png/generation.png");
+                                          }
+                                          else if(widget.model.type=="presentation"){
+                                            wid=Image.asset("assets/png/presentation.png");
+                                          }
+                                          return wid;
+                                        }
+                                      )
                                     ),
                                   )
                                   // Container(
@@ -368,7 +413,7 @@ class _HistoryElementState extends State<HistoryElement> with TickerProviderStat
                             child: SizedBox(
                               width: 25,
                               height: 25,
-                              child: widget.model.favorite?Container(height: 25,width: 25,color: Colors.red,): SvgPicture.asset("assets/svg/saved_tab.svg",color: const Color.fromRGBO(254, 222,181, 1))
+                              child: widget.model.favorite?Image.asset("assets/png/favorite.png",width: 50,height: 50,fit: BoxFit.cover,): SvgPicture.asset("assets/svg/saved_tab.svg",color: const Color.fromRGBO(254, 222,181, 1))
                             )
                           ),
                         ),
@@ -394,7 +439,10 @@ class HistoryModel{
   String progress;
   String messageId;
   String answer;
+  Uint8List? answerBuffer;
   String answerMessageId;
+  Uint8List? fileBuffer;
+  String? reply;
   HistoryModel({
     required this.icon,
     required this.favorite,
@@ -403,7 +451,10 @@ class HistoryModel{
     required this.progress,
     required this.messageId,
     required this.answer,
-    required this.answerMessageId
+    required this.answerMessageId,
+    this.fileBuffer,
+    this.reply,
+    this.answerBuffer
   });
   Map<String,dynamic> toMap(){
     return {

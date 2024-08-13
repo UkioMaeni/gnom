@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gnom/config/update_config.dart';
+import 'package:gnom/core/localization/localization_bloc.dart';
 import 'package:gnom/pages/push/push_page.dart';
 
 class HOMEInitPage extends StatefulWidget {
@@ -79,7 +82,7 @@ class _HOMEInitPageState extends State<HOMEInitPage> with TickerProviderStateMix
     vsync: this,
      duration: Duration(milliseconds: 200)
   );
-  _heightAnimation=Tween<double>(begin: 160,end: 300).animate(_heightController);
+  _heightAnimation=Tween<double>(begin: 160,end: 350).animate(_heightController);
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) { 
       setState(() {
@@ -92,7 +95,9 @@ class _HOMEInitPageState extends State<HOMEInitPage> with TickerProviderStateMix
   void goToStudiesPage(){
     widget.update("/studies");
   }
-
+ void goToScincePage(){
+    widget.update("/scince");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -115,34 +120,39 @@ class _HOMEInitPageState extends State<HOMEInitPage> with TickerProviderStateMix
             ),
             Positioned(
               top: 0,
-              child: Column(
-                children: [
-                  const SizedBox(height: 50,),
-                  header("GNOM\nHELPER"),
-                  const SizedBox(height: 230,),
-                  const Text(
-                    "ВЫБЕРИ",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.w800,
-                      fontFamily: "NoirPro",
-                      height: 1,
-                      letterSpacing: 1,
-                      color: Color.fromRGBO(254, 222,181, 1)
+              child: Builder(
+                builder: (context) {
+                  final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
+                  return Column(
+                    children: [
+                      const SizedBox(height: 50,),
+                      header("GNOM\nHELPER"),
+                      const SizedBox(height: 230,),
+                      Text(
+                        state.locale.choose,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.w800,
+                          fontFamily: "NoirPro",
+                          height: 1,
+                          letterSpacing: 1,
+                          color: Color.fromRGBO(254, 222,181, 1)
+                          ),
                       ),
-                  ),
-                  const SizedBox(height: 10,),
-                  GestureDetector(
-                    onTap: goToStudiesPage,
-                    child: selectType("УЧЁБА")
-                  ),
-                  const SizedBox(height: 20,),
-                  GestureDetector(
-                    onTap: closeInfo,
-                    child: selectType("ТВОРЧЕСТВО")
-                  )
-                ],
+                      const SizedBox(height: 10,),
+                      GestureDetector(
+                        onTap: goToStudiesPage,
+                        child: selectType(state.locale.education)
+                      ),
+                      const SizedBox(height: 20,),
+                      GestureDetector(
+                        onTap: goToScincePage,
+                        child: selectType(state.locale.artSpace)
+                      )
+                    ],
+                  );
+                }
               ),
             ),
             Positioned(
@@ -220,19 +230,47 @@ Widget updateViewInfo(){
                     height: _heightAnimation.value,//heightUpdate,
                       child: AnimatedContainer(
                         duration: Duration(milliseconds: 200),
-                        padding: EdgeInsets.only(top: 40-heightUpdate/10),
-                        child: Text(
-                            "UPDATE\n09.03.2024",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 25,
-                              fontWeight: FontWeight.w500,
-                              fontFamily: "NoirPro",
-                              height: 1,
-                              letterSpacing: 1,
-                              color: textColor
-                              ),
-                          ),
+                        padding: EdgeInsets.only(top: 40-heightUpdate/10,left: 10,right: 10,bottom: 10),
+                        child: Column(
+                          children: [
+                            Builder(
+                              builder: (context) {
+                                final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
+                                return Text(
+                                    "${state.locale.changes}\n${UpdateConfig.updateDate}",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.w500,
+                                      fontFamily: "NoirPro",
+                                      height: 1,
+                                      letterSpacing: 1,
+                                      color: textColor
+                                      ),
+                                  );
+                              }
+                            ),
+                              SizedBox(height: 30,),
+                              if(_heightAnimation.value>250)
+                              Expanded(
+                                child: SingleChildScrollView(
+                                  child: Text(
+                                    "${UpdateConfig.updateText}".toUpperCase(),
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: "NoirPro",
+                                      
+                                      letterSpacing: 1,
+                                      color: Colors.white
+                                      ),
+                                  ),
+                                ),
+                              )
+                          ],
+                        ),
+                          
                       ),
                     );
                   },

@@ -40,6 +40,8 @@ class _DiagramInfoState extends State<DiagramInfo> with SingleTickerProviderStat
      req.add(widget.requestsCount.presentation);
      req.add(widget.requestsCount.reduction);
      req.add(widget.requestsCount.paraphrase);
+     req.add(widget.requestsCount.sovet);
+     req.add(widget.requestsCount.generation);
      WidgetsBinding.instance.addPostFrameCallback((_){
       setState(() {
         currentHeight=_height;
@@ -104,14 +106,14 @@ class _DiagramInfoState extends State<DiagramInfo> with SingleTickerProviderStat
                             ),
                             child: Column(
                               children: [
-                                punkt("Генерация картинки",1),
-                                punkt("Сочинение",2),
-                                punkt("Презентация",3),
-                                punkt("Дай совет",4),
+                                punkt("Математика",1),
+                                punkt("Реферат",2),
+                                punkt("Сочинение",3),
+                                punkt("Презентация",4),
                                 punkt("Сокращение",5),
-                                punkt("Реферат",6),
-                                punkt("Математика",7),
-                                punkt("Перефразирование",8)
+                                punkt("Перефразирование",6),
+                                punkt("Дай совет",7),
+                                punkt("Генерация картинки",8)
                               ],
                             ),
                            )
@@ -294,17 +296,18 @@ class _DiagramInfoState extends State<DiagramInfo> with SingleTickerProviderStat
                   );
   }
   Color interpolateColor(double value) {
-      if (value < 0) {
-        value = 0;
-      } else if (value > maxValue) {
-        value = maxValue.toDouble();
-      }
-
-      double normalizedValue = value / maxValue;
-      double red = 255 *(1-normalizedValue);
-      double green = 255 *(normalizedValue);
-      
-      double blue = 0;
-      return Color.fromRGBO(red.toInt(), green.toInt(), blue.toInt(),1);
-    }
+  if (value < 0) {
+    value = 0;
+  } else if (value > maxValue) {
+    value = maxValue.toDouble();
+  }
+//255,88,0
+  double normalizedValue = value / maxValue;
+  double red = 234+ (255-234)*(normalizedValue) ;
+  double green = 88+(213-88)*(1-normalizedValue);
+  double blue = 0+ 26*(1-normalizedValue);
+  Color.fromRGBO(234, 213, 26,1);
+  print(255);
+  return Color.fromRGBO(red.toInt(), green.toInt(), blue.toInt(),1);
+}
 }

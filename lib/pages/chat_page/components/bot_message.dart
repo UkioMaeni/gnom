@@ -67,6 +67,14 @@ class _BotMessageState extends State<BotMessage> {
               children: [
                 Builder(
                   builder: (context) {
+                    if(widget.message.link!=null&&widget.message.fileBuffer!=null){
+                      return GestureDetector(
+                          child: Image.memory(widget.message.fileBuffer!),
+                          onTap: () async{
+                            await OpenFile.open(widget.message.link!);
+                          },
+                        );
+                    }
                     if(widget.message.text=="file" && widget.message.link!=null){
                       List<String> splits=widget.message.link!.split(".");
                       print(splits[splits.length-1]);
@@ -81,9 +89,7 @@ class _BotMessageState extends State<BotMessage> {
                       }
                       return Image.asset("assets/jpg/pdf_icon.jpg");
                     }
-                    if(widget.message.text.contains("http")){
-                      return Image.network(widget.message.text.substring(7));
-                    }
+                    
                     return Text(
                       widget.message.text,
                       style: const TextStyle(
@@ -97,7 +103,7 @@ class _BotMessageState extends State<BotMessage> {
                   }
                 ),
                 
-                if(widget.message.link!=null&&widget.message.text=="")
+                if((widget.message.link!=null )&&widget.message.text=="")
                 GestureDetector(
                   onTap: () async{
                     final deviceInfo = await DeviceInfoPlugin().androidInfo;

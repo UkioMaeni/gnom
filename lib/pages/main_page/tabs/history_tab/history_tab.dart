@@ -4,9 +4,22 @@ import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gnom/core/localization/localization_bloc.dart';
 import 'package:gnom/pages/chat_page/store/chat_store.dart';
 import 'package:gnom/pages/main_page/tabs/history_tab/history_info.dart';
+
+extension on  String{
+   String firstUpper(){
+    if(this.isEmpty){
+      return "";
+    }else{
+      return this[0].toUpperCase()+substring(1);
+    }
+  }
+}
+
 
 class HistoryTab extends StatefulWidget {
   const HistoryTab({super.key});
@@ -112,11 +125,23 @@ class _HistoryTabState extends State<HistoryTab> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Padding(
       padding:  EdgeInsets.only(top: MediaQuery.of(context).padding.top,left: 20,right: 0),
-      child: Stack(
-        children: [
+      child:  SizedBox(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        child: SingleChildScrollView(
+            child: Expanded(
+              child: SizedBox(
+                height: widgets.length*105+100,
+                child: Stack(
+                  children: [
+                    
+                    for(int i=0;i<widgets.length;i++)widgets[i]
+                  ],
+                ),
+              ),
+            ),
           
-          for(int i=0;i<widgets.length;i++)widgets[i]
-        ],
+        ),
       ),
     );
   }
@@ -300,20 +325,30 @@ class _HistoryElementState extends State<HistoryElement> with TickerProviderStat
                                     children: [
                                       Builder(
                                         builder: (context) {
-                                          String name="Неизвестно";
+                                          final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
+                                          String name=state.locale.error;
                                           if(widget.model.type=="reduce"){
-                                            name="сокращение";
+                                            name=state.locale.shortcut;
                                           }else if(widget.model.type=="math"){
-                                            name="математика";
+                                            name=state.locale.mathematics;
+                                          }
+                                          else if(widget.model.type=="referre"){
+                                            name=state.locale.paper;
                                           }
                                           else if(widget.model.type=="generation"){
-                                            name="генерация\nкартинки";
+                                            name=state.locale.imageGeneration;
                                           }
                                           else if(widget.model.type=="essay"){
-                                            name="сочинение";
+                                            name=state.locale.essay;
                                           }
                                           else if(widget.model.type=="presentation"){
-                                            name="презентация";
+                                            name=state.locale.presentation;
+                                          }
+                                          else if(widget.model.type=="paraphrase"){
+                                            name=state.locale.paraphrasing;
+                                          }
+                                          else if(widget.model.type=="sovet"){
+                                            name=state.locale.adviseOn;
                                           }
                                           return Text(
                                           name,
@@ -368,18 +403,25 @@ class _HistoryElementState extends State<HistoryElement> with TickerProviderStat
                                           Widget wid = SvgPicture.asset("assets/svg/math.svg",fit: BoxFit.contain,color: Color.fromRGBO(254, 222,181, 1),);
                                           
                                           if(widget.model.type=="reduce"){
-                                           wid= SvgPicture.asset("assets/svg/reduce.svg",fit: BoxFit.contain,color: Color.fromRGBO(254, 222,181, 1),);
+                                           wid= Image.asset("assets/png/reduce1.png",fit: BoxFit.contain,);
                                             
                                           }else if(widget.model.type=="math"){
                                             wid=Image.asset("assets/png/math.png");
-                                          }else if(widget.model.type=="essay"){
+                                          }else if(widget.model.type=="referre"){
+                                            wid=Image.asset("assets/png/referer.png",fit: BoxFit.contain,);
+                                          }
+                                          else if(widget.model.type=="essay"){
                                              wid=Image.asset("assets/png/essay.png");
                                           }
-                                          else if(widget.model.type=="generation"){
-                                            wid=Image.asset("assets/png/generation.png");
+                                          
+                                          else if(widget.model.type=="paraphrase"){
+                                            wid=Image.asset("assets/png/paraphrase1.png",fit: BoxFit.contain,);
                                           }
                                           else if(widget.model.type=="generation"){
                                             wid=Image.asset("assets/png/generation.png");
+                                          }
+                                          else if(widget.model.type=="sovet"){
+                                            wid=Image.asset("assets/png/sovet.png",fit: BoxFit.contain,);
                                           }
                                           else if(widget.model.type=="presentation"){
                                             wid=Image.asset("assets/png/presentation.png");
@@ -413,7 +455,7 @@ class _HistoryElementState extends State<HistoryElement> with TickerProviderStat
                             child: SizedBox(
                               width: 25,
                               height: 25,
-                              child: widget.model.favorite?Image.asset("assets/png/favorite.png",width: 50,height: 50,fit: BoxFit.cover,): SvgPicture.asset("assets/svg/saved_tab.svg",color: const Color.fromRGBO(254, 222,181, 1))
+                              child: widget.model.favorite?SvgPicture.asset("assets/svg/isFavorite.svg",color: const Color.fromRGBO(254, 222,181, 1), width: 50,height: 50,fit: BoxFit.cover,): SvgPicture.asset("assets/svg/saved_tab.svg",color: const Color.fromRGBO(254, 222,181, 1))
                             )
                           ),
                         ),

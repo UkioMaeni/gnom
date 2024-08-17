@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gnom/core/localization/localization_bloc.dart';
 import 'package:gnom/pages/chat_page/chat_page.dart';
 
 class HOMEStudiesPage extends StatefulWidget {
@@ -75,16 +77,21 @@ class _HOMEStudiesPageState extends State<HOMEStudiesPage> {
                   child: Icon(Icons.arrow_back)
                 ),
                 SizedBox(width: 10,),
-                Text(
-                  "Учеба",
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.w400,
-                    fontFamily: "NoirPro",
-                    height: 1,
-                    color: Colors.white
-                    ),
+                Builder(
+                  builder: (context) {
+                    final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
+                    return Text(
+                      state.locale.education,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.w400,
+                        fontFamily: "NoirPro",
+                        height: 1,
+                        color: Colors.white
+                        ),
+                    );
+                  }
                 ),
               ],
             ),
@@ -194,34 +201,73 @@ class _StudiesElementState extends State<StudiesElement> with TickerProviderStat
                                       ),
                                     ),
                                     SizedBox(width: 20,),
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                        widget.model.title,
-                                        textAlign: TextAlign.center,
-                                        style: const TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w800,
-                                          fontFamily: "NoirPro",
-                                          height: 1,
-                                          color: Color.fromRGBO(254, 222,181, 1)
+                                    Builder(
+                                      builder: (context) {
+                                        final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
+                                        String title= state.locale.error;
+                                        String  sub=state.locale.error;
+                                        if(widget.model.type.name=="reduce"){
+                                           title= state.locale.shortcut;
+                                           sub = state.locale.result_30s;
+                                          }else if(widget.model.type.name=="math"){
+                                            title=state.locale.mathematics;
+                                            sub = state.locale.result_20s;
+                                          }else if(widget.model.type.name=="referat"){
+                                            title=state.locale.paper;
+                                            sub = state.locale.result_30s;
+                                            
+                                          }
+                                          else if(widget.model.type.name=="essay"){
+                                             title=state.locale.essay;
+                                             sub = state.locale.result_3m;
+                                          }
+                                          
+                                          else if(widget.model.type.name=="parafrase"){
+                                            title=state.locale.paraphrasing;
+                                            sub = state.locale.result_30s;
+                                          }
+                                          else if(widget.model.type.name=="generation"){
+                                            title=state.locale.imageGeneration;
+                                            sub = state.locale.result_30s;
+                                          }
+                                          else if(widget.model.type.name=="sovet"){
+                                            title=state.locale.adviseOn;
+                                            sub = state.locale.result_20s;
+                                          }
+                                          else if(widget.model.type.name=="presentation"){
+                                            title=state.locale.presentation;
+                                            sub = state.locale.result_5m;
+                                          }
+                                        return Column(
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                            title,
+                                            textAlign: TextAlign.center,
+                                            style: const TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.w800,
+                                              fontFamily: "NoirPro",
+                                              height: 1,
+                                              color: Color.fromRGBO(254, 222,181, 1)
+                                              ),
                                           ),
-                                      ),
-                                      const SizedBox(height: 5,),
-                                      Text(
-                                        widget.model.sub,
-                                        textAlign: TextAlign.center,
-                                        style: const TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500,
-                                          fontFamily: "NoirPro",
-                                          height: 1,
-                                          color: Colors.white
+                                          const SizedBox(height: 5,),
+                                          Text(
+                                            sub,
+                                            textAlign: TextAlign.center,
+                                            style: const TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500,
+                                              fontFamily: "NoirPro",
+                                              height: 1,
+                                              color: Colors.white
+                                              ),
                                           ),
-                                      ),
-                                      ],
+                                          ],
+                                        );
+                                      }
                                     ),
                                     // Container(
                                     //     width: 140,

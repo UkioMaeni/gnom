@@ -37,7 +37,10 @@ LText LocaleText = LText();
     String get  language;
     String get  chatSupport;
     String get locale;
-    
+    String get result_20s;
+    String get result_30s;
+    String get result_5m;
+    String get result_3m;
 }
 
 
@@ -73,7 +76,7 @@ class RuLocale implements LocaleLibrary{
   String get essay => "сочинение";
 
   @override
-  String get imageGeneration => "генерация картинки";
+  String get imageGeneration => "генерация\nкартинки";
 
   @override
   String get inProgress => "в процессе";
@@ -131,7 +134,18 @@ class RuLocale implements LocaleLibrary{
   
   @override
   String get locale => "ru";
- 
+  
+  @override
+  String get result_20s => "результат в течение 20 сек.";
+  
+  @override
+  String get result_30s => "результат в течение 30 сек.";
+  
+  @override
+  String get result_3m => "результат в течение 3 минут";
+  
+  @override
+  String get result_5m => "результат в течение 5 минут";
 }
 
 class EnLocale implements LocaleLibrary{
@@ -166,7 +180,7 @@ class EnLocale implements LocaleLibrary{
   String get essay => "essay";
 
   @override
-  String get imageGeneration => "Image generation";
+  String get imageGeneration => "Image\ngeneration";
 
   @override
   String get inProgress => "in progress";
@@ -224,6 +238,22 @@ class EnLocale implements LocaleLibrary{
   
   @override
   String get locale => "en";
+  
+  @override
+  // TODO: implement result_20s
+  String get result_20s => "The result in 20 seconds";
+  
+  @override
+  // TODO: implement result_30s
+  String get result_30s => "The result in 30 seconds";
+  
+  @override
+  // TODO: implement result_3m
+  String get result_3m => "The result in 3 minutes";
+  
+  @override
+  // TODO: implement result_5m
+  String get result_5m => "The result in 5 minutes";
 }
 
 class ArLocale implements LocaleLibrary{
@@ -316,5 +346,21 @@ class ArLocale implements LocaleLibrary{
   
   @override
   String get locale => "ar";
+  
+  @override
+  // TODO: implement result_20s
+  String get result_20s => "النتيجة خلال ٢٠ ثانية";
+  
+  @override
+  // TODO: implement result_30s
+  String get result_30s =>"النتيجة خلال ٣٠ ثانية";
+  
+  @override
+  // TODO: implement result_3m
+  String get result_3m => "النتيجة خلال ٣ دقائق";
+  
+  @override
+  // TODO: implement result_5m
+  String get result_5m => "النتيجة خلال ٥ دقائق";
  
 }

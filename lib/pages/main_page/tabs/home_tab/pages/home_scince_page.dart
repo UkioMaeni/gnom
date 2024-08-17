@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gnom/core/localization/localization_bloc.dart';
 import 'package:gnom/pages/chat_page/chat_page.dart';
 import 'package:gnom/pages/mini_game/mini_game.dart';
 
@@ -18,8 +20,8 @@ class _HOMEScincePageState extends State<HOMEScincePage> {
 
 
   List<ScinceModel> stadies=[
-    ScinceModel(title: "ГЕНЕРАЦИЯ\nКАРТИНКИ",icon: Image.asset("assets/png/generation.png",fit: BoxFit.contain,)),
-    ScinceModel(title: "МИНИ\nИГРА",icon: Image.asset("assets/png/mini_game.png",fit: BoxFit.contain,)),
+    ScinceModel(title: "ГЕНЕРАЦИЯ\nКАРТИНКИ",icon: Image.asset("assets/png/generation.png",fit: BoxFit.contain,),type: EChatPageType.generation),
+    ScinceModel(title: "МИНИ\nИГРА",icon: Image.asset("assets/png/mini_game.png",fit: BoxFit.contain,),type: EChatPageType.miniGame),
   ];
 
   List<Widget> widgets=[];
@@ -71,16 +73,21 @@ class _HOMEScincePageState extends State<HOMEScincePage> {
                   child: Icon(Icons.arrow_back)
                 ),
                 SizedBox(width: 10,),
-                Text(
-                  "Учеба",
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.w400,
-                    fontFamily: "NoirPro",
-                    height: 1,
-                    color: Colors.white
-                    ),
+                Builder(
+                  builder: (context) {
+                    final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
+                    return Text(
+                      state.locale.artSpace,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.w400,
+                        fontFamily: "NoirPro",
+                        height: 1,
+                        color: Colors.white
+                        ),
+                    );
+                  }
                 ),
               ],
             ),
@@ -103,7 +110,9 @@ class _HOMEScincePageState extends State<HOMEScincePage> {
 class ScinceModel{
   String title;
   Widget icon;
+  EChatPageType type;
   ScinceModel({
+    required this.type,
     required this.icon,
     required this.title,
   });
@@ -195,17 +204,28 @@ class _ScinceElementState extends State<ScinceElement> with TickerProviderStateM
                                         crossAxisAlignment: CrossAxisAlignment.center,
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
-                                          Text(
-                                          widget.model.title,
-                                          textAlign: TextAlign.center,
-                                          style: const TextStyle(
-                                            fontSize: 26,
-                                            fontWeight: FontWeight.w800,
-                                            fontFamily: "NoirPro",
-                                            height: 1,
-                                            color: Color.fromRGBO(254, 222,181, 1)
-                                            ),
-                                        ),
+                                          Builder(
+                                            builder: (context) {
+                                              final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
+                                              String title=state.locale.error;
+                                              if(widget.model.type.name=="generation"){
+                                                title=state.locale.imageGeneration;
+                                              }else if(widget.model.type.name=="miniGame"){
+                                                 title="!mini game";
+                                              }
+                                              return Text(
+                                              title,
+                                              textAlign: TextAlign.center,
+                                              style: const TextStyle(
+                                                fontSize: 26,
+                                                fontWeight: FontWeight.w800,
+                                                fontFamily: "NoirPro",
+                                                height: 1,
+                                                color: Color.fromRGBO(254, 222,181, 1)
+                                                ),
+                                                                                      );
+                                            }
+                                          ),
                                         const SizedBox(height: 5,),
                                         
                                         ],

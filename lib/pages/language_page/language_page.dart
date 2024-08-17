@@ -7,7 +7,7 @@ import 'package:gnom/core/localization/custom_localization.dart';
 import 'package:gnom/core/localization/localization_bloc.dart';
 import 'package:gnom/pages/main_page/main_page.dart';
 import 'package:gnom/repositories/locale_storage.dart';
-
+import 'package:infinite_pageview/infinite_pageview.dart';
 class LanguagePage extends StatefulWidget {
   final bool initial;
   const LanguagePage({super.key,required this.initial});
@@ -19,7 +19,7 @@ class LanguagePage extends StatefulWidget {
 class _LanguagePageState extends State<LanguagePage> {
 
   late final PageController _pageController;
-
+  late InfiniteScrollController _infiniteScrollController;
   bool loadLang=true;
   late Locale locale;
   checkLanguage()async{
@@ -30,14 +30,19 @@ class _LanguagePageState extends State<LanguagePage> {
       locale=Locale("en","US");
     }
     int initPage=1;
+    int initOffset=0;
     if(locale.languageCode=="ru"){
       initPage=0;
+      initOffset=0;
     }else if(locale.languageCode=="en"){
       initPage=1;
+      initOffset=250;
     }else if(locale.languageCode=="ar"){
       initPage=2;
+      initOffset=500;
     }
     _pageController=PageController(initialPage: initPage);
+    _infiniteScrollController=InfiniteScrollController(initialScrollOffset: initOffset.toDouble());
     page=initPage;
     setState(() {
       loadLang=false;
@@ -59,13 +64,23 @@ class _LanguagePageState extends State<LanguagePage> {
   }
 
   void leftClick(){
-    if(page<=0) return;
-    _pageController.animateToPage(page-1, duration: const Duration(milliseconds: 200), curve: Curves.linear);
+   // if(page<=0) return;
+    //_pageController.animateToPage(page-1, duration: const Duration(milliseconds: 200), curve: Curves.linear);
+    _infiniteScrollController.animateTo(_infiniteScrollController.offset-250, duration: Duration(milliseconds: 200), curve: Curves.linear);
+    page=(page-1)%3;
+    setState(() {
+      
+    });
 
   }
   void rightClick(){
-    if(page>=AppLocalization.localeCount()-1) return;
-    _pageController.animateToPage(page+1, duration: const Duration(milliseconds: 200), curve: Curves.linear);
+    _infiniteScrollController.animateTo(_infiniteScrollController.offset+250, duration: Duration(milliseconds: 200), curve: Curves.linear);
+    page=(page+1)%3;
+    setState(() {
+      
+    });
+    print(_infiniteScrollController.offset);
+   // _pageController.animateToPage(page%3+1, duration: const Duration(milliseconds: 200), curve: Curves.linear);
   }
 
  late int page;
@@ -116,19 +131,19 @@ class _LanguagePageState extends State<LanguagePage> {
                             SizedBox(
                               width: 250,
                               height: 40,
-                              child:PageView.builder(
-                                controller: _pageController,
-                                scrollDirection: Axis.horizontal,
-                                onPageChanged: (value) {
-                                  setState(() {
-                                    page=value;
-                                  });
-                                },
-                                
-                                itemCount: AppLocalization.localeCount(),
+                              child: InfinitePageView(
+                                controller: _infiniteScrollController,
+                                physics: NeverScrollableScrollPhysics(),
+
                                 itemBuilder: (context, index) {
-                                  final locale=AppLocalization.listlocations[index];
-                                  //AppLocalization.currentLocale=AppLocalization.listlocations[index];
+                                  int correctIndex=index%3;
+                                  if(correctIndex<0){
+                                    page=((correctIndex*correctIndex)/(-correctIndex)).toInt();
+                                  }
+                                  page=correctIndex;
+                                  
+                                  final locale=AppLocalization.listlocations[correctIndex];
+                                  print(index);
                                   return Text(
                                             AppLocalization.getLocaleName(locale),
                                             textAlign: TextAlign.center,
@@ -142,7 +157,36 @@ class _LanguagePageState extends State<LanguagePage> {
                                               ),
                                           );
                                 },
-                              ) 
+                              ),
+                              // child:PageView.builder(
+                              //   controller: _pageController,
+                              //   scrollDirection: Axis.horizontal,
+                              //   onPageChanged: (value) {
+                              //     setState(() {
+                              //       page=value;
+                              //     });
+                              //   },
+                                
+                              //   //itemCount: AppLocalization.localeCount(),
+                              //   itemBuilder: (context, index) {
+                              //     print(index);
+                              //     int correctIndex=index%3;
+                              //     final locale=AppLocalization.listlocations[correctIndex];
+                              //     //AppLocalization.currentLocale=AppLocalization.listlocations[index];
+                              //     return Text(
+                              //               AppLocalization.getLocaleName(locale),
+                              //               textAlign: TextAlign.center,
+                              //               style: const TextStyle(
+                              //                 fontSize: 40,
+                              //                 fontWeight: FontWeight.w800,
+                              //                 fontFamily: "NoirPro",
+                              //                 height: 1,
+                              //                 letterSpacing: 1,
+                              //                 color: Colors.white
+                              //                 ),
+                              //             );
+                              //   },
+                              // ) 
                             ),
                             UIChevron(
                               type: EChevronType.right,
@@ -166,7 +210,7 @@ Widget setLanguageButton(){
     onTap: () async{
       print(AppLocalization.currentLocale.toString());
        
-       Locale newLocale= AppLocalization.listlocations[page];
+       Locale newLocale= AppLocalization.listlocations[page%3];
        await localeStorage.saveAppLanguage(newLocale.toString());
        if(newLocale.languageCode=="ru"){
         context.read<LocalizationBloc>().add(LocalizationSetLocaleEvent(locale:RuLocale() ));
@@ -196,7 +240,7 @@ Widget setLanguageButton(){
         child: Align(
           alignment: Alignment.center,
           child: Text(
-                    AppLocalization.getLocaleButtonStart(AppLocalization.listlocations[page]),
+                    AppLocalization.getLocaleButtonStart(AppLocalization.listlocations[page%3]),
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       fontSize: 30,

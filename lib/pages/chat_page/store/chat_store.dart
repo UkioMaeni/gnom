@@ -1,6 +1,8 @@
 import 'dart:developer';
+import 'dart:io';
 import 'dart:typed_data';
 import 'package:dio/dio.dart';
+import 'package:external_path/external_path.dart';
 import 'package:flutter/material.dart';
 import 'package:gnom/db/sql_lite.dart';
 import 'package:gnom/http/subjects.dart';
@@ -48,13 +50,13 @@ abstract class _ChatStore with Store {
 
     final messageId=Uuid().v4();
 
-    if(message.toLowerCase()=="да"||message.toLowerCase()=="нет"){
+    if(message.toLowerCase()=="да"||message.toLowerCase()=="yes"||message.toLowerCase()=="нет"||message.toLowerCase()=="no"){
       final mess=Message(id: messageId,status: "send",text: message,sender: "people",fileBuffer: null);
       chats[chatType.name]!.add(mess);
       instanceDb.addMessage(SubjectTypedMessage(message: mess, subjectType: chatType.name));
       print(requiredComplete[chatType.name]);
       if(requiredComplete[chatType.name]!.required){
-        if(message.toLowerCase()=="да"){ 
+        if(message.toLowerCase()=="да"||message.toLowerCase()=="yes"){ 
           FormData formData=FormData();
 
             formData.fields.add(MapEntry("type", chatType.name));
@@ -81,10 +83,32 @@ abstract class _ChatStore with Store {
                 chats[chatType.name]!.add(messBot);
                 instanceDb.addMessage(SubjectTypedMessage(message: messBot, subjectType: chatType.name));
               }else{
-                final messBot=Message(id: messageBotId,status: "send",text:"Ответ:\n"+ result.result,sender: "bot",fileBuffer: null);
-                updateStatusHistory(result.messageId,result.result,messageBotId);
-                chats[chatType.name]!.add(messBot);
-                instanceDb.addMessage(SubjectTypedMessage(message: messBot, subjectType: chatType.name));
+                if(result.result.contains("http")){
+                  final response=await Dio().get(
+                         result.result,
+                         options: Options(responseType: ResponseType.bytes)
+                      );
+                      print(response.data);
+                      print(response.headers["content-type"]);
+                      String fileExchange=response.headers["content-type"]?[0].replaceAll("image/", "")??"none";
+                      var path = await ExternalPath.getExternalStorageDirectories();
+                      final gnomDirectory = Directory(path[0]+'/Android/media/com.gnom.helper');
+                      final file = File(gnomDirectory.path+"/${result.messageId}.${fileExchange}");
+                      
+                      file.writeAsBytesSync(response.data);
+                      //chatStore.updateStatusForDownloadFile(widget.message.id, gnomDirectory.path+"/${id}.${fileExchange}",widget.type);
+                      final messBot=Message(id: messageBotId,status: "send",text:"@",sender: "bot",fileBuffer: response.data,link:gnomDirectory.path+"/${result.messageId}.${fileExchange}" );
+                      updateStatusHistory(result.messageId,result.result,messageBotId);
+                      chats[chatType.name]!.add(messBot);
+                      instanceDb.addMessage(SubjectTypedMessage(message: messBot, subjectType: chatType.name));
+                }else{
+                   final messBot=Message(id: messageBotId,status: "send",text:"Ответ:\n"+ result.result,sender: "bot",fileBuffer: null);
+                   updateStatusHistory(result.messageId,result.result,messageBotId);
+                    chats[chatType.name]!.add(messBot);
+                    instanceDb.addMessage(SubjectTypedMessage(message: messBot, subjectType: chatType.name));
+                }
+                
+                
                 
               }
               chats=ObservableMap.of(chats);

@@ -6,13 +6,15 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:gnom/core/localization/localization_bloc.dart';
 import 'package:gnom/http/guest.dart';
 import 'package:gnom/pages/chat_page/components/chat_area.dart';
 import 'package:gnom/pages/chat_page/store/chat_store.dart';
 import 'package:image_picker/image_picker.dart';
 enum EChatPageType{
-  math,parafrase,referat,essay,presentation,reduce,sovet,generation
+  math,parafrase,referat,essay,presentation,reduce,sovet,generation,miniGame
 }
 
 
@@ -92,9 +94,33 @@ void attachment()async{
                       const SizedBox(width: 10,),
                       Builder(
                         builder: (context) {
-                          
+                          final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
+                                          String name=state.locale.error;
+                                          if(widget.type.name=="reduce"){
+                                            name=state.locale.shortcut;
+                                          }else if(widget.type.name=="math"){
+                                            name=state.locale.mathematics;
+                                          }
+                                          else if(widget.type.name=="referre"){
+                                            name=state.locale.paper;
+                                          }
+                                          else if(widget.type.name=="generation"){
+                                            name=state.locale.imageGeneration;
+                                          }
+                                          else if(widget.type.name=="essay"){
+                                            name=state.locale.essay;
+                                          }
+                                          else if(widget.type.name=="presentation"){
+                                            name=state.locale.presentation;
+                                          }
+                                          else if(widget.type.name=="paraphrase"){
+                                            name=state.locale.paraphrasing;
+                                          }
+                                          else if(widget.type.name=="sovet"){
+                                            name=state.locale.adviseOn;
+                                          }
                           return Text(
-                            widget.title,
+                            name,
                             textAlign: TextAlign.center,
                             style: const TextStyle(
                               fontSize: 30,
@@ -117,64 +143,81 @@ void attachment()async{
                 SizedBox(height: 10,),
                 Observer(builder: (context) {
                   if(chatStore.requiredComplete[widget.type.name]!.required)
-                  return Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        chatStore.addMessage(widget.type, "да",null);
-                      },
-                      child: Container(
-                        padding: EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: const Color.fromARGB(157, 43, 42, 42),
-                          borderRadius: BorderRadius.circular(14)
-                        ),
-                        child: Text(
-                              "ДА",
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                fontSize: 30,
-                                fontWeight: FontWeight.w400,
-                                fontFamily: "NoirPro",
-                                height: 1,
-                                color: Colors.white
-                                ),
-                            ),
-                      ),
+                  return Container(
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      border: Border(
+                        bottom: BorderSide(
+                          color: Color.fromARGB(162, 255, 255, 255)
+                        )
+                      )
                     ),
-                    SizedBox(width: 50,),
-                    GestureDetector(
-                      onTap: () {
-                        chatStore.addMessage(widget.type, "нет",null);
-                      },
-                      child: Container(
-                        padding: EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: const Color.fromARGB(157, 43, 42, 42),
-                          borderRadius: BorderRadius.circular(14)
+                    child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: Builder(
+                          builder: (context) {
+                            final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
+                            return GestureDetector(
+                              onTap: () {
+                                chatStore.addMessage(widget.type, state.locale.yes,null);
+                              },
+                              child: Text(
+                                          state.locale.yes,
+                                          textAlign: TextAlign.center,
+                                          style: const TextStyle(
+                                            fontSize: 25,
+                                            fontWeight: FontWeight.w400,
+                                            fontFamily: "NoirPro",
+                                            height: 1,
+                                            color: Colors.white
+                                            ),
+                                        )
+                            );
+                          }
                         ),
-                        child: Text(
-                              "НЕТ",
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                fontSize: 30,
-                                fontWeight: FontWeight.w400,
-                                fontFamily: "NoirPro",
-                                height: 1,
-                                color: Colors.white
-                                ),
-                            ),
                       ),
-                    )
-                  ],
-                );
+                      Container(
+                        width: 1,
+                        height: 50,
+                        color: Color.fromARGB(162, 255, 255, 255),
+                      ),
+                      Expanded(
+                        child: Builder(
+                          builder: (context) {
+                            final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
+                            return GestureDetector(
+                              onTap: () {
+                                chatStore.addMessage(widget.type, state.locale.no,null);
+                              },
+                              child: Text(
+                                          state.locale.no,
+                                          textAlign: TextAlign.center,
+                                          style: const TextStyle(
+                                            fontSize: 25,
+                                            fontWeight: FontWeight.w400,
+                                            fontFamily: "NoirPro",
+                                            height: 1,
+                                            color: Colors.white
+                                            ),
+                                        )
+                            );
+                          }
+                        ),
+                      )
+                    ],
+                                    ),
+                  );
                 return SizedBox();
                 },),
                 
-                SizedBox(height: 10,),
                 textField(),
-                const SizedBox(height: 20,)
+                Container(
+                  height: 40,
+                  color: Colors.black,
+                )
               ],
             ),
           ),
@@ -185,15 +228,19 @@ void attachment()async{
 
   Widget textField(){
     return SizedBox(
-      width: MediaQuery.of(context).size.width-60,
+      width: MediaQuery.of(context).size.width,
       child: Container(
         decoration: BoxDecoration(
-          color: const Color.fromARGB(157, 43, 42, 42),
-          borderRadius: BorderRadius.circular(14)
+          color: Colors.black,
+          border: Border(
+                        bottom: BorderSide(
+                          color: Color.fromARGB(162, 255, 255, 255)
+                        )
+                      )
         ),
         child: Row(
           children: [
-            const SizedBox(width: 10,),
+            SizedBox(width: 10,),
             Builder(
               builder: (context) {
                 if(widget.type==EChatPageType.sovet||widget.type==EChatPageType.presentation||widget.type==EChatPageType.essay||widget.type==EChatPageType.referat){

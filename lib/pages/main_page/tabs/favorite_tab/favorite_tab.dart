@@ -3,8 +3,10 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gnom/core/localization/localization_bloc.dart';
 import 'package:gnom/pages/chat_page/store/chat_store.dart';
 import 'package:gnom/pages/main_page/tabs/history_tab/history_info.dart';
 import 'package:gnom/pages/main_page/tabs/history_tab/history_tab.dart';
@@ -268,8 +270,9 @@ class _HistoryElementState extends State<HistoryElement> with TickerProviderStat
                       Expanded(
                         child: DecoratedBox(
                           decoration: BoxDecoration(
-                            color: const Color.fromRGBO(196, 114, 137, 0.8),
-                            borderRadius: BorderRadius.circular(15)
+                            color: widget.model.type=="math"?Color.fromARGB(80, 196, 114, 137): const Color.fromRGBO(196, 114, 137, 0.8),
+                            borderRadius: BorderRadius.circular(15),
+                            border: widget.model.type=="math"?Border.all(color: const Color.fromRGBO(196, 114, 137, 0.8),width: 3):null
                           ),
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 5),
@@ -278,26 +281,56 @@ class _HistoryElementState extends State<HistoryElement> with TickerProviderStat
                                 children: [
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisAlignment: widget.model.type=="math"? MainAxisAlignment.center:MainAxisAlignment.start,
                                     children: [
-                                      Text(
-                                      widget.model.type,
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w500,
-                                        fontFamily: "NoirPro",
-                                        height: 1,
-                                        color: Color.fromRGBO(254, 222,181, 1)
-                                        ),
-                                    ),
+                                      Builder(
+                                        builder: (context) {
+                                          final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
+                                          String name=state.locale.error;
+                                          if(widget.model.type=="reduce"){
+                                            name=state.locale.shortcut;
+                                          }else if(widget.model.type=="math"){
+                                            name=state.locale.mathematics;
+                                          }
+                                          else if(widget.model.type=="referre"){
+                                            name=state.locale.paper;
+                                          }
+                                          else if(widget.model.type=="generation"){
+                                            name=state.locale.imageGeneration;
+                                          }
+                                          else if(widget.model.type=="essay"){
+                                            name=state.locale.essay;
+                                          }
+                                          else if(widget.model.type=="presentation"){
+                                            name=state.locale.presentation;
+                                          }
+                                          else if(widget.model.type=="paraphrase"){
+                                            name=state.locale.paraphrasing;
+                                          }
+                                          else if(widget.model.type=="sovet"){
+                                            name=state.locale.adviseOn;
+                                          }
+                                          return Text(
+                                          name,
+                                          textAlign: TextAlign.left,
+                                          style: const TextStyle(
+                                            fontSize: 28,
+                                            fontWeight: FontWeight.w500,
+                                            fontFamily: "NoirPro",
+                                            height: 1,
+                                            color: Color.fromRGBO(254, 222,181, 1)
+                                            ),
+                                                                              );
+                                        }
+                                      ),
                                     const SizedBox(height: 5,),
-                                    RichText(
+                                    if(widget.model.type!="math") RichText(
                                       text: TextSpan(
                                         children: [
                                           const TextSpan(
                                             text: "ТЕМА ",
                                             style: TextStyle(
-                                              fontSize: 12,
+                                              fontSize: 15,
                                               fontWeight: FontWeight.w500,
                                               fontFamily: "NoirPro",
                                               height: 1,
@@ -305,7 +338,7 @@ class _HistoryElementState extends State<HistoryElement> with TickerProviderStat
                                               ),
                                           ),
                                           TextSpan(
-                                            text:"\"${widget.model.theme}\"",
+                                            text:"\"${widget.model.theme.length>15?widget.model.theme.substring(0,12)+"...":widget.model.theme}\"",
                                             style: const TextStyle(
                                               fontSize: 18,
                                               fontWeight: FontWeight.w500,
@@ -325,7 +358,37 @@ class _HistoryElementState extends State<HistoryElement> with TickerProviderStat
                                     child: SizedBox(
                                       width: 70,
                                       height: 80,
-                                      child: SvgPicture.asset("assets/svg/math.svg",fit: BoxFit.contain,)
+                                      child: Builder(
+                                        builder: (context) {
+                                          Widget wid = SvgPicture.asset("assets/svg/math.svg",fit: BoxFit.contain,color: Color.fromRGBO(254, 222,181, 1),);
+                                          
+                                          if(widget.model.type=="reduce"){
+                                           wid= Image.asset("assets/png/reduce1.png",fit: BoxFit.contain,);
+                                            
+                                          }else if(widget.model.type=="math"){
+                                            wid=Image.asset("assets/png/math.png");
+                                          }else if(widget.model.type=="referre"){
+                                            wid=Image.asset("assets/png/referer.png",fit: BoxFit.contain,);
+                                          }
+                                          else if(widget.model.type=="essay"){
+                                             wid=Image.asset("assets/png/essay.png");
+                                          }
+                                          
+                                          else if(widget.model.type=="paraphrase"){
+                                            wid=Image.asset("assets/png/paraphrase1.png",fit: BoxFit.contain,);
+                                          }
+                                          else if(widget.model.type=="generation"){
+                                            wid=Image.asset("assets/png/generation.png");
+                                          }
+                                          else if(widget.model.type=="sovet"){
+                                            wid=Image.asset("assets/png/sovet.png",fit: BoxFit.contain,);
+                                          }
+                                          else if(widget.model.type=="presentation"){
+                                            wid=Image.asset("assets/png/presentation.png");
+                                          }
+                                          return wid;
+                                        }
+                                      )
                                     ),
                                   )
                                   // Container(
@@ -352,7 +415,7 @@ class _HistoryElementState extends State<HistoryElement> with TickerProviderStat
                             child: SizedBox(
                               width: 25,
                               height: 25,
-                              child: widget.model.favorite?Container(height: 25,width: 25,color: Colors.red,): SvgPicture.asset("assets/svg/saved_tab.svg",color: const Color.fromRGBO(254, 222,181, 1))
+                              child: widget.model.favorite?SvgPicture.asset("assets/svg/isFavorite.svg",color: const Color.fromRGBO(254, 222,181, 1), width: 50,height: 50,fit: BoxFit.cover,): SvgPicture.asset("assets/svg/saved_tab.svg",color: const Color.fromRGBO(254, 222,181, 1))
                             )
                           ),
                         ),

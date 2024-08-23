@@ -3,6 +3,9 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gnom/core/localization/localization_bloc.dart';
+import 'package:gnom/core/tools/string_tool.dart';
 import 'package:gnom/store/user_store.dart';
 
 class ProfileRequestCount extends StatefulWidget {
@@ -63,25 +66,35 @@ class _ProfileRequestCountState extends State<ProfileRequestCount> with SingleTi
                           SizedBox(
                             height: 20,
                           ),
-                          Text(
-                            "ОБЩИЙ",
-                            style: TextStyle(
-                              fontFamily: "NoirPro",
-                              color: Color.fromRGBO(254, 222,181, 1),
-                              height: 1,
-                              fontWeight: FontWeight.w800,
-                              fontSize: 25
-                            ),
-                            ),
-                            Text(
-                            "ОСТАТОК ЗАПРОСОВ",
-                            style: TextStyle(
-                              fontFamily: "NoirPro",
-                              color: Color.fromRGBO(254, 222,181, 1),
-                              height: 1.4,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 17
-                            ),
+                          Builder(
+                            builder: (context) {
+                              final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
+                              return Text(
+                                StringTools.firstUpperOfString(state.locale.remainingPrompts_1),
+                                style: TextStyle(
+                                  fontFamily: "NoirPro",
+                                  color: Color.fromRGBO(254, 222,181, 1),
+                                  height: 1,
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 25
+                                ),
+                                );
+                            }
+                          ),
+                            Builder(
+                              builder: (context) {
+                                final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
+                                return Text(
+                                state.locale.remainingPrompts_2,
+                                style: TextStyle(
+                                  fontFamily: "NoirPro",
+                                  color: Color.fromRGBO(254, 222,181, 1),
+                                  height: 1.4,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 17
+                                ),
+                                );
+                              }
                             ),
                             SizedBox(height: 10,),
                             ClipOval(
@@ -107,9 +120,9 @@ class _ProfileRequestCountState extends State<ProfileRequestCount> with SingleTi
                                         style: TextStyle(
                                           fontFamily: "NoirPro",
                                           color: Colors.white,
-                                          height: 1.4,
+                                          height: 1,
                                           fontWeight: FontWeight.w600,
-                                          fontSize: 40
+                                          fontSize: 35
                                         ),
                                         ),
                                     ),

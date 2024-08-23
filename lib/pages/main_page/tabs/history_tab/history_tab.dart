@@ -7,18 +7,11 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gnom/core/localization/localization_bloc.dart';
+import 'package:gnom/core/tools/string_tool.dart';
 import 'package:gnom/pages/chat_page/store/chat_store.dart';
 import 'package:gnom/pages/main_page/tabs/history_tab/history_info.dart';
 
-extension on  String{
-   String firstUpper(){
-    if(this.isEmpty){
-      return "";
-    }else{
-      return this[0].toUpperCase()+substring(1);
-    }
-  }
-}
+
 
 
 class HistoryTab extends StatefulWidget {
@@ -43,12 +36,14 @@ class _HistoryTabState extends State<HistoryTab> with TickerProviderStateMixin {
     final completedList= histories.where((element) => element.progress=="completed").toList();
     print(processList.length);
     for(int i=0;i<processList.length;i++){
+      if(!mounted) return;
       setState(() {
+        final state = (context.read<LocalizationBloc>().state as LocalizationLocaleState);
         if(i==0){
           widgets.add(
           Positioned(
             top: i*105+paddingOffset,
-            child: TextElement(title: "В ПРОЦЕССЕ",)
+            child: TextElement(title:  StringTools.firstUpperOfString(state.locale.inProgress),)
           )
         );
         }
@@ -59,12 +54,14 @@ class _HistoryTabState extends State<HistoryTab> with TickerProviderStateMixin {
       await Future.delayed(Duration(milliseconds: 300));
     }
     for(int i=0;i<completedList.length;i++){
+      if(!mounted) return;
       setState(() {
+        final state = (context.read<LocalizationBloc>().state as LocalizationLocaleState);
         if(i==0){
           widgets.add(
           Positioned(
             top: (i+processList.length)*105+paddingOffset+50,
-            child: TextElement(title: "ВЫПОЛНЕНО",)
+            child: TextElement(title: StringTools.firstUpperOfString(state.locale.done),)
           )
         );
         }
@@ -129,8 +126,7 @@ class _HistoryTabState extends State<HistoryTab> with TickerProviderStateMixin {
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
         child: SingleChildScrollView(
-            child: Expanded(
-              child: SizedBox(
+            child:  SizedBox(
                 height: widgets.length*105+100,
                 child: Stack(
                   children: [
@@ -138,7 +134,7 @@ class _HistoryTabState extends State<HistoryTab> with TickerProviderStateMixin {
                     for(int i=0;i<widgets.length;i++)widgets[i]
                   ],
                 ),
-              ),
+              
             ),
           
         ),
@@ -351,7 +347,7 @@ class _HistoryElementState extends State<HistoryElement> with TickerProviderStat
                                             name=state.locale.adviseOn;
                                           }
                                           return Text(
-                                          name,
+                                           StringTools.firstUpperOfString(name),
                                           textAlign: TextAlign.left,
                                           style: const TextStyle(
                                             fontSize: 28,
@@ -364,32 +360,37 @@ class _HistoryElementState extends State<HistoryElement> with TickerProviderStat
                                         }
                                       ),
                                     const SizedBox(height: 5,),
-                                    if(widget.model.type!="math") RichText(
-                                      text: TextSpan(
-                                        children: [
-                                          const TextSpan(
-                                            text: "ТЕМА ",
-                                            style: TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w500,
-                                              fontFamily: "NoirPro",
-                                              height: 1,
-                                              color: Colors.white
+                                    if(widget.model.type!="math") Builder(
+                                      builder: (context) {
+                                        final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
+                                        return RichText(
+                                          text: TextSpan(
+                                            children: [
+                                               TextSpan(
+                                                text: "${ StringTools.firstUpperOfString(state.locale.topic)} ",
+                                                style: TextStyle(
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontFamily: "NoirPro",
+                                                  height: 1,
+                                                  color: Colors.white
+                                                  ),
                                               ),
+                                              TextSpan(
+                                                text:"\"${widget.model.theme.length>15?widget.model.theme.substring(0,12)+"...":widget.model.theme}\"",
+                                                style: const TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontFamily: "NoirPro",
+                                                  height: 1,
+                                                  letterSpacing: 1,
+                                                  color:Colors.white
+                                                  ),
+                                              )
+                                            ]
                                           ),
-                                          TextSpan(
-                                            text:"\"${widget.model.theme.length>15?widget.model.theme.substring(0,12)+"...":widget.model.theme}\"",
-                                            style: const TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w500,
-                                              fontFamily: "NoirPro",
-                                              height: 1,
-                                              letterSpacing: 1,
-                                              color:Colors.white
-                                              ),
-                                          )
-                                        ]
-                                      ),
+                                        );
+                                      }
                                     )
                                     ],
                                   ),

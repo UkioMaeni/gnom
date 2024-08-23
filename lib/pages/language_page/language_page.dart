@@ -108,17 +108,20 @@ class _LanguagePageState extends State<LanguagePage> {
                     return Column(
                       children: [
                         const SizedBox(height: 80,),
-                        Text(
-                          AppLocalization.getLocaleDescription(AppLocalization.listlocations[page]),
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            fontSize: 35,
-                            fontWeight: FontWeight.w800,
-                            fontFamily: "NoirPro",
-                            height: 1,
-                            letterSpacing: 1,
-                            color: Color.fromRGBO(254, 222,181, 1)
-                            ),
+                        SizedBox(
+                          height: 90,
+                          child: Text(
+                            AppLocalization.getLocaleDescription(AppLocalization.listlocations[page]),
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontSize: 35,
+                              fontWeight: FontWeight.w800,
+                              fontFamily: "NoirPro",
+                              height: 1,
+                              letterSpacing: 1,
+                              color: Color.fromRGBO(254, 222,181, 1)
+                              ),
+                          ),
                         ),
                         const SizedBox(height: 100,),
                         Row(
@@ -130,7 +133,7 @@ class _LanguagePageState extends State<LanguagePage> {
                             ),
                             SizedBox(
                               width: 250,
-                              height: 40,
+                              height: 60,
                               child: InfinitePageView(
                                 controller: _infiniteScrollController,
                                 physics: NeverScrollableScrollPhysics(),
@@ -144,18 +147,22 @@ class _LanguagePageState extends State<LanguagePage> {
                                   
                                   final locale=AppLocalization.listlocations[correctIndex];
                                   print(index);
-                                  return Text(
-                                            AppLocalization.getLocaleName(locale),
-                                            textAlign: TextAlign.center,
-                                            style: const TextStyle(
-                                              fontSize: 40,
-                                              fontWeight: FontWeight.w800,
-                                              fontFamily: "NoirPro",
-                                              height: 1,
-                                              letterSpacing: 1,
-                                              color: Colors.white
-                                              ),
-                                          );
+                                  return Align(
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                              AppLocalization.getLocaleName(locale),
+                                              textAlign: TextAlign.center,
+                                              
+                                              style: const TextStyle(
+                                                fontSize: 40,
+                                                fontWeight: FontWeight.w800,
+                                                fontFamily: "NoirPro",
+                                                height: 1,
+                                                letterSpacing: 1,
+                                                color: Colors.white
+                                                ),
+                                            ),
+                                  );
                                 },
                               ),
                               // child:PageView.builder(

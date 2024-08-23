@@ -6,7 +6,9 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gnom/config/http_config.dart';
+import 'package:gnom/core/localization/localization_bloc.dart';
 import 'package:gnom/pages/chat_page/chat_page.dart';
 import 'package:gnom/pages/chat_page/store/chat_store.dart';
 import 'package:flutter/services.dart';
@@ -159,16 +161,21 @@ class _BotMessageState extends State<BotMessage> {
                   },
                   child: Container(
                     padding: EdgeInsets.symmetric(vertical: 10),
-                    child: Text(
-                    "СКАЧАТЬ",
-                    style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w400,
-                            fontFamily: "NoirPro",
-                            height: 1,
-                            color: Colors.white
-                            ),
-                  ),
+                    child: Builder(
+                      builder: (context) {
+                        final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
+                        return Text(
+                        state.locale.download,
+                        style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w400,
+                                fontFamily: "NoirPro",
+                                height: 1,
+                                color: Colors.white
+                                ),
+                                          );
+                      }
+                    ),
                   ),
                 ),
                 if(widget.message.text=="file"&&widget.message.link!=null)
@@ -184,16 +191,21 @@ class _BotMessageState extends State<BotMessage> {
                   },
                   child: Container(
                       padding: EdgeInsets.symmetric(vertical: 10),
-                      child: Text(
-                      "ОТКРЫТЬ",
-                      style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w400,
-                              fontFamily: "NoirPro",
-                              height: 1,
-                              color: Colors.white
-                              ),
-                    ),
+                      child: Builder(
+                        builder: (context) {
+                          final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
+                          return Text(
+                          state.locale.open,
+                          style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w400,
+                                  fontFamily: "NoirPro",
+                                  height: 1,
+                                  color: Colors.white
+                                  ),
+                                              );
+                        }
+                      ),
                     ),
                 ),
               ],

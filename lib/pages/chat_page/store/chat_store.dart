@@ -4,6 +4,8 @@ import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:external_path/external_path.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gnom/core/localization/localization_bloc.dart';
 import 'package:gnom/db/sql_lite.dart';
 import 'package:gnom/http/subjects.dart';
 import 'package:gnom/http/user.dart';
@@ -46,10 +48,10 @@ abstract class _ChatStore with Store {
   });
   
   @action
-  addMessage(EChatPageType chatType,String message,XFile? file)async{
+  addMessage(EChatPageType chatType,String message,XFile? file,BuildContext context)async{
 
     final messageId=Uuid().v4();
-
+    final state = (context.read<LocalizationBloc>().state as LocalizationLocaleState);
     if(message.toLowerCase()=="да"||message.toLowerCase()=="yes"||message.toLowerCase()=="нет"||message.toLowerCase()=="no"){
       final mess=Message(id: messageId,status: "send",text: message,sender: "people",fileBuffer: null);
       chats[chatType.name]!.add(mess);
@@ -66,7 +68,8 @@ abstract class _ChatStore with Store {
               String? name=requiredComplete[chatType.name]!.message!.name;
               formData.files.add(MapEntry("file", MultipartFile.fromBytes(requiredComplete[chatType.name]!.message!.fileBuffer!,filename: name??"file.png", )));
             }
-            final messBot=Message(id: messageId,status: "send",text: "Запрос отправлен, ожидайте",sender: "bot",fileBuffer: null);
+            
+            final messBot=Message(id: messageId,status: "send",text: state.locale.promptIsSent,sender: "bot",fileBuffer: null);
             chats[chatType.name]!.add(messBot);
             
             instanceDb.addMessage(SubjectTypedMessage(message: messBot, subjectType: chatType.name));
@@ -79,7 +82,7 @@ abstract class _ChatStore with Store {
             final messageBotId=Uuid().v4();
             if(result!=null){  
               if(result.long==true){
-                final messBot=Message(id: messageBotId,status: "send",text: "Запрос требует временени на обработку.следите за уведомлениями",sender: "bot",fileBuffer: null);
+                final messBot=Message(id: messageBotId,status: "send",text:state.locale.theQueryRequiresTime,sender: "bot",fileBuffer: null);
                 chats[chatType.name]!.add(messBot);
                 instanceDb.addMessage(SubjectTypedMessage(message: messBot, subjectType: chatType.name));
               }else{
@@ -149,7 +152,13 @@ abstract class _ChatStore with Store {
           final mess=Message(id: messageId,status: "send",text: message,sender: "people",fileBuffer: null);
           chats[chatType.name]!.add(mess);
           instanceDb.addMessage(SubjectTypedMessage(message: mess, subjectType: chatType.name));
-          final messBot=Message(id: messageId,status: "send",text: "Вы действительно хотите запросить \"${message}\"?",sender: "bot",fileBuffer: null);
+          String text=state.locale.areYouSure;
+          if(state.locale.language=="ar"){
+            text="؟\"${message}\" "+text;
+          }else{
+            text=text+" \"${message}\"?";
+          }
+          final messBot=Message(id: messageId,status: "send",text: text,sender: "bot",fileBuffer: null);
           chats[chatType.name]!.add(messBot);
           instanceDb.addMessage(SubjectTypedMessage(message: messBot, subjectType: chatType.name));
           requiredComplete[chatType.name]!.message=mess;

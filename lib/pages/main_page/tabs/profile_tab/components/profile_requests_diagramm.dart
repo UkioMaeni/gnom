@@ -26,7 +26,6 @@ class _ProfileRequestsDiagrammState extends State<ProfileRequestsDiagramm> with 
   List<int> req=[];
 
   int maxValue=0;
-
   @override
   void initState() {
     _opacityController=AnimationController(

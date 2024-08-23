@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gnom/core/localization/localization_bloc.dart';
+import 'package:gnom/core/tools/string_tool.dart';
 import 'package:gnom/http/user.dart';
 
 class AuthScene extends StatefulWidget {
@@ -35,16 +38,21 @@ class _AuthSceneState extends State<AuthScene> {
                   borderRadius: BorderRadius.circular(13)
                 ),
                 padding: EdgeInsets.all(10),
-                child: Text(
-                        "ВОЙТИ",
-                        style: TextStyle(
-                          fontFamily: "NoirPro",
-                          color: Color.fromRGBO(254, 222,181, 1),
-                          height: 1,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 25
-                        ),
-                    ),
+                child: Builder(
+                  builder: (context) {
+                    final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
+                    return Text(
+                             StringTools.firstUpperOfString(state.locale.logIn),
+                            style: TextStyle(
+                              fontFamily: "NoirPro",
+                              color: Color.fromRGBO(254, 222,181, 1),
+                              height: 1,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 25
+                            ),
+                        );
+                  }
+                ),
             ),
     );
   }

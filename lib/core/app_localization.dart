@@ -13,7 +13,7 @@ class AppLocalization{
           return "ENGLISH";
         }
         if(locale.countryCode==arLocale.countryCode&&locale.scriptCode==arLocale.scriptCode){
-          return "AA";
+          return "عربي";
         }
         return "ENGLISH";
   } 
@@ -25,7 +25,7 @@ class AppLocalization{
           return "CHOOSE YOUR\nLANGUAGE";
         }
         if(locale.countryCode==arLocale.countryCode&&locale.scriptCode==arLocale.scriptCode){
-          return "AA\n";
+          return "اختر لغتك\n";
         }
         return "CHOOSE YOUR\nLANGUAGE";
   }
@@ -37,7 +37,7 @@ class AppLocalization{
           return "START";
         }
         if(locale.countryCode==arLocale.countryCode&&locale.scriptCode==arLocale.scriptCode){
-          return "AASTART";
+          return "ابدأ";
         }
         return "CHOOSE YOUR\nLANGUAGE";
   }

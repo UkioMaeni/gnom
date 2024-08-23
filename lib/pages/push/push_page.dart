@@ -23,7 +23,9 @@ class _PushPageState extends State<PushPage> {
   startGenerate()async{
     final pushs=chatStore.pushs;
     for(int i=0;i<pushs.length;i++){
+      
       await Future.delayed(Duration(milliseconds: 300));
+      if(!mounted)return;
       setState(() {
         widgets.add(
            PushElement(topOffset: (i)*105+30, model:pushs[i],)

@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gnom/core/localization/localization_bloc.dart';
+import 'package:gnom/core/tools/string_tool.dart';
 import 'package:gnom/pages/chat_page/chat_page.dart';
 import 'package:gnom/pages/mini_game/mini_game.dart';
 
@@ -77,7 +78,7 @@ class _HOMEScincePageState extends State<HOMEScincePage> {
                   builder: (context) {
                     final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
                     return Text(
-                      state.locale.artSpace,
+                       StringTools.firstUpperOfString(state.locale.artSpace),
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                         fontSize: 30,
@@ -211,10 +212,10 @@ class _ScinceElementState extends State<ScinceElement> with TickerProviderStateM
                                               if(widget.model.type.name=="generation"){
                                                 title=state.locale.imageGeneration;
                                               }else if(widget.model.type.name=="miniGame"){
-                                                 title="!mini game";
+                                                 title=state.locale.miniGame;
                                               }
                                               return Text(
-                                              title,
+                                               StringTools.firstUpperOfString(title),
                                               textAlign: TextAlign.center,
                                               style: const TextStyle(
                                                 fontSize: 26,

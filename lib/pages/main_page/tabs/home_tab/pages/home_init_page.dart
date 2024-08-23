@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gnom/config/update_config.dart';
 import 'package:gnom/core/localization/localization_bloc.dart';
+import 'package:gnom/core/tools/string_tool.dart';
 import 'package:gnom/pages/push/push_page.dart';
 
 class HOMEInitPage extends StatefulWidget {
@@ -113,7 +114,7 @@ class _HOMEInitPageState extends State<HOMEInitPage> with TickerProviderStateMix
               right: 30,
               child: GestureDetector(
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder:  (context) => PushPage(),));
+                 // Navigator.push(context, MaterialPageRoute(builder:  (context) => PushPage(),));
                 },
                 child: Icon(Icons.notifications,size: 40,color: Colors.white,)
               )
@@ -129,7 +130,7 @@ class _HOMEInitPageState extends State<HOMEInitPage> with TickerProviderStateMix
                       header("GNOM\nHELPER"),
                       const SizedBox(height: 230,),
                       Text(
-                        state.locale.choose,
+                         StringTools.firstUpperOfString(state.locale.choose),
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 25,
@@ -143,12 +144,12 @@ class _HOMEInitPageState extends State<HOMEInitPage> with TickerProviderStateMix
                       const SizedBox(height: 10,),
                       GestureDetector(
                         onTap: goToStudiesPage,
-                        child: selectType(state.locale.education)
+                        child: selectType( StringTools.firstUpperOfString(state.locale.education))
                       ),
                       const SizedBox(height: 20,),
                       GestureDetector(
                         onTap: goToScincePage,
-                        child: selectType(state.locale.artSpace)
+                        child: selectType( StringTools.firstUpperOfString(state.locale.artSpace))
                       )
                     ],
                   );
@@ -237,7 +238,7 @@ Widget updateViewInfo(){
                               builder: (context) {
                                 final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
                                 return Text(
-                                    "${state.locale.changes}\n${UpdateConfig.updateDate}",
+                                    "${ StringTools.firstUpperOfString(state.locale.changes)}\n${UpdateConfig.updateDate}",
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       fontSize: 25,

@@ -45,7 +45,7 @@ void attachment()async{
   final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
   
   if(pickedFile!=null){
-    chatStore.addMessage(widget.type, _controller.text,pickedFile);
+    chatStore.addMessage(widget.type, _controller.text,pickedFile,context);
   }
   _controller.text="";
   // // Добавление файла
@@ -55,7 +55,7 @@ void attachment()async{
   
 }
   sendMessage(){
-    chatStore.addMessage(widget.type, _controller.text,null);
+    chatStore.addMessage(widget.type, _controller.text,null,context);
     _controller.text="";
   }
 
@@ -162,7 +162,7 @@ void attachment()async{
                             final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
                             return GestureDetector(
                               onTap: () {
-                                chatStore.addMessage(widget.type, state.locale.yes,null);
+                                chatStore.addMessage(widget.type, state.locale.yes,null,context);
                               },
                               child: Text(
                                           state.locale.yes,
@@ -190,7 +190,7 @@ void attachment()async{
                             final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
                             return GestureDetector(
                               onTap: () {
-                                chatStore.addMessage(widget.type, state.locale.no,null);
+                                chatStore.addMessage(widget.type, state.locale.no,null,context);
                               },
                               child: Text(
                                           state.locale.no,
@@ -254,32 +254,37 @@ void attachment()async{
             ),
             
              Expanded(
-              child: TextField(
-                controller: _controller,
-                maxLines: 5,
-                minLines: 1,
-                style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w400,
-                        fontFamily: "NoirPro",
-                        height: 1,
-                        color: Colors.white
-                        ),
-                decoration: InputDecoration(
-                  constraints: BoxConstraints(
-                    minHeight: 40,
-                  ),
-                  contentPadding: EdgeInsets.only(left: 10,right: 10),
-                  hintText: "Напишите сообщение...",
-                  hintStyle: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w400,
-                        fontFamily: "NoirPro",
-                        height: 1,
-                        color: Color.fromARGB(96, 255, 255, 255)
-                        ),
-                  border: InputBorder.none
-                ),
+              child: Builder(
+                builder: (context) {
+                  final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
+                  return TextField(
+                    controller: _controller,
+                    maxLines: 5,
+                    minLines: 1,
+                    style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: "NoirPro",
+                            height: 1,
+                            color: Colors.white
+                            ),
+                    decoration: InputDecoration(
+                      constraints: BoxConstraints(
+                        minHeight: 40,
+                      ),
+                      contentPadding: EdgeInsets.only(left: 10,right: 10),
+                      hintText: state.locale.writeAMessage,
+                      hintStyle: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: "NoirPro",
+                            height: 1,
+                            color: Color.fromARGB(96, 255, 255, 255)
+                            ),
+                      border: InputBorder.none
+                    ),
+                  );
+                }
               ),
             ),
             GestureDetector(

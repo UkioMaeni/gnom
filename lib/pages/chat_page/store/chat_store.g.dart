@@ -74,9 +74,10 @@ mixin _$ChatStore on _ChatStore, Store {
       AsyncAction('_ChatStore.addMessage', context: context);
 
   @override
-  Future addMessage(EChatPageType chatType, String message, XFile? file) {
+  Future addMessage(EChatPageType chatType, String message, XFile? file,
+      BuildContext context) {
     return _$addMessageAsyncAction
-        .run(() => super.addMessage(chatType, message, file));
+        .run(() => super.addMessage(chatType, message, file, context));
   }
 
   late final _$addMessageFromDbAsyncAction =

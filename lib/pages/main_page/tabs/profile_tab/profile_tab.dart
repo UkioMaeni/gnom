@@ -5,8 +5,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gnom/core/localization/localization_bloc.dart';
+import 'package:gnom/core/tools/string_tool.dart';
 import 'package:gnom/pages/auth_page/auth_page.dart';
 import 'package:gnom/pages/main_page/tabs/profile_tab/components/auth.dart';
 import 'package:gnom/pages/main_page/tabs/profile_tab/components/diagram_info.dart';
@@ -17,6 +20,11 @@ import 'package:gnom/pages/main_page/tabs/profile_tab/components/profile_request
 import 'package:gnom/pages/main_page/tabs/profile_tab/components/profile_requests_diagramm.dart';
 import 'package:gnom/pages/setting_page/setting_page.dart';
 import 'package:gnom/store/user_store.dart';
+import 'package:gnom/core/extension/string.dart';
+final List<double> prices=[
+  249,799,349
+];
+
 
 class ProfileTab extends StatefulWidget {
   const ProfileTab({super.key});
@@ -143,9 +151,9 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                           if(!isGuest)userName(),
                           SizedBox(height: 30,),
                           ProfileRequestCount(requestsCount:requestsCount),
-                          if(!isGuest)SizedBox(height: 20,),
+                          
                           //if(!isGuest)ProfileListFriends(),
-                          //SizedBox(height: 20,),
+                          SizedBox(height: 20,),
                           ProfileRequestsDiagramm(requestsCount:requestsCount,setOpen:(){
                             setState(() {
                               isOpenDiagram=true;
@@ -171,16 +179,21 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                                       width: 45,
                                       child: SvgPicture.asset("assets/svg/exit.svg",color: Color.fromRGBO(254, 222,181, 1),)
                                     ),
-                                    Text(
-                                      " Войти",
-                                      style: TextStyle(
-                                        fontFamily: "NoirPro",
-                                        color: Colors.white,
-                                        height: 1,
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 25
-                                      ),
-                                  ),
+                                    Builder(
+                                      builder: (context) {
+                                        final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
+                                        return Text(
+                                          " ${StringTools.firstUpperOfString(state.locale.logIn)}",
+                                          style: TextStyle(
+                                            fontFamily: "NoirPro",
+                                            color: Colors.white,
+                                            height: 1,
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 25
+                                          ),
+                                                                          );
+                                      }
+                                    ),
                                   
                                   ],
                                 ),
@@ -198,7 +211,8 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                   filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
                   child: Center(
                     child: PlaneInfo(
-                      openTypeIndex:openTypeIndex,
+                      openTypeIndex:openTypeIndex-1,
+                      price: prices[openTypeIndex-1],
                       setOpen:(_){
                       setState(() {
                         openTypeIndex=0;
@@ -214,7 +228,7 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                   child: Center(
                     child: DiagramInfo(
                       requestsCount: requestsCount,
-                      openTypeIndex:openTypeIndex,
+                      openTypeIndex:openTypeIndex-1,
                       close: (){
                         setState(() {
                           isOpenDiagram=false;
@@ -406,6 +420,10 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                                 child: Container(
                                   height: 30,
                                   width: 150,
+                                  constraints: BoxConstraints(
+                                    minWidth: 150,
+                                    maxWidth: 200
+                                  ),
                                   decoration: BoxDecoration(
                                     color: Color.fromARGB(204, 194, 145, 159),
                                     borderRadius: BorderRadius.circular(10),

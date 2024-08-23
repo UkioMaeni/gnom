@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gnom/core/localization/localization_bloc.dart';
+import 'package:gnom/core/tools/string_tool.dart';
 import 'package:gnom/pages/chat_page/store/chat_store.dart';
 import 'package:gnom/pages/main_page/tabs/history_tab/history_info.dart';
 import 'package:gnom/pages/main_page/tabs/history_tab/history_tab.dart';
@@ -311,7 +312,7 @@ class _HistoryElementState extends State<HistoryElement> with TickerProviderStat
                                             name=state.locale.adviseOn;
                                           }
                                           return Text(
-                                          name,
+                                          StringTools.firstUpperOfString(name),
                                           textAlign: TextAlign.left,
                                           style: const TextStyle(
                                             fontSize: 28,
@@ -323,33 +324,38 @@ class _HistoryElementState extends State<HistoryElement> with TickerProviderStat
                                                                               );
                                         }
                                       ),
-                                    const SizedBox(height: 5,),
-                                    if(widget.model.type!="math") RichText(
-                                      text: TextSpan(
-                                        children: [
-                                          const TextSpan(
-                                            text: "ТЕМА ",
-                                            style: TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w500,
-                                              fontFamily: "NoirPro",
-                                              height: 1,
-                                              color: Colors.white
+                                     SizedBox(height: 5,),
+                                    if(widget.model.type!="math") Builder(
+                                      builder: (context) {
+                                        final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
+                                        return RichText(
+                                          text: TextSpan(
+                                            children: [
+                                               TextSpan(
+                                                text: "${StringTools.firstUpperOfString(state.locale.topic)} ",
+                                                style: TextStyle(
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontFamily: "NoirPro",
+                                                  height: 1,
+                                                  color: Colors.white
+                                                  ),
                                               ),
+                                              TextSpan(
+                                                text:"\"${widget.model.theme.length>15?widget.model.theme.substring(0,12)+"...":widget.model.theme}\"",
+                                                style: const TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontFamily: "NoirPro",
+                                                  height: 1,
+                                                  letterSpacing: 1,
+                                                  color:Colors.white
+                                                  ),
+                                              )
+                                            ]
                                           ),
-                                          TextSpan(
-                                            text:"\"${widget.model.theme.length>15?widget.model.theme.substring(0,12)+"...":widget.model.theme}\"",
-                                            style: const TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w500,
-                                              fontFamily: "NoirPro",
-                                              height: 1,
-                                              letterSpacing: 1,
-                                              color:Colors.white
-                                              ),
-                                          )
-                                        ]
-                                      ),
+                                        );
+                                      }
                                     )
                                     ],
                                   ),

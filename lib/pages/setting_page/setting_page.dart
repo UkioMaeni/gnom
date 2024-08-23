@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gnom/UIKit/UIChevron.dart';
 import 'package:gnom/core/app_localization.dart';
 import 'package:gnom/core/localization/localization_bloc.dart';
+import 'package:gnom/core/tools/string_tool.dart';
 import 'package:gnom/pages/chat_support_page/chat_support_page.dart';
 import 'package:gnom/pages/language_page/language_page.dart';
 import 'package:gnom/pages/main_page/main_page.dart';
@@ -82,16 +83,21 @@ class _SettingPageState extends State<SettingPage> {
                             child: Icon(Icons.arrow_back)
                           ),
                           SizedBox(width: 10,),
-                          Text(
-                            "Настройки",
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              fontSize: 30,
-                              fontWeight: FontWeight.w400,
-                              fontFamily: "NoirPro",
-                              height: 1,
-                              color: Colors.white
-                              ),
+                          Builder(
+                            builder: (context) {
+                               final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
+                              return Text(
+                                StringTools.firstUpperOfString(state.locale.settings),
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.w400,
+                                  fontFamily: "NoirPro",
+                                  height: 1,
+                                  color: Colors.white
+                                  ),
+                              );
+                            }
                           ),
                         ],
                       ),
@@ -168,7 +174,7 @@ class _SettingPageState extends State<SettingPage> {
                                     builder: (context) {
                                       final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
                                       return Text(
-                                        " "+state.locale.logOut,
+                                        " "+StringTools.firstUpperOfString(state.locale.logOut),
                                         style: TextStyle(
                                           fontFamily: "NoirPro",
                                           color: Colors.white,
@@ -199,7 +205,7 @@ Widget settingItem({ required Widget icon,required String title,required Functio
         SizedBox(height: 40,width: 40, child: icon),
         SizedBox(width: 10,),
         Text(
-          title,
+          StringTools.firstUpperOfString(title),
           textAlign: TextAlign.center,
           style: const TextStyle(
             fontSize: 25,

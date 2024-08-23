@@ -3,6 +3,9 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gnom/core/localization/localization_bloc.dart';
+import 'package:gnom/core/tools/string_tool.dart';
 import 'package:gnom/pages/main_page/tabs/profile_tab/components/plaining_subcribtion/animations_planings.dart';
 import 'package:gnom/pages/main_page/tabs/profile_tab/components/profile_requests_diagramm.dart';
 import 'package:gnom/store/user_store.dart';
@@ -104,17 +107,22 @@ class _DiagramInfoState extends State<DiagramInfo> with SingleTickerProviderStat
                               color: Color.fromARGB(204, 194, 145, 159),
                               borderRadius: BorderRadius.circular(25)
                             ),
-                            child: Column(
-                              children: [
-                                punkt("Математика",1),
-                                punkt("Реферат",2),
-                                punkt("Сочинение",3),
-                                punkt("Презентация",4),
-                                punkt("Сокращение",5),
-                                punkt("Перефразирование",6),
-                                punkt("Дай совет",7),
-                                punkt("Генерация картинки",8)
-                              ],
+                            child: Builder(
+                              builder: (context) {
+                                final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
+                                return Column(
+                                  children: [
+                                    punkt(state.locale.mathematics,1),
+                                    punkt(state.locale.paper,2),
+                                    punkt(state.locale.essay,3),
+                                    punkt(state.locale.presentation,4),
+                                    punkt(state.locale.shortcut,5),
+                                    punkt(state.locale.paraphrasing,6),
+                                    punkt(state.locale.adviseOn,7),
+                                    punkt(state.locale.imageGeneration,8)
+                                  ],
+                                );
+                              }
                             ),
                            )
                           ],
@@ -172,7 +180,7 @@ class _DiagramInfoState extends State<DiagramInfo> with SingleTickerProviderStat
           ),
           SizedBox(width: 10,),
           Text(
-                  title,
+                  StringTools.firstUpperOfString(title),
                   style: TextStyle(
                     fontFamily: "NoirPro",
                     color: Colors.white,

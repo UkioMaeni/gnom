@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gnom/core/localization/localization_bloc.dart';
+import 'package:gnom/core/tools/string_tool.dart';
 import 'package:gnom/pages/chat_page/chat_page.dart';
 
 class HOMEStudiesPage extends StatefulWidget {
@@ -81,7 +82,7 @@ class _HOMEStudiesPageState extends State<HOMEStudiesPage> {
                   builder: (context) {
                     final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
                     return Text(
-                      state.locale.education,
+                       StringTools.firstUpperOfString(state.locale.education),
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                         fontSize: 30,
@@ -243,7 +244,7 @@ class _StudiesElementState extends State<StudiesElement> with TickerProviderStat
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
                                             Text(
-                                            title,
+                                             StringTools.firstUpperOfString(title),
                                             textAlign: TextAlign.center,
                                             style: const TextStyle(
                                               fontSize: 20,
@@ -255,7 +256,7 @@ class _StudiesElementState extends State<StudiesElement> with TickerProviderStat
                                           ),
                                           const SizedBox(height: 5,),
                                           Text(
-                                            sub,
+                                             StringTools.firstUpperOfString(sub),
                                             textAlign: TextAlign.center,
                                             style: const TextStyle(
                                               fontSize: 14,

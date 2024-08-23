@@ -28,7 +28,8 @@ LText LocaleText = LText();
     String get  done;
     String get  inProgress;
     String get  notAvailableForTrial;
-    String get  remainingPrompts;
+    String get  remainingPrompts_1;
+    String get  remainingPrompts_2;
     String get  logIn;
     String get  logOut;
     String get  subscriptionPlan;
@@ -41,6 +42,14 @@ LText LocaleText = LText();
     String get result_30s;
     String get result_5m;
     String get result_3m;
+    String get miniGame;
+    String get answer;
+    String get download;
+    String get open;
+    String get notifications;
+    String get writeAMessage;
+    String get settings;
+    String get topic;
 }
 
 
@@ -115,7 +124,10 @@ class RuLocale implements LocaleLibrary{
   String get promptIsSent => "запрос отправлен, ожидайте";
 
   @override
-  String get remainingPrompts => "общий остаток запросов";
+  String get remainingPrompts_1 => "общий";
+
+  @override
+  String get remainingPrompts_2 => "остаток запросов";
 
   @override
   String get shortcut => "сокращение";
@@ -127,7 +139,7 @@ class RuLocale implements LocaleLibrary{
   String get subscriptions => "подписки";
 
   @override
-  String get theQueryRequiresTime => "Запрос требует времени на обработку. следите за уведомлениями";
+  String get theQueryRequiresTime => "Запрос требует времени на обработку. Следите за уведомлениями";
 
   @override
   String get yes => "да";
@@ -146,6 +158,38 @@ class RuLocale implements LocaleLibrary{
   
   @override
   String get result_5m => "результат в течение 5 минут";
+  
+  @override
+  // TODO: implement answer
+  String get answer => "ответ";
+  
+  @override
+  // TODO: implement download
+  String get download => "скачать";
+  
+  @override
+  // TODO: implement miniGame
+  String get miniGame => "мини игра";
+  
+  @override
+  // TODO: implement notifications
+  String get notifications => "уведомления";
+  
+  @override
+  // TODO: implement open
+  String get open => "открыть";
+  
+  @override
+  // TODO: implement settings
+  String get settings => "настройки";
+  
+  @override
+  // TODO: implement writeAMessage
+  String get writeAMessage => "Напишите сообщение";
+  
+  @override
+  // TODO: implement topic
+  String get topic => "Тема";
 }
 
 class EnLocale implements LocaleLibrary{
@@ -219,7 +263,10 @@ class EnLocale implements LocaleLibrary{
   String get promptIsSent => "prompt is sent, please wait";
 
   @override
-  String get remainingPrompts => "remaining prompts";
+  String get remainingPrompts_1 => "remaining";
+
+  @override
+  String get remainingPrompts_2 => "prompts";
 
   @override
   String get shortcut => "shortcut";
@@ -254,6 +301,38 @@ class EnLocale implements LocaleLibrary{
   @override
   // TODO: implement result_5m
   String get result_5m => "The result in 5 minutes";
+  
+  @override
+  // TODO: implement answer
+  String get answer => "answer";
+  
+  @override
+  // TODO: implement download
+  String get download => "download";
+  
+  @override
+  // TODO: implement miniGame
+  String get miniGame => "mini пame";
+  
+  @override
+  // TODO: implement notifications
+  String get notifications => "notifications";
+  
+  @override
+  // TODO: implement open
+  String get open => "open";
+  
+  @override
+  // TODO: implement settings
+  String get settings => "settings";
+  
+  @override
+  // TODO: implement writeAMessage
+  String get writeAMessage => "write a message";
+  
+  @override
+  // TODO: implement topic
+  String get topic => "Topic";
 }
 
 class ArLocale implements LocaleLibrary{
@@ -327,7 +406,10 @@ class ArLocale implements LocaleLibrary{
   String get promptIsSent => "تم إرسال الطلب، الرجاء الانتظار";
 
   @override
-  String get remainingPrompts => "الطلبات المتبقية";
+  String get remainingPrompts_1 => "الطلبات";
+
+  @override
+  String get remainingPrompts_2 => "المتبقية";
 
   @override
   String get shortcut => "اختصار";
@@ -362,5 +444,37 @@ class ArLocale implements LocaleLibrary{
   @override
   // TODO: implement result_5m
   String get result_5m => "النتيجة خلال ٥ دقائق";
+  
+  @override
+  // TODO: implement answer
+  String get answer => "جواب";
+  
+  @override
+  // TODO: implement download
+  String get download => "تحميل";
+  
+  @override
+  // TODO: implement miniGame
+  String get miniGame => "لعبة مصغرة";
+  
+  @override
+  // TODO: implement notifications
+  String get notifications => "إشعارات";
+  
+  @override
+  // TODO: implement open
+  String get open => "افتح";
+  
+  @override
+  // TODO: implement settings
+  String get settings => "الإعدادات";
+  
+  @override
+  // TODO: implement writeAMessage
+  String get writeAMessage => "اكتب رسالة";
+  
+  @override
+  // TODO: implement topic
+  String get topic => "موضوع";
  
 }

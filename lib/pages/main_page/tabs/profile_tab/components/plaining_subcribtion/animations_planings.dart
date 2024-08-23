@@ -2,12 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gnom/core/localization/localization_bloc.dart';
+import 'package:gnom/core/tools/string_tool.dart';
 
 class FirstElementPlaning extends StatefulWidget {
   final Function(int) onTap;
   final Color color;
   final double scaleView;
-  const FirstElementPlaning({super.key,required this.onTap,required this.color,required this.scaleView});
+  final double price;
+  const FirstElementPlaning({super.key,required this.onTap,required this.color,required this.scaleView,required this.price});
 
   @override
   State<FirstElementPlaning> createState() => _FirstElementPlaningState();
@@ -67,7 +69,7 @@ class _FirstElementPlaningState extends State<FirstElementPlaning> with SingleTi
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  "349",
+                                  widget.price.toInt().toString(),
                                   style: TextStyle(
                                     fontFamily: "NoirPro",
                                     color: Colors.white,
@@ -92,7 +94,7 @@ class _FirstElementPlaningState extends State<FirstElementPlaning> with SingleTi
                               builder: (context) {
                                 final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
                                 return Text(
-                                      state.locale.month,
+                                      StringTools.firstUpperOfString(state.locale.month) ,
                                       style: TextStyle(
                                         fontFamily: "NoirPro",
                                         color: Colors.white,

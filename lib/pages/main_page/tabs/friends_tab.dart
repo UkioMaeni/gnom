@@ -5,7 +5,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:gnom/core/localization/localization_bloc.dart';
+import 'package:gnom/core/tools/string_tool.dart';
 import 'package:gnom/http/user.dart';
 import 'package:gnom/store/user_store.dart';
 
@@ -87,17 +90,22 @@ class _FriendsTabState extends State<FriendsTab> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     if(userStore.role=="guest"){
       return Center(
-        child: Text(
-                "НЕДОСТУПНО ДЛЯ ГОСТЕВОГО РЕЖИМА",
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500,
-                  fontFamily: "NoirPro",
-                  height: 1,
-                  color: Color.fromRGBO(254, 222, 181, 1),
-                ),
-              ),
+        child: Builder(
+          builder: (context) {
+            final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
+            return Text(
+                    StringTools.firstUpperOfString(state.locale.notAvailableForTrial),
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                      fontFamily: "NoirPro",
+                      height: 1,
+                      color: Color.fromRGBO(254, 222, 181, 1),
+                    ),
+                  );
+          }
+        ),
       );
     }
     return Padding(

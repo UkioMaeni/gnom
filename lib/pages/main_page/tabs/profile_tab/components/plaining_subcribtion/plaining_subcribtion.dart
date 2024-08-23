@@ -6,7 +6,9 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gnom/core/localization/localization_bloc.dart';
+import 'package:gnom/core/tools/string_tool.dart';
 import 'package:gnom/pages/main_page/tabs/profile_tab/components/plaining_subcribtion/animations_planings.dart';
+import 'package:gnom/pages/main_page/tabs/profile_tab/profile_tab.dart';
 import 'package:gnom/store/user_store.dart';
 
 class ProfileplaningSubcribtion extends StatefulWidget {
@@ -107,7 +109,7 @@ class _ProfileplaningSubcribtionState extends State<ProfileplaningSubcribtion> w
                         builder: (context) {
                           final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
                           return Text(
-                            state.locale.subscriptionPlan,
+                            StringTools.firstUpperOfString(state.locale.subscriptionPlan),
                             style: TextStyle(
                               fontFamily: "NoirPro",
                               color: Color.fromRGBO(254, 222,181, 1),
@@ -124,6 +126,7 @@ class _ProfileplaningSubcribtionState extends State<ProfileplaningSubcribtion> w
                         children: [
                           FirstElementPlaning(
                             color: Colors.amber,
+                            price: prices[0],
                             scaleView: 1,
                             onTap:(_)async{
                             print(widget.controller.offset);
@@ -131,6 +134,7 @@ class _ProfileplaningSubcribtionState extends State<ProfileplaningSubcribtion> w
                             widget.setOpen(1);
                           }),
                           FirstElementPlaning(
+                            price: prices[1],
                             color: Colors.amber,
                             scaleView: 1.3,
                             onTap:(_)async{
@@ -139,6 +143,7 @@ class _ProfileplaningSubcribtionState extends State<ProfileplaningSubcribtion> w
                             widget.setOpen(2);
                           }),
                           FirstElementPlaning(
+                            price: prices[2],
                             color: Colors.amber,
                             scaleView: 1,
                             onTap:(_)async{

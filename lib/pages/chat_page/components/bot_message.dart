@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gnom/UIKit/permision_modal.dart';
 import 'package:gnom/config/http_config.dart';
 import 'package:gnom/core/localization/localization_bloc.dart';
 import 'package:gnom/pages/chat_page/chat_page.dart';
@@ -111,8 +112,23 @@ class _BotMessageState extends State<BotMessage> {
                     final deviceInfo = await DeviceInfoPlugin().androidInfo;
                     final version = deviceInfo.version.sdkInt;
                     if(version>=33){
-                      await Permission.manageExternalStorage.request();
-                      final status= await Permission.manageExternalStorage.status;
+                      
+                        PermissionStatus  status= await Permission.manageExternalStorage.status;
+                        if(status.isDenied){
+                          await showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (context) {
+                              return Dialog(
+
+                                backgroundColor: Colors.transparent,
+                                child: PermisionModal(),
+                              );
+                            },
+                          );
+                        }
+                        status= await Permission.manageExternalStorage.status;
+                        
                       if(status!=PermissionStatus.granted){
                         return;
                       }

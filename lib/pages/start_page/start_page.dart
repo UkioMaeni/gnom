@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gnom/UIKit/permision_modal.dart';
 import 'package:gnom/core/localization/custom_localization.dart';
 import 'package:gnom/core/localization/localization_bloc.dart';
 import 'package:gnom/db/sql_lite.dart';
@@ -13,6 +14,7 @@ import 'package:gnom/repositories/locale_storage.dart';
 import 'package:gnom/repositories/token_repo.dart';
 import 'package:gnom/store/user_store.dart';
 import 'package:gnom/tools/phone_info.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class StartPage extends StatefulWidget {
   const StartPage({super.key});

@@ -1,13 +1,16 @@
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gnom/UIKit/UIChevron.dart';
+import 'package:gnom/UIKit/permision_modal.dart';
 import 'package:gnom/core/app_localization.dart';
 import 'package:gnom/core/localization/custom_localization.dart';
 import 'package:gnom/core/localization/localization_bloc.dart';
 import 'package:gnom/pages/main_page/main_page.dart';
 import 'package:gnom/repositories/locale_storage.dart';
 import 'package:infinite_pageview/infinite_pageview.dart';
+import 'package:permission_handler/permission_handler.dart';
 class LanguagePage extends StatefulWidget {
   final bool initial;
   const LanguagePage({super.key,required this.initial});
@@ -230,6 +233,38 @@ Widget setLanguageButton(){
        }
        
        if(widget.initial){
+        final deviceInfo = await DeviceInfoPlugin().androidInfo;
+        final version = deviceInfo.version.sdkInt;
+        PermissionStatus  status;
+        if(version>=33){
+          await Permission.manageExternalStorage.request();
+            status= await Permission.manageExternalStorage.status;
+        }else{
+          await Permission.storage.request();
+           status= await Permission.storage.status;
+        }
+        
+        if(status.isDenied){
+          await showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (context) {
+              return Dialog(
+
+                backgroundColor: Colors.transparent,
+                child: PermisionModal(),
+              );
+            },
+          );
+        }
+        if(version>=33){
+            status= await Permission.manageExternalStorage.status;
+        }else{
+           status= await Permission.storage.status;
+        }
+        if(status.isDenied){
+          return;
+        }
         Navigator.push(context, MaterialPageRoute(builder: (context) => const MainPage(),));
        }else{
         Navigator.pop(context);

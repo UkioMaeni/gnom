@@ -42,7 +42,14 @@ android {
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
-
+    signingConfigs {
+        release {
+            storeFile file('keystore.jks')
+            storePassword '_Gnom<pass.gen>_'
+            keyAlias 'main'
+            keyPassword '_Gnom<pass.gen>_'
+        }
+    }
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.gnom.helper"
@@ -58,7 +65,7 @@ android {
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
         }
     }
 }

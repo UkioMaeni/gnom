@@ -14,10 +14,14 @@ import 'package:gnom/pages/chat_page/chat_page.dart';
 import 'package:gnom/pages/chat_page/store/chat_store.dart';
 import 'package:flutter/services.dart';
 import 'package:external_path/external_path.dart';
+import 'package:open_file_plus/open_file_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
-import 'package:open_file/open_file.dart';
+import 'package:external_path/external_path.dart';
+import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart';
 class BotMessage extends StatefulWidget {
   final Message message;
   final String  type;
@@ -111,39 +115,53 @@ class _BotMessageState extends State<BotMessage> {
                   onTap: () async{
                     final deviceInfo = await DeviceInfoPlugin().androidInfo;
                     final version = deviceInfo.version.sdkInt;
-                    if(version>=33){
+                    
+                    // if(version>=33){
                       
-                        PermissionStatus  status= await Permission.manageExternalStorage.status;
-                        if(status.isDenied){
-                          await showDialog(
-                            context: context,
-                            barrierDismissible: false,
-                            builder: (context) {
-                              return Dialog(
+                    //     PermissionStatus  status= await Permission.manageExternalStorage.status;
+                    //     if(status.isDenied){
+                    //       await showDialog(
+                    //         context: context,
+                    //         barrierDismissible: false,
+                    //         builder: (context) {
+                    //           return Dialog(
 
-                                backgroundColor: Colors.transparent,
-                                child: PermisionModal(),
-                              );
-                            },
-                          );
-                        }
-                        status= await Permission.manageExternalStorage.status;
+                    //             backgroundColor: Colors.transparent,
+                    //             child: PermisionModal(),
+                    //           );
+                    //         },
+                    //       );
+                    //     }
+                    //     status= await Permission.manageExternalStorage.status;
                         
-                      if(status!=PermissionStatus.granted){
-                        return;
-                      }
-                    }else{
-                      await Permission.storage.request();
-                      final status= await Permission.storage.status;
-                      if(status!=PermissionStatus.granted){
-                        return;
-                      }
-                    }
+                    //   if(status!=PermissionStatus.granted){
+                    //     return;
+                    //   }
+                    // }else{
+                    //   await Permission.storage.request();
+                    //   final status= await Permission.storage.status;
+                    //   if(status!=PermissionStatus.granted){
+                    //     return;
+                    //   }
+                    // }
+                    
                     var path = await ExternalPath.getExternalStorageDirectories();
-                    final gnomDirectory = Directory(path[0]+'/Android/media/com.gnom.helper');
+                    print(path);
+                    String directoryPath=path[0]+'/Android/media/com.gnom.helper';
+                    if(version==28){
+                      directoryPath=path[0]+'/Android/data/com.gnom.helper';
+                    }
+                    final gnomDirectory = Directory(directoryPath);
+                    final directory = await getApplicationDocumentsDirectory();
+                    
+                    print(directory.path);                    
+                    String downloadDirectory= path[0]+"/Download";
+                      //downloadDirectory=directory.path;
                     if(!gnomDirectory.existsSync()){
                       gnomDirectory.create();
                     }
+                    bool find=gnomDirectory.existsSync();
+                    print(find);
                     setState(() {
                       isDownload=true;
                       
@@ -163,7 +181,7 @@ class _BotMessageState extends State<BotMessage> {
                       print(fileExchange);
                       String id= Uuid().v4();
                       final file = File(gnomDirectory.path+"/${id}.${fileExchange}");
-                      
+                      await file.create();
                       file.writeAsBytesSync(response.data);
                       chatStore.updateStatusForDownloadFile(widget.message.id, gnomDirectory.path+"/${id}.${fileExchange}",widget.type);
                       
@@ -198,7 +216,20 @@ class _BotMessageState extends State<BotMessage> {
                 GestureDetector(
                   onTap: ()async {
                     try {
-                      await OpenFile.open(widget.message.link!);
+                      // await Permission.manageExternalStorage.request();
+                      // print(await Permission.manageExternalStorage.status);
+                      print(widget.message.link);
+                      final extension = path.extension(widget.message.link!);
+                      print(extension);
+                      bool exist=await File(widget.message.link!).exists();
+                      print(exist);
+                      print("aaa");
+                      await OpenFile.open(widget.message.link!,type: "application/vnd.openxmlformats-officedocument.presentationml.presentation");
+                      //await launchUrl(Uri.parse(widget.message.link!));
+                      //await OpenFilex.open(widget.message.link!);
+                      //await OpenFilex.open(widget.message.link!);
+                      
+                      print("end");
                     } catch (e) {
                       print(e);
                     }
@@ -209,6 +240,7 @@ class _BotMessageState extends State<BotMessage> {
                       padding: EdgeInsets.symmetric(vertical: 10),
                       child: Builder(
                         builder: (context) {
+                          print(widget.message.link);
                           final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
                           return Text(
                           state.locale.open,

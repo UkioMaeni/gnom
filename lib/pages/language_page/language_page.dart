@@ -7,6 +7,7 @@ import 'package:gnom/UIKit/permision_modal.dart';
 import 'package:gnom/core/app_localization.dart';
 import 'package:gnom/core/localization/custom_localization.dart';
 import 'package:gnom/core/localization/localization_bloc.dart';
+import 'package:gnom/main.dart';
 import 'package:gnom/pages/main_page/main_page.dart';
 import 'package:gnom/repositories/locale_storage.dart';
 import 'package:infinite_pageview/infinite_pageview.dart';
@@ -223,7 +224,7 @@ Widget setLanguageButton(){
        Locale newLocale= AppLocalization.listlocations[page%3];
        await localeStorage.saveAppLanguage(newLocale.toString());
        if(newLocale.languageCode=="ru"){
-        context.read<LocalizationBloc>().add(LocalizationSetLocaleEvent(locale:RuLocale() ));
+        context.read<LocalizationBloc>().add(LocalizationSetLocaleEvent(locale:RuLocale()));
        }else if(newLocale.languageCode=="en"){
         context.read<LocalizationBloc>().add(LocalizationSetLocaleEvent(locale:EnLocale() ));
        }else if(newLocale.languageCode=="ar"){
@@ -232,43 +233,48 @@ Widget setLanguageButton(){
         context.read<LocalizationBloc>().add(LocalizationSetLocaleEvent(locale: EnLocale()));
        }
        
-       if(widget.initial){
-        final deviceInfo = await DeviceInfoPlugin().androidInfo;
-        final version = deviceInfo.version.sdkInt;
-        PermissionStatus  status;
-        if(version>=33){
-          await Permission.manageExternalStorage.request();
-            status= await Permission.manageExternalStorage.status;
-        }else{
-          await Permission.storage.request();
-           status= await Permission.storage.status;
-        }
+      //  if(widget.initial){
+      //   final deviceInfo = await DeviceInfoPlugin().androidInfo;
+      //   final version = deviceInfo.version.sdkInt;
+      //   PermissionStatus  status;
+      //   if(version>=33){
+      //     await Permission.manageExternalStorage.request();
+      //       status= await Permission.manageExternalStorage.status;
+      //   }else{
+      //     await Permission.storage.request();
+      //      status= await Permission.storage.status;
+      //   }
         
-        if(status.isDenied){
-          await showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (context) {
-              return Dialog(
+      //   if(status.isDenied){
+      //     await showDialog(
+      //       context: context,
+      //       barrierDismissible: false,
+      //       builder: (context) {
+      //         return Dialog(
 
-                backgroundColor: Colors.transparent,
-                child: PermisionModal(),
-              );
-            },
-          );
-        }
-        if(version>=33){
-            status= await Permission.manageExternalStorage.status;
-        }else{
-           status= await Permission.storage.status;
-        }
-        if(status.isDenied){
-          return;
-        }
+      //           backgroundColor: Colors.transparent,
+      //           child: PermisionModal(),
+      //         );
+      //       },
+      //     );
+      //   }
+      //   if(version>=33){
+      //       status= await Permission.manageExternalStorage.status;
+      //   }else{
+      //      status= await Permission.storage.status;
+      //   }
+      //   if(status.isDenied){
+      //     return;
+      //   }
+      //   
+      //  }else{
+      //   Navigator.pop(context);
+      //  }
+      if(widget.initial){
         Navigator.push(context, MaterialPageRoute(builder: (context) => const MainPage(),));
-       }else{
+      }else{
         Navigator.pop(context);
-       }
+      }
       
     },
     child: SizedBox(

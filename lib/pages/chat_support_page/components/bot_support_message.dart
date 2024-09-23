@@ -11,10 +11,10 @@ import 'package:gnom/pages/chat_page/chat_page.dart';
 import 'package:gnom/pages/chat_page/store/chat_store.dart';
 import 'package:flutter/services.dart';
 import 'package:external_path/external_path.dart';
+import 'package:open_file_plus/open_file_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:uuid/uuid.dart';
-import 'package:open_file/open_file.dart';
 class BotSupportMessage extends StatefulWidget {
   final Message message;
   const BotSupportMessage({super.key,required this.message});

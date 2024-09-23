@@ -41,6 +41,7 @@ class _MainPageState extends State<MainPage> {
 
   void initFirebase()async{
     final apnsToken = await FirebaseMessaging.instance.getToken();
+    print(apnsToken);
     await FCMHttp().setFcmToken(apnsToken??"");
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       print('Got a message whilst in the foreground!');

@@ -56,11 +56,12 @@ class _UIChevronState extends State<UIChevron> with SingleTickerProviderStateMix
       builder: (context,_) {
         return GestureDetector(
           onTap: onClick,
-          child: SizedBox(
-            height: 40,
-            width: 40,
+          child: Container( 
+            color: Colors.transparent,
+            height: 80,
+            width: 60,
             child: Align(
-              alignment: Alignment.center,
+              alignment:Alignment.center,
               child: Transform(
                 alignment: Alignment.center,
                 transform: transform,

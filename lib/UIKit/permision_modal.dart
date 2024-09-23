@@ -51,7 +51,7 @@ class _PermisionModalState extends State<PermisionModal> {
                 final version = deviceInfo.version.sdkInt;
                  PermissionStatus  status;
                 if(version>=33){
-                  await Permission.manageExternalStorage.request();
+                  await Permission.manageExternalStorage .request();
                     status= await Permission.manageExternalStorage.status;
                 }else{
                   await Permission.storage.request();

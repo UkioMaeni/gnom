@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:external_path/external_path.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gnom/UIKit/permision_modal.dart';
@@ -8,6 +9,7 @@ import 'package:gnom/core/localization/localization_bloc.dart';
 import 'package:gnom/db/sql_lite.dart';
 import 'package:gnom/http/guest.dart';
 import 'package:gnom/http/user.dart';
+import 'package:gnom/main.dart';
 import 'package:gnom/pages/language_page/language_page.dart';
 import 'package:gnom/pages/main_page/main_page.dart';
 import 'package:gnom/repositories/locale_storage.dart';
@@ -120,6 +122,8 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin{
 
 
   authorizeUser()async{
+    var path = await ExternalPath.getExternalStorageDirectories();
+    print(path);
     String? tokenU=await tokenRepo.refreshUserToken;
     print(tokenU);
     if(tokenU==null){

@@ -148,7 +148,7 @@ class _BotMessageState extends State<BotMessage> {
                     var path = await ExternalPath.getExternalStorageDirectories();
                     print(path);
                     String directoryPath=path[0]+'/Android/media/com.gnom.helper';
-                    if(version==28){
+                    if(version<=32){
                       directoryPath=path[0]+'/Android/data/com.gnom.helper';
                     }
                     final gnomDirectory = Directory(directoryPath);

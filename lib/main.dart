@@ -112,6 +112,7 @@ class _InherittedAppState extends State<InherittedApp> with WidgetsBindingObserv
     setState(() {
       _notification = state;
       print(_notification);
+      print("////////////////////azazaza");
       if(_notification==AppLifecycleState.resumed&&!requested){
         requiredPermissons();
       }

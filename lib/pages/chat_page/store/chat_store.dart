@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:external_path/external_path.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,7 @@ import 'package:gnom/pages/main_page/tabs/history_tab/history_tab.dart';
 import 'package:gnom/pages/push/push_page.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mobx/mobx.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 
 part 'chat_store.g.dart';
@@ -73,7 +75,7 @@ abstract class _ChatStore with Store {
             chats[chatType.name]!.add(messBot);
             
             instanceDb.addMessage(SubjectTypedMessage(message: messBot, subjectType: chatType.name));
-            history.add(HistoryModel(fileBuffer: requiredComplete[chatType.name]!.message!.fileBuffer, icon: SizedBox.shrink(),progress: "process",theme: requiredComplete[chatType.name]!.message!.text,type:chatType.name ,favorite: false,messageId:requiredComplete[chatType.name]!.message!.id,answer: "",answerMessageId: "",));
+            //history.add(HistoryModel(fileBuffer: requiredComplete[chatType.name]!.message!.fileBuffer, icon: SizedBox.shrink(),progress: "process",theme: requiredComplete[chatType.name]!.message!.text,type:chatType.name ,favorite: false,messageId:requiredComplete[chatType.name]!.message!.id,answer: "",answerMessageId: "",));
             history=ObservableList.of(history);
             chats=ObservableMap.of(chats);
             requiredComplete[chatType.name]!.required=false;
@@ -95,7 +97,17 @@ abstract class _ChatStore with Store {
                       print(response.headers["content-type"]);
                       String fileExchange=response.headers["content-type"]?[0].replaceAll("image/", "")??"none";
                       var path = await ExternalPath.getExternalStorageDirectories();
-                      final gnomDirectory = Directory(path[0]+'/Android/media/com.gnom.helper');
+                      String directoryPath=path[0]+'/Android/media/com.gnom.helper';
+                      final deviceInfo = await DeviceInfoPlugin().androidInfo;
+                      final version = deviceInfo.version.sdkInt;
+                      if(version<=32){
+                        directoryPath=path[0]+'/Android/data/com.gnom.helper';
+                      }
+                      
+                      final gnomDirectory = Directory(directoryPath);
+                      if(!gnomDirectory.existsSync()){
+                      gnomDirectory.create();
+                    }
                       final file = File(gnomDirectory.path+"/${result.messageId}.${fileExchange}");
                       
                       file.writeAsBytesSync(response.data);
@@ -176,19 +188,35 @@ abstract class _ChatStore with Store {
       for(var element in result){
         print(element.message.id);
         print("////");
-        chats[element.subjectType]!.add(element.message);
+        //chats[element.subjectType]!.add(element.message);
         for(var h in history){
+          print(h.messageId);
           if(h.messageId==element.message.id){
             h.progress="completed";
-            h.answerBuffer=element.message.fileBuffer;
+            h.answer=element.message.link!;
+            await instanceDb.updateHistoryAnswer(element.message.id,element.message.link!);
+            await instanceDb.updateHistoryProgress(element.message.id);
             print(h.messageId);
           }
         }
         history=ObservableList.of(history);
-        instanceDb.addMessage(element);
+        //instanceDb.addMessage(element);
       }
     }
     chats=ObservableMap.of(chats);
+  }
+
+  @action
+  Future<void> updateHistoryAsDocument(String messageId,String path,String documentType)async{
+      List<HistoryModel> find = history.where((element) => element.messageId==messageId,).toList();
+      for (var element in find) {
+        element.answer=documentType;
+        element.AisDocument=true;
+        element.Apath=path;
+        await instanceDb.updateHistoryAnswerInDocument(element.messageId,path,documentType);
+      }
+      
+      
   }
   @action
   addMessageFromDb()async{
@@ -252,7 +280,11 @@ abstract class _ChatStore with Store {
 
   ]);
 
-
+  @action
+  addHistory(HistoryModel model){
+    history.add(model);
+    history=ObservableList.of(history);
+  }
 
   @action
   updateStatusHistory(String id,String answer,String answerMessageId )async{
@@ -303,6 +335,8 @@ class Message{
   String? name;
   String? link;
   String? reply;
+  String? path;
+  
   Message({
     required this.id,
     required this.status,
@@ -311,7 +345,8 @@ class Message{
     required this.fileBuffer,
     this.name,
     this.link,
-    this.reply
+    this.reply,
+    this.path
   });
 
   Map<String,dynamic> toMap(){

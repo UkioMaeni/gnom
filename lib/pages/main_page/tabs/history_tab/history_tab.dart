@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gnom/core/localization/localization_bloc.dart';
 import 'package:gnom/core/tools/string_tool.dart';
@@ -26,51 +27,46 @@ class _HistoryTabState extends State<HistoryTab> with TickerProviderStateMixin {
 
   // late final AnimationController _heightController;
   // late final Animation<double> _height;
-  double paddingOffset=100;
+  double paddingOffset=50;
     List<Widget> widgets=[];
 
+  String type="process";
+
   startGenerate()async{
+    String currentType=type;
+    widgets=[];
     final histories= chatStore.history;
-    
-    final processList= histories.where((element) => element.progress=="process").toList();
-    final completedList= histories.where((element) => element.progress=="completed").toList();
+    final processList= histories.where((element) => element.progress==type).toList();
+    //final completedList= histories.where((element) => element.progress=="completed").toList();
     print(processList.length);
     for(int i=0;i<processList.length;i++){
-      if(!mounted) return;
+      if(!mounted || currentType!=type) return;
       setState(() {
         final state = (context.read<LocalizationBloc>().state as LocalizationLocaleState);
-        if(i==0){
-          widgets.add(
-          Positioned(
-            top: i*105+paddingOffset,
-            child: TextElement(title:  StringTools.firstUpperOfString(state.locale.inProgress),)
-          )
-        );
-        }
         widgets.add(
-           HistoryElement(topOffset: (i)*105+paddingOffset+50, model:processList[i],)
+          HistoryElement(topOffset: (i)*105+paddingOffset+50, model:processList[i],)
         );
       });
       await Future.delayed(Duration(milliseconds: 300));
     }
-    for(int i=0;i<completedList.length;i++){
-      if(!mounted) return;
-      setState(() {
-        final state = (context.read<LocalizationBloc>().state as LocalizationLocaleState);
-        if(i==0){
-          widgets.add(
-          Positioned(
-            top: (i+processList.length)*105+paddingOffset+50,
-            child: TextElement(title: StringTools.firstUpperOfString(state.locale.done),)
-          )
-        );
-        }
-        widgets.add(
-           HistoryElement(topOffset: (i+processList.length)*105+paddingOffset+100, model:completedList[i],)
-        );
-      });
-      await Future.delayed(Duration(milliseconds: 300));
-    }
+    // for(int i=0;i<completedList.length;i++){
+    //   if(!mounted) return;
+    //   setState(() {
+    //     final state = (context.read<LocalizationBloc>().state as LocalizationLocaleState);
+    //     if(i==0){
+    //       widgets.add(
+    //       Positioned(
+    //         top: (i+processList.length)*105+paddingOffset+50,
+    //         child: TextElement(title: StringTools.firstUpperOfString(state.locale.done),)
+    //       )
+    //     );
+    //     }
+    //     widgets.add(
+    //        HistoryElement(topOffset: (i+processList.length)*105+paddingOffset+100, model:completedList[i],)
+    //     );
+    //   });
+    //   await Future.delayed(Duration(milliseconds: 300));
+    // }
   }
   @override
   void initState() {
@@ -115,39 +111,132 @@ class _HistoryTabState extends State<HistoryTab> with TickerProviderStateMixin {
     });
   }
 
-
+  
   
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding:  EdgeInsets.only(top: MediaQuery.of(context).padding.top,left: 20,right: 0),
-      child:  SizedBox(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        child: SingleChildScrollView(
-            child:  SizedBox(
-                height: widgets.length*105+100,
-                child: Stack(
-                  children: [
-                    
-                    for(int i=0;i<widgets.length;i++)widgets[i]
-                  ],
-                ),
-              
+      child:  Column(
+        children: [
+          SizedBox(height: 20,),
+          Container(
+            height: 70,
+            margin: EdgeInsets.only(right: 20),
+            decoration: BoxDecoration(
+              color: Color.fromARGB(64, 0, 0, 0),
+              borderRadius: BorderRadius.circular(10)
             ),
-          
-        ),
+            child: Builder(
+              builder: (context) {
+                final state = context.watch<LocalizationBloc>().state as LocalizationLocaleState;
+                return Row(
+                  children: [
+                    NavigationElement(
+                      title: state.locale.done.toUpperCase(),
+                      type: "completed",
+                      currentType: type,
+                      updater: () {
+                          setState(() {
+                            type="completed";
+                            startGenerate();
+                          });
+                        },
+                      width: (MediaQuery.of(context).size.width-40)/3-10,
+                    ),
+                    Container(
+                      width: 1,
+                      margin: EdgeInsets.symmetric(vertical: 20),
+                      color: Color.fromRGBO(254, 222,181, 1),
+                    ),
+                    NavigationElement(
+                      title: state.locale.inProgress.toUpperCase(),
+                      type: "process",
+                      currentType: type,
+                      updater: () {
+                          setState(() {
+                            type="process";
+                            startGenerate();
+                          });
+                        },
+                      width: (MediaQuery.of(context).size.width-40)/3+20-2,
+                    ),
+                    Container(
+                      width: 1,
+                      margin: EdgeInsets.symmetric(vertical: 20),
+                      color: Color.fromRGBO(254, 222,181, 1),
+                    ),
+                    NavigationElement(
+                      title: state.locale.error.toUpperCase(),
+                      type: "error",
+                      currentType: type,
+                      updater: () {
+                          setState(() {
+                            type="error";
+                            startGenerate();
+                          });
+                        },
+                      width: (MediaQuery.of(context).size.width-40)/3-10,
+                    ),
+                  ],
+                );
+              }
+            ),
+          ),
+          Expanded(
+            child: Observer(
+              builder: (context) {
+               final history= chatStore.history;
+                return SizedBox(
+                  height: MediaQuery.of(context).size.height,
+                  width: MediaQuery.of(context).size.width,
+                  child: SingleChildScrollView(
+                      child:  SizedBox(
+                          height: widgets.length*105+100,
+                          child: Stack(
+                            children: [
+                              
+                              for(int i=0;i<widgets.length;i++)widgets[i]
+                            ],
+                          ),
+                        
+                      ),
+                      
+                    
+                  ),
+                  // child: Observer(
+                  //   builder: (context) {
+                  //     final histories= chatStore.history;
+                    
+                  //     final processList= histories.where((element) => element.progress=="process").toList();
+                  //     final completedList= histories.where((element) => element.progress=="completed").toList();
+                  //     return ListView(
+                  //       children: [
+                
+                  //       ],
+                  //     );
+                  //   }
+                  // ),
+                );
+              }
+            ),
+          ),
+        ],
       ),
     );
   }
 
 
 
+
+//class NavigationElement ex
+
+
 Widget selectType(String title){
   return GestureDetector(
     onTap: () {
-     
+      
     },
     child: SizedBox(
       width: MediaQuery.of(context).size.width-60,
@@ -193,6 +282,49 @@ Widget selectType(String title){
   }
 
 }
+  
+
+class NavigationElement extends StatelessWidget {
+  final double width;
+  final String title;
+  final String type;
+  final String currentType;
+  final Function() updater;
+  const NavigationElement({super.key,required this.title,required this.type,required this.currentType,required this.updater,required this.width});
+
+  @override
+  Widget build(BuildContext context) {
+    return  GestureDetector(
+                    onTap:updater,
+                    child: Container(
+                      width: width,
+                      height: double.infinity,
+                      alignment: Alignment.center,
+                      color: Colors.transparent,
+                      child:AnimatedDefaultTextStyle(
+                        duration: Duration(milliseconds: 200),
+                        style: TextStyle(
+                          fontSize: currentType==type?16:13,
+                          color:currentType==type? Color.fromRGBO(254, 222,181, 1):Color.fromRGBO(254, 222,181, 0.4)
+                        ),
+                        child: Text(
+                          title,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            
+                            fontWeight: FontWeight.w800,
+                            fontFamily: "NoirPro",
+                            height: 1,
+                            letterSpacing: 1,
+                            ),
+                        ),
+                      ),
+                    ),
+                  
+                );
+  }
+}
+
 
 class TextElement extends StatefulWidget {
   final String title;
@@ -306,7 +438,7 @@ class _HistoryElementState extends State<HistoryElement> with TickerProviderStat
                       Expanded(
                         child: DecoratedBox(
                           decoration: BoxDecoration(
-                            color: widget.model.type=="math"?Color.fromARGB(80, 196, 114, 137): const Color.fromRGBO(196, 114, 137, 0.8),
+                            color:widget.model.progress=="error"?Color.fromARGB(45, 0, 0, 0): widget.model.type=="math"?Color.fromARGB(80, 196, 114, 137): const Color.fromRGBO(196, 114, 137, 0.8),
                             borderRadius: BorderRadius.circular(15),
                             border: widget.model.type=="math"?Border.all(color: const Color.fromRGBO(196, 114, 137, 0.8),width: 3):null
                           ),
@@ -315,84 +447,143 @@ class _HistoryElementState extends State<HistoryElement> with TickerProviderStat
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    mainAxisAlignment: widget.model.type=="math"? MainAxisAlignment.center:MainAxisAlignment.start,
-                                    children: [
-                                      Builder(
+                                  Opacity(
+                                    opacity: 1,
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment: widget.model.type=="math"? MainAxisAlignment.center:MainAxisAlignment.start,
+                                      children: [
+                                        Builder(
+                                          builder: (context) {
+                                            final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
+                                            String name=state.locale.error;
+                                            if(widget.model.type=="reduce"){
+                                              name=state.locale.shortcut;
+                                            }else if(widget.model.type=="math"){
+                                              name=state.locale.mathematics;
+                                            }
+                                            else if(widget.model.type=="referat"){
+                                              name=state.locale.paper;
+                                            }
+                                            else if(widget.model.type=="generation"){
+                                              name=state.locale.imageGeneration;
+                                            }
+                                            else if(widget.model.type=="essay"){
+                                              name=state.locale.essay;
+                                            }
+                                            else if(widget.model.type=="presentation"){
+                                              name=state.locale.presentation;
+                                            }
+                                            else if(widget.model.type=="parafrase"){
+                                              name=state.locale.paraphrasing;
+                                            }
+                                            else if(widget.model.type=="sovet"){
+                                              name=state.locale.adviseOn;
+                                            }
+                                            return Opacity(
+                                              opacity: widget.model.progress=="error"?0.3:1,
+                                              child: Text(
+                                               StringTools.firstUpperOfString(name),
+                                              textAlign: TextAlign.left,
+                                              style: const TextStyle(
+                                                fontSize: 28,
+                                                fontWeight: FontWeight.w500,
+                                                fontFamily: "NoirPro",
+                                                height: 1,
+                                                color: Color.fromRGBO(254, 222,181, 1)
+                                                ),
+                                              ),
+                                            );
+                                          }
+                                        ),
+                                      const SizedBox(height: 5,),
+                                      
+                                      if(widget.model.type!="math") Builder(
                                         builder: (context) {
                                           final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
-                                          String name=state.locale.error;
-                                          if(widget.model.type=="reduce"){
-                                            name=state.locale.shortcut;
-                                          }else if(widget.model.type=="math"){
-                                            name=state.locale.mathematics;
-                                          }
-                                          else if(widget.model.type=="referre"){
-                                            name=state.locale.paper;
-                                          }
-                                          else if(widget.model.type=="generation"){
-                                            name=state.locale.imageGeneration;
-                                          }
-                                          else if(widget.model.type=="essay"){
-                                            name=state.locale.essay;
-                                          }
-                                          else if(widget.model.type=="presentation"){
-                                            name=state.locale.presentation;
-                                          }
-                                          else if(widget.model.type=="paraphrase"){
-                                            name=state.locale.paraphrasing;
-                                          }
-                                          else if(widget.model.type=="sovet"){
-                                            name=state.locale.adviseOn;
-                                          }
-                                          return Text(
-                                           StringTools.firstUpperOfString(name),
-                                          textAlign: TextAlign.left,
-                                          style: const TextStyle(
-                                            fontSize: 28,
-                                            fontWeight: FontWeight.w500,
-                                            fontFamily: "NoirPro",
-                                            height: 1,
-                                            color: Color.fromRGBO(254, 222,181, 1)
+                                          return Opacity(
+                                            opacity: widget.model.progress=="error"?0.3:1,
+                                            child: RichText(
+                                              text: TextSpan(
+                                                children: [
+                                                   TextSpan(
+                                                    text: "${ StringTools.firstUpperOfString(state.locale.topic)} ",
+                                                    style: TextStyle(
+                                                      fontSize: 15,
+                                                      fontWeight: FontWeight.w500,
+                                                      fontFamily: "NoirPro",
+                                                      height: 1,
+                                                      color: Colors.white
+                                                      ),
+                                                  ),
+                                                  TextSpan(
+                                                    text:"\"${widget.model.question.length>10?widget.model.question.substring(0,10)+"...":widget.model.question}\"",
+                                                    style: const TextStyle(
+                                                      fontSize: 18,
+                                                      fontWeight: FontWeight.w500,
+                                                      fontFamily: "NoirPro",
+                                                      height: 1,
+                                                      letterSpacing: 1,
+                                                      color:Colors.white
+                                                      ),
+                                                  )
+                                                ]
+                                              ),
                                             ),
-                                                                              );
+                                          );
                                         }
                                       ),
-                                    const SizedBox(height: 5,),
-                                    if(widget.model.type!="math") Builder(
-                                      builder: (context) {
-                                        final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
-                                        return RichText(
-                                          text: TextSpan(
-                                            children: [
-                                               TextSpan(
-                                                text: "${ StringTools.firstUpperOfString(state.locale.topic)} ",
-                                                style: TextStyle(
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontFamily: "NoirPro",
-                                                  height: 1,
-                                                  color: Colors.white
-                                                  ),
-                                              ),
-                                              TextSpan(
-                                                text:"\"${widget.model.theme.length>15?widget.model.theme.substring(0,12)+"...":widget.model.theme}\"",
-                                                style: const TextStyle(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontFamily: "NoirPro",
-                                                  height: 1,
-                                                  letterSpacing: 1,
-                                                  color:Colors.white
-                                                  ),
-                                              )
-                                            ]
+                                      if(widget.model.progress=="error")
+                                        Container(
+                                          margin: EdgeInsets.only(top: 5),
+                                          padding: EdgeInsets.all(3),
+                                          decoration: BoxDecoration(
+                                            color: const Color.fromRGBO(196, 114, 137, 0.8),
+                                            borderRadius: BorderRadius.circular(5)
                                           ),
-                                        );
-                                      }
-                                    )
-                                    ],
+                                          child: Builder(
+                                            builder: (context) {
+                                              final state = context.watch<LocalizationBloc>().state as LocalizationLocaleState;
+                                              String name=state.locale.error;
+                                              if(widget.model.type=="reduce"){
+                                                name=state.locale.error;
+                                              }else if(widget.model.type=="math"){
+                                                name=state.locale.mathError;
+                                              }
+                                              else if(widget.model.type=="referat"){
+                                                name=state.locale.reportError;
+                                              }
+                                              else if(widget.model.type=="generation"){
+                                                name=state.locale.error;
+                                              }
+                                              else if(widget.model.type=="essay"){
+                                                name=state.locale.essayError;
+                                              }
+                                              else if(widget.model.type=="presentation"){
+                                                name=state.locale.presentationError;
+                                              }
+                                              else if(widget.model.type=="parafrase"){
+                                                name=state.locale.error;
+                                              }
+                                              else if(widget.model.type=="sovet"){
+                                                name=state.locale.error;
+                                              }
+                                              return Text(
+                                                 name,
+                                                textAlign: TextAlign.left,
+                                                style: const TextStyle(
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontFamily: "NoirPro",
+                                                  height: 1,
+                                                  color: Color.fromRGBO(254, 222,181, 1)
+                                                  ),
+                                                );
+                                            }
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                   Align(
                                     alignment: Alignment.topCenter,
@@ -408,14 +599,14 @@ class _HistoryElementState extends State<HistoryElement> with TickerProviderStat
                                             
                                           }else if(widget.model.type=="math"){
                                             wid=Image.asset("assets/png/math.png");
-                                          }else if(widget.model.type=="referre"){
+                                          }else if(widget.model.type=="referat"){
                                             wid=Image.asset("assets/png/referer.png",fit: BoxFit.contain,);
                                           }
                                           else if(widget.model.type=="essay"){
                                              wid=Image.asset("assets/png/essay.png");
                                           }
                                           
-                                          else if(widget.model.type=="paraphrase"){
+                                          else if(widget.model.type=="parafrase"){
                                             wid=Image.asset("assets/png/paraphrase1.png",fit: BoxFit.contain,);
                                           }
                                           else if(widget.model.type=="generation"){
@@ -476,7 +667,11 @@ class _HistoryElementState extends State<HistoryElement> with TickerProviderStat
 
 class HistoryModel{
   String type;
-  String theme;
+  bool QisDocument;
+  bool AisDocument;
+  String question;
+  String Qpath;
+  String Apath;
   Widget icon;
   bool favorite;
   String progress;
@@ -489,7 +684,7 @@ class HistoryModel{
   HistoryModel({
     required this.icon,
     required this.favorite,
-    required this.theme,
+    required this.question,
     required this.type,
     required this.progress,
     required this.messageId,
@@ -497,16 +692,26 @@ class HistoryModel{
     required this.answerMessageId,
     this.fileBuffer,
     this.reply,
-    this.answerBuffer
+    this.answerBuffer,
+    required this.QisDocument,
+    required this.AisDocument,
+    required this.Qpath,
+    required this.Apath
+
   });
   Map<String,dynamic> toMap(){
     return {
       "favorite":favorite,
-      "theme":theme,
+      "question":question,
+      "qpath":Qpath,
+      "apath":Apath,
+      "qisDocument":QisDocument,
+      "aisDocument":AisDocument,
       "type":type,
       "progress":progress,
       "messageId":messageId,
       "answer":answer,
+      "fileBuffer":fileBuffer,
       "answerMessageId":answerMessageId,
     };
   }

@@ -10,7 +10,10 @@ import 'package:gnom/pages/main_page/tabs/friends_tab.dart';
 import 'package:gnom/pages/main_page/tabs/history_tab/history_tab.dart';
 import 'package:gnom/pages/main_page/tabs/home_tab/home_tab.dart';
 import 'package:gnom/pages/main_page/tabs/profile_tab/profile_tab.dart';
+import 'package:gnom/pages/policy_page/policy_page.dart';
+import 'package:gnom/repositories/policy_repo.dart';
 import 'package:gnom/store/user_store.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -22,10 +25,11 @@ class MainPage extends StatefulWidget {
 
 
 
-class _MainPageState extends State<MainPage> {
+class _MainPageState extends State<MainPage>  with WidgetsBindingObserver{
+
+
 
   int _selectedIndex = 0;
-
   static const List<Widget> _pages = <Widget>[
   HomeTab(),
   HistoryTab(),
@@ -56,14 +60,48 @@ class _MainPageState extends State<MainPage> {
     });
   }
 
+    @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    setState(() {
+      print(state);
+      if(state==AppLifecycleState.resumed){
+       chatStore.checkUnread();
+      }
+    });
+  }
 
   @override
-  void initState() {
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  void initialize()async{
+    String isPolicy= await policyRepo.policyIsCompleted;
+    if(isPolicy=="no"){
+      await showDialog(
+        barrierDismissible: true,
+        context: context,
+        builder: (context) {
+          return Dialog(
+            insetPadding: EdgeInsets.zero,
+            child: PolicyPage()
+          );
+        },
+      );
+    }
+    chatStore.checkUnread();
     initFirebase();
     userStore.getRequestsCount();
     userStore.requiredData();
     chatStore.addMessageFromDb();
     chatStore.addHistoryFromDb();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void initState() {
+    initialize();
     super.initState();
   }
 

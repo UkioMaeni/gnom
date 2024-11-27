@@ -12,7 +12,9 @@ import 'package:gnom/core/localization/localization_bloc.dart';
 import 'package:gnom/http/guest.dart';
 import 'package:gnom/pages/chat_page/components/chat_area.dart';
 import 'package:gnom/pages/chat_page/store/chat_store.dart';
+import 'package:gnom/pages/chat_page/store/chat_store_2.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:uuid/uuid.dart';
 enum EChatPageType{
   math,parafrase,referat,essay,presentation,reduce,sovet,generation,miniGame
 }
@@ -32,6 +34,8 @@ class _ChatPageState extends State<ChatPage> {
 
  final TextEditingController _controller=TextEditingController();
 
+  final uuid= Uuid();
+
   @override
   void dispose() {
     _controller.dispose();
@@ -45,6 +49,8 @@ void attachment()async{
   final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
   
   if(pickedFile!=null){
+    // final mess= MessageDocument(documentType: pickedFile.mimeType??"no",uuid: uuid.v4(),type: widget.type.name,sender: "person",downloadPath: "no",path: pickedFile.path); 
+    // chatStore2.addMessage(mess, context);
     chatStore.addMessage(widget.type, _controller.text,pickedFile,context);
   }
   _controller.text="";
@@ -55,6 +61,8 @@ void attachment()async{
   
 }
   sendMessage(){
+    // final mess= MessageText(text: _controller.text,uuid: uuid.v4(),type: widget.type.name,sender: "person"); 
+    // chatStore2.addMessage(mess,context);
     chatStore.addMessage(widget.type, _controller.text,null,context);
     _controller.text="";
   }
@@ -163,6 +171,8 @@ void attachment()async{
                             return GestureDetector(
                               onTap: () {
                                 chatStore.addMessage(widget.type, state.locale.yes,null,context);
+                                // final mess= MessageText(text: state.locale.yes,uuid: uuid.v4(),type: widget.type.name,sender: "person"); 
+                                // chatStore2.addMessage(mess,context);
                               },
                               child: Text(
                                           state.locale.yes,
@@ -191,6 +201,8 @@ void attachment()async{
                             return GestureDetector(
                               onTap: () {
                                 chatStore.addMessage(widget.type, state.locale.no,null,context);
+                                // final mess= MessageText(text: state.locale.no,uuid: uuid.v4(),type: widget.type.name,sender: "person"); 
+                                // chatStore2.addMessage(mess,context);
                               },
                               child: Text(
                                           state.locale.no,

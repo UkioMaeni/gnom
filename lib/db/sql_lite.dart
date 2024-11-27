@@ -38,13 +38,18 @@ class SQLLite{
           '''
           CREATE TABLE IF NOT EXISTS
           favorite(
-            id INTEGER PRIMARY KEY, 
+            id INTEGER PRIMARY KEY,
+            qpath TEXT,
+            apath TEXT,
+            qisDocument TEXT,
+            aisDocument TEXT,
+            question TEXT, 
             favorite TEXT, 
-            theme TEXT, 
             type TEXT, 
             progress TEXT, 
             messageId TEXT, 
-            answer TEXT, 
+            answer TEXT,
+            fileBuffer TEXT, 
             answerMessageId TEXT
             )
           ''',
@@ -85,7 +90,21 @@ class SQLLite{
     for(var element in historyesFromDb){
       print(element["favorite"]);
       print("///");
-      final HistoryModel his=HistoryModel(answer: element["answer"],answerMessageId: element["answerMessageId"], favorite: element["favorite"]=="true"?true:false, icon: SizedBox.shrink(), messageId: element["messageId"],progress: element["progress"],theme: element["theme"],type: element["type"]);
+      final HistoryModel his=HistoryModel(
+        answer: element["answer"],
+        answerMessageId: element["answerMessageId"], 
+        favorite: element["favorite"]=="true"?true:false, 
+        icon: SizedBox.shrink(), 
+        messageId: element["messageId"],
+        progress: element["progress"],
+        question: element["question"],
+        AisDocument: element["aisDocument"]=="true"?true:false,
+        QisDocument: element["qisDocument"]=="true"?true:false,
+        Apath: element["apath"],
+        Qpath: element["qpath"],
+        fileBuffer:element["fileBuffer"] ,
+        type: element["type"]
+        );
       historyes.add(his);
     }
     return historyes;
@@ -113,6 +132,59 @@ class SQLLite{
       await db.insert(
           "favorite",
           model.toMap(),
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+  Future<bool> updateHistoryProgress(String messageId)async{
+    try {
+      final Database db = await openDatabase(path);
+      await db.update(
+          "favorite",
+          {
+            "progress":"completed",
+          },
+          where: 'messageId = ?',
+          whereArgs: [messageId],
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+  Future<bool> updateHistoryAnswer(String messageId,String answer)async{
+    try {
+      final Database db = await openDatabase(path);
+      await db.update(
+          "favorite",
+          {
+            "answer":answer,
+          },
+          where: 'messageId = ?',
+          whereArgs: [messageId],
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+  Future<bool> updateHistoryAnswerInDocument(String messageId,String documentPath,String documentType)async{
+    try {
+      final Database db = await openDatabase(path);
+      await db.update(
+          "favorite",
+          {
+            "aisDocument":"true",
+            "apath":documentPath,
+            "answer":documentType
+          },
+          where: 'messageId = ?',
+          whereArgs: [messageId],
           conflictAlgorithm: ConflictAlgorithm.replace,
         );
       return true;

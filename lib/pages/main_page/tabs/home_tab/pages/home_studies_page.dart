@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gnom/core/localization/localization_bloc.dart';
 import 'package:gnom/core/tools/string_tool.dart';
 import 'package:gnom/pages/chat_page/chat_page.dart';
+import 'package:gnom/pages/transaction_page/transaction_page.dart';
 
 class HOMEStudiesPage extends StatefulWidget {
   final Function(String) update;
@@ -34,6 +35,7 @@ class _HOMEStudiesPageState extends State<HOMEStudiesPage> {
   startGenerate()async{
     for(int i=0;i<stadies.length;i++){
       setState(() {
+        if(!mounted) return;
         widgets.add(
            StudiesElement(topOffset: (i)*105+30, model:stadies[i],)
         );
@@ -168,7 +170,7 @@ class _StudiesElementState extends State<StudiesElement> with TickerProviderStat
     double width=MediaQuery.of(context).size.width;
     return  GestureDetector(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => ChatPage(type: widget.model.type,title:widget.model.title),));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => TransactionPage(type: widget.model.type,model:widget.model),));
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10),

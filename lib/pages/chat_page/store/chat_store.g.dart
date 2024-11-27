@@ -80,6 +80,16 @@ mixin _$ChatStore on _ChatStore, Store {
         .run(() => super.addMessage(chatType, message, file, context));
   }
 
+  late final _$updateHistoryAsDocumentAsyncAction =
+      AsyncAction('_ChatStore.updateHistoryAsDocument', context: context);
+
+  @override
+  Future<void> updateHistoryAsDocument(
+      String messageId, String path, String documentType) {
+    return _$updateHistoryAsDocumentAsyncAction.run(
+        () => super.updateHistoryAsDocument(messageId, path, documentType));
+  }
+
   late final _$addMessageFromDbAsyncAction =
       AsyncAction('_ChatStore.addMessageFromDb', context: context);
 
@@ -122,6 +132,20 @@ mixin _$ChatStore on _ChatStore, Store {
   Future<void> updateFavoriteHistory(String id) {
     return _$updateFavoriteHistoryAsyncAction
         .run(() => super.updateFavoriteHistory(id));
+  }
+
+  late final _$_ChatStoreActionController =
+      ActionController(name: '_ChatStore', context: context);
+
+  @override
+  dynamic addHistory(HistoryModel model) {
+    final _$actionInfo =
+        _$_ChatStoreActionController.startAction(name: '_ChatStore.addHistory');
+    try {
+      return super.addHistory(model);
+    } finally {
+      _$_ChatStoreActionController.endAction(_$actionInfo);
+    }
   }
 
   @override

@@ -6,7 +6,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gnom/core/localization/localization_bloc.dart';
 import 'package:gnom/core/tools/string_tool.dart';
 import 'package:gnom/pages/chat_page/chat_page.dart';
+import 'package:gnom/pages/main_page/tabs/home_tab/pages/home_studies_page.dart';
 import 'package:gnom/pages/mini_game/mini_game.dart';
+import 'package:gnom/pages/transaction_page/transaction_page.dart';
 
 class HOMEScincePage extends StatefulWidget {
   final Function(String) update;
@@ -164,7 +166,7 @@ class _ScinceElementState extends State<ScinceElement> with TickerProviderStateM
     return  GestureDetector(
       onTap: () {
         if(widget.model.title=="ГЕНЕРАЦИЯ\nКАРТИНКИ"){
-          Navigator.push(context, MaterialPageRoute(builder: (context) => ChatPage(type: EChatPageType.generation,title:widget.model.title),));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => TransactionPage(type: widget.model.type,model:StudiesModel(icon:widget.model.icon,title: widget.model.title,sub: "",type: EChatPageType.generation )),));
         }else{
           Navigator.push(context, MaterialPageRoute(builder: (context) => MiniGame(),));
         }

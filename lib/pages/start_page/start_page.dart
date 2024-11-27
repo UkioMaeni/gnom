@@ -112,7 +112,7 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin{
       }else{
         context.read<LocalizationBloc>().add(LocalizationSetLocaleEvent(locale: EnLocale()));
       }
-
+      
       toMainPage();
     }else{
       toLangPage();

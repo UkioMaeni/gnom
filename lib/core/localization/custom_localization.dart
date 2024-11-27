@@ -50,6 +50,19 @@ LText LocaleText = LText();
     String get writeAMessage;
     String get settings;
     String get topic;
+    String get sendPresentation;
+    String get sendSovet;
+    String get sendEssay;
+    String get sendReport;
+    String get sendImage;
+    String get sendReduction;
+    String get sendParafrase;
+    String get sendRequest;
+    String get uploadImage;
+    String get mathError;
+    String get essayError;
+    String get reportError;
+    String get presentationError;
 }
 
 
@@ -190,6 +203,58 @@ class RuLocale implements LocaleLibrary{
   @override
   // TODO: implement topic
   String get topic => "Тема";
+  
+  @override
+  // TODO: implement sendEssay
+  String get sendEssay => "Написать сочинение на тему";
+  
+  @override
+  // TODO: implement sendImage
+  String get sendImage => "Сгенерировать картинку по запросу";
+  
+  @override
+  // TODO: implement sendPresentation
+  String get sendPresentation => "Создать презентацию на тему";
+  
+  @override
+  // TODO: implement sendReport
+  String get sendReport => "Написать реферат на тему";
+  
+  @override
+  // TODO: implement sendSovet
+  String get sendSovet => "Помочь советом по теме";
+  
+  @override
+  // TODO: implement sendParafrase
+  String get sendParafrase => "Убедитесь, что в исходном тексте нет ошибок, так как они могут повлиять на качество итогового результата после сокращения.";
+  
+  @override
+  // TODO: implement sendReduction
+  String get sendReduction => "Убедитесь, что в исходном тексте нет ошибок, так как они могут повлиять на качество итогового результата после перефразирования.";
+  
+  @override
+  // TODO: implement sendRequest
+  String get sendRequest => "Отправить запрос";
+  
+  @override
+  // TODO: implement uploadImage
+  String get uploadImage => "Загрузите изображение";
+  
+  @override
+  // TODO: implement essayError
+  String get essayError => "Ошибка при генерации сочинения";
+  
+  @override
+  // TODO: implement mathError
+  String get mathError => "Ошибка при вычислениях";
+  
+  @override
+  // TODO: implement presentationError
+  String get presentationError => "Ошибка в генерации презентации";
+  
+  @override
+  // TODO: implement reportError
+  String get reportError => "Ошибка в генерации реферата";
 }
 
 class EnLocale implements LocaleLibrary{
@@ -333,6 +398,58 @@ class EnLocale implements LocaleLibrary{
   @override
   // TODO: implement topic
   String get topic => "Topic";
+  
+  @override
+  // TODO: implement sendEssay
+  String get sendEssay => "Write an essay on the topic";
+  
+  @override
+  // TODO: implement sendImage
+  String get sendImage => "Generate a picture upon request";
+  
+  @override
+  // TODO: implement sendPresentation
+  String get sendPresentation => "Create a presentation on the topic";
+  
+  @override
+  // TODO: implement sendReport
+  String get sendReport => "Write a report on the topic";
+  
+  @override
+  // TODO: implement sendSovet
+  String get sendSovet => "Help with advice on the topic";
+  
+  @override
+  // TODO: implement sendParafrase
+  String get sendParafrase => "Make sure there are no mistakes in the original text, as they may affect the quality of the final result after summarization.";
+  
+  @override
+  // TODO: implement sendReduction
+  String get sendReduction => "Make sure there are no mistakes in the original text, as they may affect the quality of the final result after paraphrasing.";
+  
+  @override
+  // TODO: implement sendRequest
+  String get sendRequest => "Send request";
+  
+  @override
+  // TODO: implement uploadImage
+  String get uploadImage => "Upload an image";
+  
+  @override
+  // TODO: implement essayError
+  String get essayError => "Error during essay generation";
+  
+  @override
+  // TODO: implement mathError
+  String get mathError => "Calculation error";
+  
+  @override
+  // TODO: implement presentationError
+  String get presentationError => "Error in presentation generation";
+  
+  @override
+  // TODO: implement reportError
+  String get reportError => "Error in report generation";
 }
 
 class ArLocale implements LocaleLibrary{
@@ -476,5 +593,56 @@ class ArLocale implements LocaleLibrary{
   @override
   // TODO: implement topic
   String get topic => "موضوع";
+  
+  @override
+  // TODO: implement sendEssay
+  String get sendEssay => "كتابة مقالة حول الموضوع";
+  
+  @override
+  // TODO: implement sendImage
+  String get sendImage => "إنشاء صورة بناءً على الطلب";
+  
+  @override
+  // TODO: implement sendPresentation
+  String get sendPresentation => "إنشاء عرض تقديمي حول الموضوع";
+  
+  @override
+  // TODO: implement sendReport
+  String get sendReport => "كتابة تقرير حول الموضوع";
+  
+  @override
+  // TODO: implement sendSovet
+  String get sendSovet => "المساعدة بنصيحة حول الموضوع";
+  
+  @override
+  // TODO: implement sendParafrase
+  String get sendParafrase => "تأكد من عدم وجود أخطاء في النص الأصلي، لأنها قد تؤثر على جودة النتيجة النهائية بعد التلخيص.";
+  
+  @override
+  // TODO: implement sendReduction
+  String get sendReduction => "تأكد من عدم وجود أخطاء في النص الأصلي، لأنها قد تؤثر على جودة النتيجة النهائية بعد إعادة الصياغة.";
+  
+  @override
+  // TODO: implement sendRequest
+  String get sendRequest =>"إرسال طلب";
+  
+  @override
+  // TODO: implement uploadImage
+  String get uploadImage => "تحميل صورة";
+  @override
+  // TODO: implement essayError
+  String get essayError => "خطأ أثناء توليد المقال";
+  
+  @override
+  // TODO: implement mathError
+  String get mathError => "خطأ في الحسابات";
+  
+  @override
+  // TODO: implement presentationError
+  String get presentationError => "خطأ في توليد العرض التقديمي";
+  
+  @override
+  // TODO: implement reportError
+  String get reportError => "خطأ في توليد التقرير";
  
 }

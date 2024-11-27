@@ -74,11 +74,38 @@ class _BotMessageState extends State<BotMessage> {
               children: [
                 Builder(
                   builder: (context) {
-                    if(widget.message.link!=null&&widget.message.fileBuffer!=null){
+                    if(widget.message.link!=null&&widget.message.text=="@"){
                       return GestureDetector(
                           child: Image.memory(widget.message.fileBuffer!),
                           onTap: () async{
-                            await OpenFile.open(widget.message.link!);
+                            print(FocusScope.of(context).hasFocus);
+                            //FocusScope.of(context).unfocus();
+                            
+                            
+                             showDialog(
+                              context: context,
+                               barrierDismissible: true,
+
+                              builder: (context) {
+                                
+                                return Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 10),
+                                  //backgroundColor: Colors.red,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      
+                                    },
+                                    child: Center(
+                                      child: Image.memory(widget.message.fileBuffer!,),
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+                            FocusScope.of(context).unfocus();
+                            print(widget.message.link);
+                            await OpenFile.open(widget.message.link!,type: "image/png");
+                           
                           },
                         );
                     }
@@ -113,8 +140,7 @@ class _BotMessageState extends State<BotMessage> {
                 if((widget.message.link!=null )&&widget.message.text=="")
                 GestureDetector(
                   onTap: () async{
-                    final deviceInfo = await DeviceInfoPlugin().androidInfo;
-                    final version = deviceInfo.version.sdkInt;
+                    
                     
                     // if(version>=33){
                       
@@ -144,7 +170,8 @@ class _BotMessageState extends State<BotMessage> {
                     //     return;
                     //   }
                     // }
-                    
+                    final deviceInfo = await DeviceInfoPlugin().androidInfo;
+                    final version = deviceInfo.version.sdkInt;
                     var path = await ExternalPath.getExternalStorageDirectories();
                     print(path);
                     String directoryPath=path[0]+'/Android/media/com.gnom.helper';
@@ -224,7 +251,7 @@ class _BotMessageState extends State<BotMessage> {
                       bool exist=await File(widget.message.link!).exists();
                       print(exist);
                       print("aaa");
-                      await OpenFile.open(widget.message.link!,type: "application/vnd.openxmlformats-officedocument.presentationml.presentation");
+                      await OpenFile.open(widget.message.link!);
                       //await launchUrl(Uri.parse(widget.message.link!));
                       //await OpenFilex.open(widget.message.link!);
                       //await OpenFilex.open(widget.message.link!);

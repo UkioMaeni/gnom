@@ -342,7 +342,7 @@ class _HistoryElementState extends State<HistoryElement> with TickerProviderStat
                                                   ),
                                               ),
                                               TextSpan(
-                                                text:"\"${widget.model.theme.length>15?widget.model.theme.substring(0,12)+"...":widget.model.theme}\"",
+                                                text:"\"${widget.model.question.length>15?widget.model.question.substring(0,12)+"...":widget.model.question}\"",
                                                 style: const TextStyle(
                                                   fontSize: 18,
                                                   fontWeight: FontWeight.w500,

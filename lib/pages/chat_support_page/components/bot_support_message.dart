@@ -10,7 +10,7 @@ import 'package:gnom/config/http_config.dart';
 import 'package:gnom/pages/chat_page/chat_page.dart';
 import 'package:gnom/pages/chat_page/store/chat_store.dart';
 import 'package:flutter/services.dart';
-import 'package:external_path/external_path.dart';
+import 'package:media_storage/media_storage.dart';
 import 'package:open_file_plus/open_file_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -110,7 +110,7 @@ class _BotSupportMessageState extends State<BotSupportMessage> {
                         return;
                       }
                     }
-                    var path = await ExternalPath.getExternalStorageDirectories();
+                    var path = await MediaStorage.getExternalStorageDirectories();
                     final gnomDirectory = Directory(path[0]+'/Android/media/com.gnom.helper');
                     if(!gnomDirectory.existsSync()){
                       gnomDirectory.create();

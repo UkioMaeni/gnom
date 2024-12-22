@@ -13,15 +13,14 @@ import 'package:gnom/core/localization/localization_bloc.dart';
 import 'package:gnom/pages/chat_page/chat_page.dart';
 import 'package:gnom/pages/chat_page/store/chat_store.dart';
 import 'package:flutter/services.dart';
-import 'package:external_path/external_path.dart';
 import 'package:open_file_plus/open_file_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
-import 'package:external_path/external_path.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
+import 'package:media_storage/media_storage.dart';
 class BotMessage extends StatefulWidget {
   final Message message;
   final String  type;
@@ -172,7 +171,7 @@ class _BotMessageState extends State<BotMessage> {
                     // }
                     final deviceInfo = await DeviceInfoPlugin().androidInfo;
                     final version = deviceInfo.version.sdkInt;
-                    var path = await ExternalPath.getExternalStorageDirectories();
+                    var path = await MediaStorage.getExternalStorageDirectories();
                     print(path);
                     String directoryPath=path[0]+'/Android/media/com.gnom.helper';
                     if(version<=32){

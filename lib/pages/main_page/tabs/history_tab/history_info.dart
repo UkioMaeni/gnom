@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
-import 'package:external_path/external_path.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -11,6 +10,7 @@ import 'package:gnom/pages/chat_page/components/bot_message.dart';
 import 'package:gnom/pages/chat_page/components/client_message.dart';
 import 'package:gnom/pages/chat_page/store/chat_store.dart';
 import 'package:gnom/pages/main_page/tabs/history_tab/history_tab.dart';
+import 'package:media_storage/media_storage.dart';
 import 'package:open_file_plus/open_file_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
@@ -37,7 +37,7 @@ class _HistoryInfoState extends State<HistoryInfo> {
   Future downloadFile()async{
                                   final deviceInfo = await DeviceInfoPlugin().androidInfo;
                                   final version = deviceInfo.version.sdkInt;
-                                  var path = await ExternalPath.getExternalStorageDirectories();
+                                  var path = await MediaStorage.getExternalStorageDirectories();
                                   print(path);
                                   String directoryPath=path[0]+'/Android/media/com.gnom.helper';
                                   if(version<=32){

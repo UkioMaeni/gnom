@@ -1,6 +1,6 @@
 import 'dart:math';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:external_path/external_path.dart';
+import 'package:external_path_ios_mac/external_path_ios_mac.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gnom/UIKit/permision_modal.dart';
@@ -16,6 +16,7 @@ import 'package:gnom/repositories/locale_storage.dart';
 import 'package:gnom/repositories/token_repo.dart';
 import 'package:gnom/store/user_store.dart';
 import 'package:gnom/tools/phone_info.dart';
+import 'package:media_storage/media_storage.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class StartPage extends StatefulWidget {
@@ -122,8 +123,10 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin{
 
 
   authorizeUser()async{
-    var path = await ExternalPath.getExternalStorageDirectories();
-    print(path);
+
+   
+    
+    
     String? tokenU=await tokenRepo.refreshUserToken;
     print(tokenU);
     if(tokenU==null){

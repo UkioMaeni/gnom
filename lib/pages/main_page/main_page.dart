@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -44,7 +46,15 @@ class _MainPageState extends State<MainPage>  with WidgetsBindingObserver{
   }
 
   void initFirebase()async{
-    final apnsToken = await FirebaseMessaging.instance.getToken();
+    String? apnsToken;
+    if(Platform.isAndroid){
+       apnsToken = await FirebaseMessaging.instance.getToken();
+    }
+    if(Platform.isIOS){
+       apnsToken = await FirebaseMessaging.instance.getAPNSToken();
+       print(apnsToken);
+    }
+    print("APNS");
     print(apnsToken);
     await FCMHttp().setFcmToken(apnsToken??"");
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
@@ -115,7 +125,7 @@ class _MainPageState extends State<MainPage>  with WidgetsBindingObserver{
       resizeToAvoidBottomInset: false,
       bottomNavigationBar: SizedBox(
       
-        height: 70,
+        height: Platform.isAndroid?70:98,
         child:  Observer(
           builder: (context) {
             return BottomNavigationBar(

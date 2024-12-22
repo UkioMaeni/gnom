@@ -13,6 +13,7 @@ class _PolicyPageState extends State<PolicyPage> {
 
   final controller = WebViewController()
   ..setJavaScriptMode(JavaScriptMode.unrestricted)
+  
   ..setNavigationDelegate(
     NavigationDelegate(
       onProgress: (int progress) {
@@ -22,7 +23,9 @@ class _PolicyPageState extends State<PolicyPage> {
       onPageStarted: (String url) {},
       onPageFinished: (String url) {},
       onHttpError: (HttpResponseError error) {},
-      onWebResourceError: (WebResourceError error) {},
+      onWebResourceError: (WebResourceError error) {
+        print(error);
+      },
       onNavigationRequest: (NavigationRequest request) {
         if (request.url.startsWith('https://gnom-pomoshnik-game.ru/index')) {
           return NavigationDecision.prevent;

@@ -701,12 +701,12 @@ class HistoryModel{
   });
   Map<String,dynamic> toMap(){
     return {
-      "favorite":favorite,
+      "favorite":favorite.toString(),
       "question":question,
       "qpath":Qpath,
       "apath":Apath,
-      "qisDocument":QisDocument,
-      "aisDocument":AisDocument,
+      "qisDocument":QisDocument.toString(),
+      "aisDocument":AisDocument.toString(),
       "type":type,
       "progress":progress,
       "messageId":messageId,

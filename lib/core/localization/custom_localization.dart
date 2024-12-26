@@ -63,6 +63,8 @@ LText LocaleText = LText();
     String get essayError;
     String get reportError;
     String get presentationError;
+    String get back;
+    String get question;
 }
 
 
@@ -255,6 +257,13 @@ class RuLocale implements LocaleLibrary{
   @override
   // TODO: implement reportError
   String get reportError => "Ошибка в генерации реферата";
+  @override
+  // TODO: implement reportError
+  String get back => "Назад";
+  
+  @override
+  // TODO: implement qustion
+  String get question => "Вопрос";
 }
 
 class EnLocale implements LocaleLibrary{
@@ -450,6 +459,13 @@ class EnLocale implements LocaleLibrary{
   @override
   // TODO: implement reportError
   String get reportError => "Error in report generation";
+  @override
+  // TODO: implement reportError
+  String get back => "Back";
+  
+  @override
+  // TODO: implement qustion
+  String get question => "Question";
 }
 
 class ArLocale implements LocaleLibrary{
@@ -644,5 +660,11 @@ class ArLocale implements LocaleLibrary{
   @override
   // TODO: implement reportError
   String get reportError => "خطأ في توليد التقرير";
+  @override
+  // TODO: implement reportError
+  String get back => "خلف";
+  @override
+  // TODO: implement reportError
+  String get question => "سؤال";
  
 }

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
@@ -181,7 +182,13 @@ abstract class _ChatStore with Store {
     requiredComplete=ObservableMap.of(requiredComplete);
   }
 
+  final StreamController<String> _computationCompleted =
+     StreamController.broadcast();
+  Stream<String> get historyEventHandler => 
+      _computationCompleted.stream;
+
   void checkUnread()async{
+    
     final result=await UserHttp().checkUnreadMessages();
     
     if(result.isNotEmpty){
@@ -192,10 +199,19 @@ abstract class _ChatStore with Store {
         for(var h in history){
           print(h.messageId);
           if(h.messageId==element.message.id){
-            h.progress="completed";
-            h.answer=element.message.link!;
-            await instanceDb.updateHistoryAnswer(element.message.id,element.message.link!);
-            await instanceDb.updateHistoryProgress(element.message.id);
+            if(element.message.link!.contains("er/")){
+              h.progress="error";
+              h.answer=element.message.link!.split("/")[1];
+              await instanceDb.updateHistoryAnswer(element.message.id,element.message.link!);
+              await instanceDb.updateHistoryProgress(element.message.id,"error");
+            }else{
+              h.progress="completed";
+              h.answer=element.message.link!;
+              await instanceDb.updateHistoryAnswer(element.message.id,element.message.link!);
+              await instanceDb.updateHistoryProgress(element.message.id,"completed");
+            }
+            
+            _computationCompleted.add("update");
             print(h.messageId);
           }
         }

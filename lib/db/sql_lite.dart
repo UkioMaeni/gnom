@@ -139,13 +139,13 @@ class SQLLite{
       return false;
     }
   }
-  Future<bool> updateHistoryProgress(String messageId)async{
+  Future<bool> updateHistoryProgress(String messageId,String progress)async{
     try {
       final Database db = await openDatabase(path);
       await db.update(
           "favorite",
           {
-            "progress":"completed",
+            "progress":progress,
           },
           where: 'messageId = ?',
           whereArgs: [messageId],

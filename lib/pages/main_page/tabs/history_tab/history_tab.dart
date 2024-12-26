@@ -11,6 +11,7 @@ import 'package:gnom/core/localization/localization_bloc.dart';
 import 'package:gnom/core/tools/string_tool.dart';
 import 'package:gnom/pages/chat_page/store/chat_store.dart';
 import 'package:gnom/pages/main_page/tabs/history_tab/history_info.dart';
+import 'package:uuid/uuid.dart';
 
 
 
@@ -32,7 +33,10 @@ class _HistoryTabState extends State<HistoryTab> with TickerProviderStateMixin {
 
   String type="process";
 
-  startGenerate()async{
+  bool isGenerated=false;
+
+  void startGenerate()async{
+    isGenerated=true;
     String currentType=type;
     widgets=[];
     final histories= chatStore.history;
@@ -67,10 +71,35 @@ class _HistoryTabState extends State<HistoryTab> with TickerProviderStateMixin {
     //   });
     //   await Future.delayed(Duration(milliseconds: 300));
     // }
+    isGenerated=false;
+    startTask();
   }
+
+  delete(){
+
+  }
+
+  List<TaskData> tasks=[];
+  void startTask(){
+    if(tasks.length!=0){
+      tasks[0].task.call();
+      String currentTask=tasks[0].id;
+      tasks=tasks.where((element) => element.id!=currentTask,).toList();
+    }
+  }
+
   @override
   void initState() {
     startGenerate();
+    chatStore.historyEventHandler.listen((event) {
+      if(event=="update"){
+        final id=Uuid().v4();
+        tasks.add(TaskData(id: id,task: startGenerate));
+        if(isGenerated==false){
+          startTask();
+        }
+      }
+    },);
     print("init");
     // _heightController=AnimationController(
     //   duration: Duration(milliseconds: 1000),
@@ -369,6 +398,15 @@ class _TextElementState extends State<TextElement> {
   }
 }
 
+
+  class TaskData{
+    String id;
+    Function task;
+    TaskData({
+      required this.id,
+      required this.task
+    });
+  }
 
 class HistoryElement extends StatefulWidget {
   final HistoryModel model;

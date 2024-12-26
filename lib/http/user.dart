@@ -23,7 +23,7 @@ class UserHttp{
       List<String> lastMessagesId=data.map<String>((e) => e["message_id"]??"none").toList();
       //chatStore.updateStatusHistory(lastMessagesId);
       print(lastMessagesId);
-      return data.map((element)=>SubjectTypedMessage(message: Message(id: element["message_id"],reply: element["message_id"], status: "", text: "",link: element["text"]??"Пустота", sender: "bot", fileBuffer: null),subjectType: element["subject_type"])).toList();
+      return data.map((element)=>SubjectTypedMessage(message: Message(id: element["message_id"],reply: element["message_id"], status: "", text: element["text"],link: element["text"]??"Пустота", sender: "bot", fileBuffer: null),subjectType: element["subject_type"])).toList();
       
       
     } catch (e) {

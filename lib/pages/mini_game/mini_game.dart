@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gnom/core/localization/localization_bloc.dart';
+import 'package:gnom/core/tools/string_tool.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_android/webview_flutter_android.dart';
 class MiniGame extends StatefulWidget {
@@ -42,10 +45,55 @@ class _MiniGameState extends State<MiniGame> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 0,
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/jpg/app_bg.jpg"),
+            fit: BoxFit.cover
+          )
+        ),
+        child: Column(
+          children: [
+            SizedBox(height: 60,),
+            GestureDetector(
+              onTap:()=> Navigator.pop(context),
+              child: Row(
+                children: [
+                  SizedBox(width: 20,),
+                  Container(
+                    height: 30,
+                    width: 30,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(15)
+                    ),
+                    child: Icon(Icons.arrow_back)
+                  ),
+                  SizedBox(width: 10,),
+                  Builder(
+                    builder: (context) {
+                      final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
+                      return Text(
+                        StringTools.firstUpperOfString(state.locale.education),
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 30,
+                          fontWeight: FontWeight.w400,
+                          fontFamily: "NoirPro",
+                          height: 1,
+                          color: Colors.white
+                          ),
+                      );
+                    }
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 10,),
+            Expanded(child: WebViewWidget(controller: controller)),
+          ],
+        ),
       ),
-      body: WebViewWidget(controller: controller),
     );
   }
 }

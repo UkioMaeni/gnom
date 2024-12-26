@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:gnom/core/localization/localization_bloc.dart';
+import 'package:gnom/core/tools/string_tool.dart';
 import 'package:gnom/pages/chat_page/components/bot_message.dart';
 import 'package:gnom/pages/chat_page/components/client_message.dart';
 import 'package:gnom/pages/chat_page/store/chat_store.dart';
@@ -94,7 +95,6 @@ class _HistoryInfoState extends State<HistoryInfo> {
           final model = chatStore.history.where((element) => element.messageId==widget.model.messageId,).toList()[0];
           print(widget.model.type);
           return Container(
-            padding: EdgeInsets.only(top: 50),
                   decoration: const BoxDecoration(
                     image: DecorationImage(
                       image: AssetImage("assets/jpg/app_bg.jpg"),
@@ -108,17 +108,58 @@ class _HistoryInfoState extends State<HistoryInfo> {
                       child: ListView(
                         
                         children: [
-                          Text(
-                                "Вопрос:",
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                  fontSize: 30,
-                                  fontWeight: FontWeight.w400,
-                                  fontFamily: "NoirPro",
-                                  height: 1,
-                                  color: Colors.white
+                          SizedBox(height: 20,),
+                          GestureDetector(
+                            onTap:()=> Navigator.pop(context),
+                            child: Row(
+                              children: [
+                                SizedBox(width: 20,),
+                                Container(
+                                  height: 30,
+                                  width: 30,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(15)
                                   ),
-                              ),
+                                  child: Icon(Icons.arrow_back)
+                                ),
+                                SizedBox(width: 10,),
+                                Builder(
+                                  builder: (context) {
+                                    final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
+                                    return Text(
+                                      StringTools.firstUpperOfString(state.locale.back),
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                        fontSize: 30,
+                                        fontWeight: FontWeight.w400,
+                                        fontFamily: "NoirPro",
+                                        height: 1,
+                                        color: Colors.white
+                                        ),
+                                    );
+                                  }
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 20,),
+                          Builder(
+                            builder: (context) {
+                              final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
+                              return Text(
+                                    "${state.locale.question}:",
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: "NoirPro",
+                                      height: 1,
+                                      color: Colors.white
+                                      ),
+                                  );
+                            }
+                          ),
                               SizedBox(height: 20,),
                          Builder(
                            builder: (context) {
@@ -151,17 +192,22 @@ class _HistoryInfoState extends State<HistoryInfo> {
                            }
                          ),
                          SizedBox(height: 20,),
-                         Text(
-                                "Ответ:",
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                  fontSize: 30,
-                                  fontWeight: FontWeight.w400,
-                                  fontFamily: "NoirPro",
-                                  height: 1,
-                                  color: Colors.white
-                                  ),
-                              ),
+                         Builder(
+                           builder: (context) {
+                            final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
+                             return Text(
+                                    "${state.locale.answer}:",
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: "NoirPro",
+                                      height: 1,
+                                      color: Colors.white
+                                      ),
+                                  );
+                           }
+                         ),
                           SizedBox(height: 20,),
                           Builder(
                             builder: (context) {

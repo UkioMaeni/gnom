@@ -47,13 +47,14 @@ class _MainPageState extends State<MainPage>  with WidgetsBindingObserver{
 
   void initFirebase()async{
     String? apnsToken;
-    if(Platform.isAndroid){
-       apnsToken = await FirebaseMessaging.instance.getToken();
-    }
-    if(Platform.isIOS){
-       apnsToken = await FirebaseMessaging.instance.getAPNSToken();
-       print(apnsToken);
-    }
+    apnsToken = await FirebaseMessaging.instance.getToken();
+    // if(Platform.isAndroid){
+       
+    // }
+    // if(Platform.isIOS){
+    //    apnsToken = await FirebaseMessaging.instance.getAPNSToken();
+    //    print(apnsToken);
+    // }
     print("APNS");
     print(apnsToken);
     await FCMHttp().setFcmToken(apnsToken??"");
@@ -67,6 +68,9 @@ class _MainPageState extends State<MainPage>  with WidgetsBindingObserver{
       if (message.notification != null) {
         print('Message also contained a notification: ${message.notification}');
       }
+    });
+    FirebaseMessaging.onBackgroundMessage((e)async{
+      print(e.data);
     });
   }
 

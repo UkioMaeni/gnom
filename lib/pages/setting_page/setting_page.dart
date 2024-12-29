@@ -59,7 +59,7 @@ class _SettingPageState extends State<SettingPage> {
               padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
               decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage("assets/jpg/app_bg.jpg"),
+                  image: AssetImage("assets/png/app_bg.png"),
                   fit: BoxFit.cover
                 )
               ),

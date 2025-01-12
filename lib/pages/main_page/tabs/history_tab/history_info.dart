@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
+import 'package:external_path_ios_mac/external_path_ios_mac.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -36,7 +37,9 @@ class _HistoryInfoState extends State<HistoryInfo> {
   }
 
   Future downloadFile()async{
-                                  final deviceInfo = await DeviceInfoPlugin().androidInfo;
+
+    if(Platform.isAndroid){
+      final deviceInfo = await DeviceInfoPlugin().androidInfo;
                                   final version = deviceInfo.version.sdkInt;
                                   var path = await MediaStorage.getExternalStorageDirectories();
                                   print(path);
@@ -83,6 +86,44 @@ class _HistoryInfoState extends State<HistoryInfo> {
                                     setState(() {
                                       
                                     });
+    }
+    if(Platform.isIOS){
+      final _externalPathIosMacPlugin = ExternalPathIosMac();
+      final path = (await _externalPathIosMacPlugin.getDirectoryPath(directory: ExternalPathIosMac.DIRECTORY_DOWNLOADS))??"Unknow";
+      print(path);
+      final gnomDirectory = Directory(path);
+      if(!gnomDirectory.existsSync()){
+                                    gnomDirectory.create();
+                                  }
+      print(widget.model.answer);
+      String url= widget.model.answer.contains("http")?widget.model.answer:"http://45.12.237.135/"+widget.model.answer;
+                                    final response=await Dio().get(
+                                      url,
+                                      options: Options(responseType: ResponseType.bytes)
+                                    );
+                                    print(response.headers["content-type"]);
+                                    String fileExchange=response.headers["content-type"]?[0].replaceAll("application/", "")??"none";
+                                    if(fileExchange.contains("vnd.openxmlformats-officedocument.presentationml.presentation")){
+                                      fileExchange="pptx";
+                                    }
+                                    if(fileExchange.contains("vnd.openxmlformats-officedocument.wordprocessingml.document")){
+                                      fileExchange="docx";
+                                    }
+                                    if(fileExchange.contains("image/png")){
+                                      fileExchange="png";
+                                    }
+
+                                    print(fileExchange);
+                                    String id= Uuid().v4();
+                                    final file = File(gnomDirectory.path+"/${id}.${fileExchange}");
+                                    await file.create();
+                                    file.writeAsBytesSync(response.data);
+                                    await chatStore.updateHistoryAsDocument(widget.model.messageId,gnomDirectory.path+"/${id}.${fileExchange}",fileExchange);
+                                    setState(() {
+                                      
+                                    });
+    }
+                                  
                                     
   }
 

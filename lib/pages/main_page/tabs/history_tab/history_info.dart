@@ -306,7 +306,15 @@ class _HistoryInfoState extends State<HistoryInfo> {
                                                 ),
                                                 GestureDetector(
                                                   onTap: () async{
-                                                    await OpenFile.open(widget.model.Apath);
+                                                    try {
+                                                      print('open');
+                                                      print(widget.model.Apath);
+                                                      final result=await OpenFile.open(widget.model.Apath);
+                                                      print(result.type);
+                                                    } catch (e) {
+                                                      print(e);
+                                                    }
+                                                    
                                                   },
                                                   child: Container(
                                                     width: 250,

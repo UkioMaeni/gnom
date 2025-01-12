@@ -32,6 +32,8 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>We need access to your camera to take photos for editing.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>We need access to your camera to take photos for editing.</string>
 	<key>NSPhotoLibraryUsageDescription</key>

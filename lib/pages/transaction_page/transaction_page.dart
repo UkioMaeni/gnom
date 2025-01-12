@@ -273,20 +273,20 @@ class _TransactionPageState extends State<TransactionPage> {
                                                 
                                                 await Permission.camera.request();
                                                 final ImagePicker picker = ImagePicker();
-                                                final LostDataResponse responses = await picker.retrieveLostData();
+                                                //final LostDataResponse responses = await picker.retrieveLostData();
                                                 print("start3");
-                                                final List<XFile>? filess = responses.files;
+                                                //final List<XFile>? filess = responses.files;
                                                 print("start4");
-                                                print(filess);
+                                                //print(filess);
                                                 print("start1");
                                                 final pickedFile = await picker.pickImage(source: ImageSource.gallery,imageQuality: 75,maxHeight: 300,maxWidth: 400,);
                                                 
                                                 print("start2");
-                                                final LostDataResponse response = await picker.retrieveLostData();
+                                                //final LostDataResponse response = await picker.retrieveLostData();
                                                 print("start3");
-                                                final List<XFile>? files = response.files;
+                                                //final List<XFile>? files = response.files;
                                                 print("start4");
-                                                print(files);
+                                                //print(files);
                                                 setState(() {
                                                   photo=pickedFile;
                                                 });
@@ -396,13 +396,16 @@ class _TransactionPageState extends State<TransactionPage> {
                                 default:
                                   text=state.locale.error;
                               }
-                              return Text(
-                                text,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: "NoirPro",
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.w800
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 20),
+                                child: Text(
+                                  text,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: "NoirPro",
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.w800
+                                  ),
                                 ),
                               );
                             }
@@ -423,15 +426,23 @@ class _TransactionPageState extends State<TransactionPage> {
                                   break;
                               }
                               
-                              return Text(
-                              text,
-                              style: TextStyle(
-                                color: Color.fromRGBO(254, 222,181, 1),
-                                fontFamily: "NoirPro",
-                                fontSize: 18,
-                                fontWeight: FontWeight.w500
-                              ),
-                            );
+                              return Container(
+                                constraints: BoxConstraints(
+                                  maxWidth: MediaQuery.of(context).size.width-50,
+                                  maxHeight: MediaQuery.of(context).size.height/3,
+                                ),
+                                child: SingleChildScrollView(
+                                  child: Text(
+                                  text,
+                                  style: TextStyle(
+                                    color: Color.fromRGBO(254, 222,181, 1),
+                                    fontFamily: "NoirPro",
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500
+                                  ),
+                                                              ),
+                                ),
+                              );
                             }
                           ),
                           SizedBox(height: 30,),

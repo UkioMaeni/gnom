@@ -20,6 +20,7 @@ import 'package:gnom/pages/main_page/tabs/history_tab/history_tab.dart';
 import 'package:gnom/pages/main_page/tabs/home_tab/pages/home_studies_page.dart';
 import 'package:gnom/store/user_store.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:uuid/uuid.dart';
 
 class TransactionPage extends StatefulWidget {
@@ -35,10 +36,11 @@ class _TransactionPageState extends State<TransactionPage> {
 
   String type="no";
   final TextEditingController _controller = TextEditingController();
-
+  final FocusNode _focusNode = FocusNode();
   @override
   void dispose() {
     _controller.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 
@@ -49,7 +51,9 @@ class _TransactionPageState extends State<TransactionPage> {
   bool modalView=false;
   bool isLoading = false;
 
+  bool isErrorModal=false;
   sendRequest()async{
+    
     setState(() {
           isLoading=true;
         });
@@ -79,10 +83,9 @@ class _TransactionPageState extends State<TransactionPage> {
           setState(() {
           isLoading=false;
           modalView=false;
+          isErrorModal=true;
         });
-        }
-        
-        
+        } 
   }
 
 
@@ -266,10 +269,31 @@ class _TransactionPageState extends State<TransactionPage> {
                                           }
                                           return GestureDetector(
                                             onTap: () async{
-                                              final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
-                                              setState(() {
-                                                photo=pickedFile;
-                                              });
+                                              try {
+                                                
+                                                await Permission.camera.request();
+                                                final ImagePicker picker = ImagePicker();
+                                                final LostDataResponse responses = await picker.retrieveLostData();
+                                                print("start3");
+                                                final List<XFile>? filess = responses.files;
+                                                print("start4");
+                                                print(filess);
+                                                print("start1");
+                                                final pickedFile = await picker.pickImage(source: ImageSource.gallery,imageQuality: 75,maxHeight: 300,maxWidth: 400,);
+                                                
+                                                print("start2");
+                                                final LostDataResponse response = await picker.retrieveLostData();
+                                                print("start3");
+                                                final List<XFile>? files = response.files;
+                                                print("start4");
+                                                print(files);
+                                                setState(() {
+                                                  photo=pickedFile;
+                                                });
+                                              } catch (e) {
+                                                print(e);
+                                              }
+                                              
                                             },
                                             child: Container(
                                               width: width*0.65,
@@ -482,6 +506,69 @@ class _TransactionPageState extends State<TransactionPage> {
                   ),
                 ),
               ),
+              if(isErrorModal)
+              PopScope(
+                canPop: false,
+                child: Positioned.fill(
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                    
+                    child: Container(
+                      color: Colors.black.withOpacity(0.6),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Builder(
+                            builder: (context) {
+                              
+                              return Text(
+                                "Непредвиденная ошибка",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontFamily: "NoirPro",
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w800
+                                ),
+                              );
+                            }
+                          ),
+                          SizedBox(height: 30,),
+                          GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    isErrorModal=false;
+                                  });
+                                },
+                                child: Container(
+                                  width: 60,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    color: Color.fromARGB(255, 111, 77, 77),
+                                    borderRadius: BorderRadius.circular(5)
+                                  ),
+                                  padding: EdgeInsets.symmetric(vertical: 10),
+                                  child: Builder(
+                                    builder: (context) {
+                                      final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
+                                      return Text(
+                                          "Ок",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontFamily: "NoirPro",
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w500
+                                          ),
+                                        );
+                                    }
+                                  ),
+                                ),
+                              )
+                        ],
+                      )
+                    ),
+                  ),
+                ),
+              ),
         ],
       )
     );
@@ -495,6 +582,7 @@ class _TransactionPageState extends State<TransactionPage> {
       onTap: () async{
         if(type=="keyboard"){
           setState(() {
+            _focusNode.unfocus();
             modalView=true;
           });
         }else{
@@ -536,6 +624,7 @@ class _TransactionPageState extends State<TransactionPage> {
           borderRadius: BorderRadius.circular(10)
         ),
         child: TextField(
+          focusNode: _focusNode,
           controller: controller,
           style: TextStyle(
               fontFamily: "NoirPro",

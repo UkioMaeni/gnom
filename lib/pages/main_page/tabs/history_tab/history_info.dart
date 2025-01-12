@@ -55,9 +55,12 @@ class _HistoryInfoState extends State<HistoryInfo> {
                                   }
                                   bool find=gnomDirectory.existsSync();
                                   print(find);
-                                  print(widget.model.answer);
-                                    print("http://45.12.237.135/"+widget.model.answer);
-                                    String url= widget.model.answer.contains("http")?widget.model.answer:"http://45.12.237.135/"+widget.model.answer;
+                                  print(widget.model.type);
+                                    
+                                    
+                                    String domain= widget.model.type=="presentation"? "http://31.129.106.28:8000/":"http://45.12.237.135/";
+                                    String url= widget.model.answer.contains("http")?widget.model.answer:domain+widget.model.answer;
+                                    print(url);
                                     final response=await Dio().get(
                                       url,
                                       options: Options(responseType: ResponseType.bytes)

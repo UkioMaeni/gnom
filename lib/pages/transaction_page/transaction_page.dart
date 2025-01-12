@@ -103,7 +103,7 @@ class _TransactionPageState extends State<TransactionPage> {
                 child: DecoratedBox(
                   decoration: const BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage("assets/jpg/app_bg.jpg"),
+                      image: AssetImage("assets/png/app_bg.png"),
                       fit: BoxFit.cover
                     )
                   ),

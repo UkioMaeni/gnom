@@ -55,7 +55,7 @@ class _PlaneInfoState extends State<PlaneInfo> {
             decoration: BoxDecoration(
               color:widget.openTypeIndex==1?Colors.red: Colors.white,
               image:widget.openTypeIndex==1? DecorationImage(
-                  image: AssetImage("assets/jpg/app_bg.jpg"),
+                  image: AssetImage("assets/png/app_bg.png"),
                   fit: BoxFit.cover
                 ):null,
               borderRadius: BorderRadius.circular(20)

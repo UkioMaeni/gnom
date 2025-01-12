@@ -82,9 +82,10 @@ class _HistoryTabState extends State<HistoryTab> with TickerProviderStateMixin {
   List<TaskData> tasks=[];
   void startTask(){
     if(tasks.length!=0){
-      tasks[0].task.call();
+      var task= tasks[0].task;
       String currentTask=tasks[0].id;
       tasks=tasks.where((element) => element.id!=currentTask,).toList();
+      task();
     }
   }
 

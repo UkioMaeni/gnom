@@ -93,6 +93,7 @@ class _HistoryInfoState extends State<HistoryInfo> {
     }
     if(Platform.isIOS){
       final _externalPathIosMacPlugin = ExternalPathIosMac();
+      
       final path = (await _externalPathIosMacPlugin.getDirectoryPath(directory: ExternalPathIosMac.DIRECTORY_DOWNLOADS))??"Unknow";
       print(path);
       final gnomDirectory = Directory(path);
@@ -477,7 +478,8 @@ class _HistoryInfoState extends State<HistoryInfo> {
                                               children: [
                                                 GestureDetector(
                                                   onTap: ()async {
-                                                    
+                                                    Directory newPath= await getApplicationDocumentsDirectory();
+                                                    print(newPath.path);
                                                     if(Platform.isIOS){
                                                       final _externalPathIosMacPlugin = ExternalPathIosMac();
                                                       final path = (await _externalPathIosMacPlugin.getDirectoryPath(directory: ExternalPathIosMac.DIRECTORY_PICTURES))??"Unknow";

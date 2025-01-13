@@ -65,6 +65,8 @@ LText LocaleText = LText();
     String get presentationError;
     String get back;
     String get question;
+    String get copy;
+    String get saveToGalery;
 }
 
 
@@ -264,6 +266,14 @@ class RuLocale implements LocaleLibrary{
   @override
   // TODO: implement qustion
   String get question => "Вопрос";
+  
+  @override
+  // TODO: implement copy
+  String get copy => "Скопировать";
+  
+  @override
+  // TODO: implement saveToGalery
+  String get saveToGalery => "Сохранить в галерею";
 }
 
 class EnLocale implements LocaleLibrary{
@@ -466,6 +476,14 @@ class EnLocale implements LocaleLibrary{
   @override
   // TODO: implement qustion
   String get question => "Question";
+  
+  @override
+  // TODO: implement copy
+  String get copy => "Copy";
+  
+  @override
+  // TODO: implement saveToGalery
+  String get saveToGalery => "Save to galery";
 }
 
 class ArLocale implements LocaleLibrary{
@@ -666,5 +684,13 @@ class ArLocale implements LocaleLibrary{
   @override
   // TODO: implement reportError
   String get question => "سؤال";
+  
+  @override
+  // TODO: implement copy
+  String get copy => "ينسخ";
+  
+  @override
+  // TODO: implement saveToGalery
+  String get saveToGalery => "حفظ في المعرض";
  
 }

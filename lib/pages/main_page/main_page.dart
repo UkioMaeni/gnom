@@ -69,9 +69,9 @@ class _MainPageState extends State<MainPage>  with WidgetsBindingObserver{
         print('Message also contained a notification: ${message.notification}');
       }
     });
-    FirebaseMessaging.onBackgroundMessage((e)async{
-      print(e.data);
-    });
+    // FirebaseMessaging.onBackgroundMessage((e)async{
+    //   print(e.data);
+    // });
   }
 
     @override

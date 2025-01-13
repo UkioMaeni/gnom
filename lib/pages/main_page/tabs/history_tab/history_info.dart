@@ -4,6 +4,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:external_path_ios_mac/external_path_ios_mac.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:gnom/core/localization/localization_bloc.dart';
@@ -132,7 +133,8 @@ class _HistoryInfoState extends State<HistoryInfo> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.model.Apath);
+    print(widget.model.answer);
+    final width=MediaQuery.of(context).size.width;
     return Scaffold(
       body: Observer(
         builder: (context) {
@@ -300,7 +302,18 @@ class _HistoryInfoState extends State<HistoryInfo> {
                                             child: Column(
                                               children: [
                                                 Container(
-                                                  child: Image.asset("assets/jpg/pdf_icon.jpg",fit: BoxFit.cover,),
+                                                  padding: EdgeInsets.all(10),
+                                                  decoration: BoxDecoration(
+                                                    border: Border.all(
+                                                      color: Color.fromARGB(157, 43, 42, 42),
+                                                      width: 3
+                                                    ),
+                                                    borderRadius: BorderRadius.only(
+                                                      topLeft: Radius.circular(10),
+                                                      topRight: Radius.circular(10)
+                                                    )
+                                                  ),
+                                                  child: Image.asset("assets/icon/pdf.png",fit: BoxFit.cover,),
                                                   width: 250,
                                                   height: 250,
                                                 ),
@@ -351,7 +364,74 @@ class _HistoryInfoState extends State<HistoryInfo> {
                                             child: Column(
                                               children: [
                                                 Container(
-                                                  child: Image.asset("assets/png/power_point_icon.png",fit: BoxFit.cover,),
+                                                  padding: EdgeInsets.all(10),
+                                                  decoration: BoxDecoration(
+                                                    border: Border.all(
+                                                      color: Color.fromARGB(157, 43, 42, 42),
+                                                      width: 3
+                                                    ),
+                                                    borderRadius: BorderRadius.only(
+                                                      topLeft: Radius.circular(10),
+                                                      topRight: Radius.circular(10)
+                                                    )
+                                                  ),
+                                                  child: Image.asset("assets/icon/pptx.png",fit: BoxFit.cover,),
+                                                  width: 250,
+                                                  height: 250,
+                                                ),
+                                                GestureDetector(
+                                                  onTap: () async{
+                                                    await OpenFile.open(widget.model.Apath);
+                                                  },
+                                                  child: Container(
+                                                    width: 250,
+                                                    alignment: Alignment.center,
+                                                      padding: EdgeInsets.symmetric(vertical: 10),
+                                                      decoration: BoxDecoration(
+                                                        color: Color.fromARGB(157, 43, 42, 42),
+                                                        
+                                                      ),
+                                                      child: Builder(
+                                                        builder: (context) {
+                                                          final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
+                                                          return Text(
+                                                          state.locale.open,
+                                                          style: const TextStyle(
+                                                                  fontSize: 20,
+                                                                  fontWeight: FontWeight.w400,
+                                                                  fontFamily: "NoirPro",
+                                                                  height: 1,
+                                                                  color: Colors.white
+                                                                  ),
+                                                                            );
+                                                        }
+                                                      ),
+                                                    ),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        }
+                                        if(widget.model.answer=="docx"){
+                                          return ClipRRect(
+                                            borderRadius: BorderRadius.circular(10),
+                                            child: Column(
+                                              children: [
+                                                Container(
+                                                  
+                                                  
+                                                  child: Image.asset("assets/icon/docx.png",fit: BoxFit.cover,),
+                                                  padding: EdgeInsets.all(10),
+                                                  decoration: BoxDecoration(
+                                                    border: Border.all(
+                                                      color: Color.fromARGB(157, 43, 42, 42),
+                                                      width: 3
+                                                    ),
+                                                    borderRadius: BorderRadius.only(
+                                                      topLeft: Radius.circular(10),
+                                                      topRight: Radius.circular(10)
+                                                    )
+                                                  ),
                                                   width: 250,
                                                   height: 250,
                                                 ),
@@ -390,68 +470,175 @@ class _HistoryInfoState extends State<HistoryInfo> {
                                         }
                                         if(widget.model.answer=="png"){
                                           File file = File(widget.model.Apath);
-                                          return GestureDetector(
-                                            onTap: () {
-                                              showDialog(
-                                                  context: context,
-                                                  barrierDismissible: true,
-
-                                                  builder: (context) {
+                                          
+                                          return Container(
+                                            width: width*2/3,
+                                            child: Column(
+                                              children: [
+                                                GestureDetector(
+                                                  onTap: ()async {
                                                     
-                                                    return Container(
-                                                      padding: EdgeInsets.symmetric(horizontal: 10),
-                                                      //backgroundColor: Colors.red,
-                                                      child: GestureDetector(
-                                                        onTap: () {
-                                                          
-                                                        },
-                                                        child: Center(
-                                                          child: Image.file(file,),
-                                                        ),
-                                                      ),
-                                                    );
+                                                    //await Clipboard.setData(ClipboardData(text: widget));
                                                   },
-                                                );
-                                            },
-                                            child: ClipRRect(
-                                              borderRadius: BorderRadius.circular(10),
-                                              child: Column(
-                                                children: [
-                                                  Container(
-                                                    
-                                                    child: Image.file(file,fit: BoxFit.cover,),
-                                                    width: 250,
-                                                    height: 250,
+                                                  child: Container(
+                                                    height: 40,
+                                                    alignment: Alignment.centerRight,
+                                                    padding: EdgeInsets.only(right: 20),
+                                                    width: width*2/3,
+                                                    decoration: BoxDecoration(
+                                                      color: Color.fromARGB(157, 43, 42, 42),
+                                                      borderRadius: BorderRadius.only(
+                                                        topLeft: Radius.circular(10),
+                                                        topRight: Radius.circular(10)
+                                                      )
+                                                    ),
+                                                    child: Row(
+                                                      mainAxisAlignment: MainAxisAlignment.end,
+                                                      children: [
+                                                        Builder(
+                                                          builder: (context) {
+                                                            final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
+                                                            return Text(
+                                                                    state.locale.saveToGalery,
+                                                                    style: const TextStyle(
+                                                                          fontSize: 15,
+                                                                          fontWeight: FontWeight.w400,
+                                                                          fontFamily: "NoirPro",
+                                                                          height: 1,
+                                                                          color: Colors.white
+                                                                          ),
+                                                                    );
+                                                          },
+                                                        ),
+                                                        SizedBox(width: 10,),
+                                                        Icon(Icons.save,size: 15,color: Colors.white,),
+                                                      ],
+                                                    ),
                                                   ),
-                                                  
-                                                ],
-                                              ),
+                                                ),
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    showDialog(
+                                                        context: context,
+                                                        barrierDismissible: true,
+                                                
+                                                        builder: (context) {
+                                                          
+                                                          return Container(
+                                                            padding: EdgeInsets.symmetric(horizontal: 10),
+                                                            //backgroundColor: Colors.red,
+                                                            child: GestureDetector(
+                                                              onTap: () {
+                                                                
+                                                              },
+                                                              child: Center(
+                                                                child: Image.file(file),
+                                                              ),
+                                                            ),
+                                                          );
+                                                        },
+                                                      );
+                                                  },
+                                                  child: ClipRRect(
+                                                    borderRadius: BorderRadius.only(
+                                                      bottomLeft: Radius.circular(10),
+                                                      bottomRight: Radius.circular(10)
+                                                    ),
+                                                    child: Column(
+                                                      children: [
+                                                        Container(
+                                                          
+                                                          child: Image.file(file,fit: BoxFit.cover,),
+                                                        ),
+                                                        
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           );
                                         }
                                       }
                                       
                                       return  Container(
-                                          constraints: BoxConstraints(
-                                            maxWidth: MediaQuery.of(context).size.width-120,
-                                            minWidth: 50
-                                          ),
-                                          padding: EdgeInsets.all(5),
-                                          decoration: BoxDecoration(
-                                            color:Color.fromARGB(157, 43, 42, 42),
-                                            borderRadius: BorderRadius.circular(10)
-                                          ),
-                                          child: Text(
-                                              widget.model.answer,
-                                              style: const TextStyle(
-                                                      fontSize: 20,
-                                                      fontWeight: FontWeight.w400,
-                                                      fontFamily: "NoirPro",
-                                                      height: 1,
-                                                      color: Colors.white
-                                                      ),
+                                        // constraints: BoxConstraints(
+                                        //         //maxWidth: MediaQuery.of(context).size.width-120,
+                                        //         minWidth: width*2/3
+                                        //       ),
+                                        width: width*2/3,
+                                        child: Column(
+                                          children: [
+                                            GestureDetector(
+                                              onTap: ()async {
+                                                
+                                                await Clipboard.setData(ClipboardData(text: widget.model.answer));
+                                              },
+                                              child: Container(
+                                                height: 40,
+                                                width: width*2/3,
+                                                alignment: Alignment.centerRight,
+                                                padding: EdgeInsets.only(right: 20),
+                                                
+                                                decoration: BoxDecoration(
+                                                  color: Color.fromARGB(157, 20, 20, 20),
+                                                  borderRadius: BorderRadius.only(
+                                                    topLeft: Radius.circular(10),
+                                                    topRight: Radius.circular(10)
+                                                  )
+                                                ),
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.end,
+                                                  children: [
+                                                    Builder(
+                                                      builder: (context) {
+                                                        final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
+                                                        return Text(
+                                                                state.locale.copy,
+                                                                style: const TextStyle(
+                                                                      fontSize: 15,
+                                                                      fontWeight: FontWeight.w400,
+                                                                      fontFamily: "NoirPro",
+                                                                      height: 1,
+                                                                      color: Colors.white
+                                                                      ),
+                                                                );
+                                                      },
+                                                    ),
+                                                    SizedBox(width: 10,),
+                                                    Icon(Icons.copy,size: 15,color: Colors.white,),
+                                                  ],
+                                                ),
+                                              ),
                                             ),
-                                        );
+                                            Container(
+                                                // constraints: BoxConstraints(
+                                                //   maxWidth: width*3/4,
+                                                //   minWidth:  width*2/3
+                                                // ),
+                                                width: width*2/3,
+                                                padding: EdgeInsets.all(5),
+                                                decoration: BoxDecoration(
+                                                  color:Color.fromARGB(157, 43, 42, 42),
+                                                  borderRadius: BorderRadius.only(
+                                                    bottomLeft: Radius.circular(10),
+                                                    bottomRight: Radius.circular(10)
+                                                  )
+                                                ),
+                                                child: Text(
+                                                    widget.model.answer,
+                                                    style: const TextStyle(
+                                                            fontSize: 20,
+                                                            fontWeight: FontWeight.w400,
+                                                            fontFamily: "NoirPro",
+                                                            height: 1,
+                                                            color: Colors.white
+                                                            ),
+                                                  ),
+                                              ),
+                                          ],
+                                        ),
+                                      );
                                       
                                     }
                                   ),

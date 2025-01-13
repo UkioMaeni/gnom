@@ -478,7 +478,22 @@ class _HistoryInfoState extends State<HistoryInfo> {
                                                 GestureDetector(
                                                   onTap: ()async {
                                                     
-                                                    //await Clipboard.setData(ClipboardData(text: widget));
+                                                    if(Platform.isIOS){
+                                                      final _externalPathIosMacPlugin = ExternalPathIosMac();
+                                                      final path = (await _externalPathIosMacPlugin.getDirectoryPath(directory: ExternalPathIosMac.DIRECTORY_PICTURES))??"Unknow";
+                                                      print(path);
+                                                      final DIRECTORY_PICTURES = Directory(path);
+                                                      if(!DIRECTORY_PICTURES.existsSync()){
+                                                        DIRECTORY_PICTURES.create();
+                                                      }
+                                                      
+                                                      
+                                                      String id= Uuid().v4();
+                                                      final file = File(DIRECTORY_PICTURES.path+"/${id}.${"png"}");
+                                                      await file.create();
+                                                      file.writeAsBytesSync(file.readAsBytesSync());
+                                                      
+                                                    }
                                                   },
                                                   child: Container(
                                                     height: 40,

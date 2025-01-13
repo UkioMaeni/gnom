@@ -67,7 +67,7 @@ LText LocaleText = LText();
     String get question;
     String get copy;
     String get saveToGalery;
-}
+} 
 
 
 class RuLocale implements LocaleLibrary{

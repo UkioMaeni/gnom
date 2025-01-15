@@ -12,6 +12,16 @@ class SQLLite{
        String newPath= join(await getDatabasesPath(), 'my_database.db');
       path=newPath;
   }
+  Future checkIntegrity()async{
+    Database db = await openDatabase(path);
+    final results = await db.rawQuery('PRAGMA table_info(favorite)');
+    final columnNames = results.map((row) => row['name']).toList();
+    print(columnNames);
+    bool fileBufferColumntExist =   columnNames.contains("answerBuffer");
+    if(!fileBufferColumntExist){
+      await db.execute('ALTER TABLE favorite ADD COLUMN answerBuffer TEXT');
+    }
+  }
   Future<bool> createDB() async {
     print("create");
     try {

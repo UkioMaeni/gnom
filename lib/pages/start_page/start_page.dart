@@ -99,10 +99,11 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin{
     await Future.delayed(Duration(seconds: 4));
     Locale? locale =await localeStorage.appLanguage;
     await instanceDb.getPath();
+    
     //await instanceDb.dropDatabase();
     
     await instanceDb.createDB();
-    
+    await instanceDb.checkIntegrity();
     if(locale!=null){
       if(locale.languageCode=="ru"){
         context.read<LocalizationBloc>().add(LocalizationSetLocaleEvent(locale: RuLocale()));

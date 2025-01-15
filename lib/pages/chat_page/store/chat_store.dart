@@ -223,13 +223,15 @@ abstract class _ChatStore with Store {
   }
 
   @action
-  Future<void> updateHistoryAsDocument(String messageId,String path,String documentType)async{
+  Future<void> updateHistoryAsDocument(String messageId,String path,String documentType,Uint8List buffer)async{
       List<HistoryModel> find = history.where((element) => element.messageId==messageId,).toList();
       for (var element in find) {
         element.answer=documentType;
         element.AisDocument=true;
         element.Apath=path;
-        await instanceDb.updateHistoryAnswerInDocument(element.messageId,path,documentType);
+        element.answerBuffer=buffer;
+        await instanceDb.updateHistoryAnswerInDocument(element.messageId,path,documentType,buffer);
+        history=ObservableList.of(history);
       }
       
       

@@ -18,6 +18,7 @@ import 'package:open_file_plus/open_file_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 class HistoryInfo extends StatefulWidget {
   final HistoryModel model;
   const HistoryInfo({super.key,required this.model});
@@ -86,7 +87,8 @@ class _HistoryInfoState extends State<HistoryInfo> {
                                     final file = File(gnomDirectory.path+"/${id}.${fileExchange}");
                                     await file.create();
                                     file.writeAsBytesSync(response.data);
-                                    await chatStore.updateHistoryAsDocument(widget.model.messageId,gnomDirectory.path+"/${id}.${fileExchange}",fileExchange);
+                                    print(response.data);
+                                    await chatStore.updateHistoryAsDocument(widget.model.messageId,gnomDirectory.path+"/${id}.${fileExchange}",fileExchange,response.data);
                                     setState(() {
                                       
                                     });
@@ -124,7 +126,8 @@ class _HistoryInfoState extends State<HistoryInfo> {
                                     final file = File(gnomDirectory.path+"/${id}.${fileExchange}");
                                     await file.create();
                                     file.writeAsBytesSync(response.data);
-                                    await chatStore.updateHistoryAsDocument(widget.model.messageId,gnomDirectory.path+"/${id}.${fileExchange}",fileExchange);
+                                    print(response.data);
+                                    await chatStore.updateHistoryAsDocument(widget.model.messageId,gnomDirectory.path+"/${id}.${fileExchange}",fileExchange,response.data);
                                     setState(() {
                                       
                                     });
@@ -141,7 +144,9 @@ class _HistoryInfoState extends State<HistoryInfo> {
       body: Observer(
         builder: (context) {
           final model = chatStore.history.where((element) => element.messageId==widget.model.messageId,).toList()[0];
-          print(widget.model.type);
+          print(model.type);
+          print("RELOAD");
+          print(model.answerBuffer);
           return Container(
                   decoration: const BoxDecoration(
                     image: DecorationImage(
@@ -211,13 +216,13 @@ class _HistoryInfoState extends State<HistoryInfo> {
                               SizedBox(height: 20,),
                          Builder(
                            builder: (context) {
-                            if(widget.model.question=="image"){
+                            if(model.question=="image"){
                               return Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Container(
-                                    child: Image.memory(widget.model.fileBuffer!,fit: BoxFit.cover,),
+                                    child: Image.memory(model.fileBuffer!,fit: BoxFit.cover,),
                                     width: 250,
                                     height: 250,
                                   ),
@@ -234,7 +239,7 @@ class _HistoryInfoState extends State<HistoryInfo> {
                                 ],
                               );
                             }
-                            Message mess= Message(id: widget.model.messageId, status: "", text: widget.model.question, sender: "client", fileBuffer: null);
+                            Message mess= Message(id: model.messageId, status: "", text: model.question, sender: "client", fileBuffer: null);
                             
                              return ClientMessage(message: mess);
                            }
@@ -259,9 +264,9 @@ class _HistoryInfoState extends State<HistoryInfo> {
                           SizedBox(height: 20,),
                           Builder(
                             builder: (context) {
-                              if(widget.model.answer.isEmpty){
-                                    Message mess= Message(id: widget.model.messageId, status: "", text: "wait...", sender: "client", fileBuffer: null);
-                                    return Align(child: BotMessage(message: mess,type: widget.model.type,),alignment: Alignment.centerLeft,);
+                              if(model.answer.isEmpty){
+                                    Message mess= Message(id: model.messageId, status: "", text: "wait...", sender: "client", fileBuffer: null);
+                                    return Align(child: BotMessage(message: mess,type: model.type,),alignment: Alignment.centerLeft,);
                                   }
                               return Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -279,26 +284,26 @@ class _HistoryInfoState extends State<HistoryInfo> {
                                     SizedBox(width: 10,),
                                   Observer(
                                     builder: (context) {
-                                    // if(widget.model.answerBuffer!=null){
+                                    // if(model.answerBuffer!=null){
                                     //   print("buffer");
-                                    //   return Image.memory(widget.model.fileBuffer!);
+                                    //   return Image.memory(model.fileBuffer!);
                                     // }
-                                    print(widget.model.answer+"////////");
+                                    print(model.answer+"////////");
                                     
                                       if(
                                         (
-                                          widget.model.answer.contains("math")||
-                                          widget.model.answer.contains("referat")||
-                                          widget.model.answer.contains("presentation")||
-                                          widget.model.answer.contains("http")
+                                          model.answer.contains("math")||
+                                          model.answer.contains("referat")||
+                                          model.answer.contains("presentation")||
+                                          model.answer.contains("http")
                                         ) && 
-                                        widget.model.Apath.isEmpty
+                                        model.Apath.isEmpty
                                         ){
                                         downloadFile();
                                         return CircularProgressIndicator();
                                       }
-                                      if(widget.model.AisDocument){
-                                        if(widget.model.answer=="pdf"){
+                                      if(model.AisDocument){
+                                        if(model.answer=="pdf"){
                                           return ClipRRect(
                                             borderRadius: BorderRadius.circular(10),
                                             child: Column(
@@ -323,8 +328,8 @@ class _HistoryInfoState extends State<HistoryInfo> {
                                                   onTap: () async{
                                                     try {
                                                       print('open');
-                                                      print(widget.model.Apath);
-                                                      final result=await OpenFile.open(widget.model.Apath);
+                                                      print(model.Apath);
+                                                      final result=await OpenFile.open(model.Apath);
                                                       print(result.type);
                                                     } catch (e) {
                                                       print(e);
@@ -360,7 +365,7 @@ class _HistoryInfoState extends State<HistoryInfo> {
                                             ),
                                           );
                                         }
-                                        if(widget.model.answer=="pptx"){
+                                        if(model.answer=="pptx"){
                                           return ClipRRect(
                                             borderRadius: BorderRadius.circular(10),
                                             child: Column(
@@ -383,7 +388,7 @@ class _HistoryInfoState extends State<HistoryInfo> {
                                                 ),
                                                 GestureDetector(
                                                   onTap: () async{
-                                                    await OpenFile.open(widget.model.Apath);
+                                                    await OpenFile.open(model.Apath);
                                                   },
                                                   child: Container(
                                                     width: 250,
@@ -414,7 +419,7 @@ class _HistoryInfoState extends State<HistoryInfo> {
                                             ),
                                           );
                                         }
-                                        if(widget.model.answer=="docx"){
+                                        if(model.answer=="docx"){
                                           return ClipRRect(
                                             borderRadius: BorderRadius.circular(10),
                                             child: Column(
@@ -439,7 +444,7 @@ class _HistoryInfoState extends State<HistoryInfo> {
                                                 ),
                                                 GestureDetector(
                                                   onTap: () async{
-                                                    await OpenFile.open(widget.model.Apath);
+                                                    await OpenFile.open(model.Apath);
                                                   },
                                                   child: Container(
                                                     width: 250,
@@ -470,9 +475,9 @@ class _HistoryInfoState extends State<HistoryInfo> {
                                             ),
                                           );
                                         }
-                                        if(widget.model.answer=="png"){
-                                          File file = File(widget.model.Apath);
-                                          
+                                        if(model.answer=="png"){
+                                          final file = model.answerBuffer;
+                                          print(model.question);
                                           return Container(
                                             width: width*2/3,
                                             child: Column(
@@ -481,8 +486,17 @@ class _HistoryInfoState extends State<HistoryInfo> {
                                                   onTap: ()async {
                                                     Directory newPath= await getApplicationDocumentsDirectory();
                                                     print(newPath.path);
+                                                    await ImageGallerySaver.saveImage(file!);
+                                                    Fluttertoast.showToast(
+                                                        msg: "OK",
+                                                        toastLength: Toast.LENGTH_SHORT,
+                                                        gravity: ToastGravity.BOTTOM,
+                                                        timeInSecForIosWeb: 1,
+                                                        backgroundColor: const Color.fromARGB(255, 52, 55, 52),
+                                                        textColor: Colors.white,
+                                                      );
                                                     if(Platform.isIOS){
-                                                      await ImageGallerySaver.saveImage(file.readAsBytesSync());
+                                                      await ImageGallerySaver.saveImage(file!);
                                                       return;
                                                       // final _externalPathIosMacPlugin = ExternalPathIosMac();
                                                       // final path = (await _externalPathIosMacPlugin.getDirectoryPath(directory: ExternalPathIosMac.DIRECTORY_PICTURES))??"Unknow";
@@ -554,7 +568,7 @@ class _HistoryInfoState extends State<HistoryInfo> {
                                                                 
                                                               },
                                                               child: Center(
-                                                                child: Image.file(file),
+                                                                child: Image.memory(file),
                                                               ),
                                                             ),
                                                           );
@@ -568,9 +582,9 @@ class _HistoryInfoState extends State<HistoryInfo> {
                                                     ),
                                                     child: Column(
                                                       children: [
-                                                        Container(
+                                                        Container(  
                                                           
-                                                          child: Image.file(file,fit: BoxFit.cover,),
+                                                          child: Image.memory(file!,fit: BoxFit.cover,),
                                                         ),
                                                         
                                                       ],
@@ -594,7 +608,7 @@ class _HistoryInfoState extends State<HistoryInfo> {
                                             GestureDetector(
                                               onTap: ()async {
                                                 
-                                                await Clipboard.setData(ClipboardData(text: widget.model.answer));
+                                                await Clipboard.setData(ClipboardData(text: model.answer));
                                               },
                                               child: Container(
                                                 height: 40,
@@ -648,7 +662,7 @@ class _HistoryInfoState extends State<HistoryInfo> {
                                                   )
                                                 ),
                                                 child: Text(
-                                                    widget.model.answer,
+                                                    model.answer,
                                                     style: const TextStyle(
                                                             fontSize: 20,
                                                             fontWeight: FontWeight.w400,

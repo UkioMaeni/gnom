@@ -85,9 +85,9 @@ mixin _$ChatStore on _ChatStore, Store {
 
   @override
   Future<void> updateHistoryAsDocument(
-      String messageId, String path, String documentType) {
-    return _$updateHistoryAsDocumentAsyncAction.run(
-        () => super.updateHistoryAsDocument(messageId, path, documentType));
+      String messageId, String path, String documentType, Uint8List buffer) {
+    return _$updateHistoryAsDocumentAsyncAction.run(() =>
+        super.updateHistoryAsDocument(messageId, path, documentType, buffer));
   }
 
   late final _$addMessageFromDbAsyncAction =

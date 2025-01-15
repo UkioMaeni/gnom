@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:gnom/pages/chat_page/store/chat_store.dart';
 import 'package:gnom/pages/main_page/tabs/history_tab/history_tab.dart';
 import 'package:path/path.dart';
@@ -50,6 +51,7 @@ class SQLLite{
             messageId TEXT, 
             answer TEXT,
             fileBuffer TEXT, 
+            answerBuffer TEXT, 
             answerMessageId TEXT
             )
           ''',
@@ -102,7 +104,7 @@ class SQLLite{
         QisDocument: element["qisDocument"]=="true"?true:false,
         Apath: element["apath"],
         Qpath: element["qpath"],
-        fileBuffer:element["fileBuffer"] ,
+        answerBuffer:element["answerBuffer"],
         type: element["type"]
         );
       historyes.add(his);
@@ -146,6 +148,7 @@ class SQLLite{
           "favorite",
           {
             "progress":progress,
+            
           },
           where: 'messageId = ?',
           whereArgs: [messageId],
@@ -163,6 +166,7 @@ class SQLLite{
           "favorite",
           {
             "answer":answer,
+            
           },
           where: 'messageId = ?',
           whereArgs: [messageId],
@@ -173,7 +177,7 @@ class SQLLite{
       return false;
     }
   }
-  Future<bool> updateHistoryAnswerInDocument(String messageId,String documentPath,String documentType)async{
+  Future<bool> updateHistoryAnswerInDocument(String messageId,String documentPath,String documentType,Uint8List buffer)async{
     try {
       final Database db = await openDatabase(path);
       await db.update(
@@ -181,7 +185,8 @@ class SQLLite{
           {
             "aisDocument":"true",
             "apath":documentPath,
-            "answer":documentType
+            "answer":documentType,
+            "answerBuffer":buffer
           },
           where: 'messageId = ?',
           whereArgs: [messageId],

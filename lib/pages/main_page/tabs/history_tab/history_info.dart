@@ -17,7 +17,7 @@ import 'package:media_storage/media_storage.dart';
 import 'package:open_file_plus/open_file_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
-
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 class HistoryInfo extends StatefulWidget {
   final HistoryModel model;
   const HistoryInfo({super.key,required this.model});
@@ -93,8 +93,9 @@ class _HistoryInfoState extends State<HistoryInfo> {
     }
     if(Platform.isIOS){
       final _externalPathIosMacPlugin = ExternalPathIosMac();
-      
-      final path = (await _externalPathIosMacPlugin.getDirectoryPath(directory: ExternalPathIosMac.DIRECTORY_DOWNLOADS))??"Unknow";
+      Directory newPath= await getApplicationDocumentsDirectory();
+      print(newPath.path);
+      final path =newPath.path; //(await _externalPathIosMacPlugin.getDirectoryPath(directory: ExternalPathIosMac.DIRECTORY_DOWNLOADS))??"Unknow";
       print(path);
       final gnomDirectory = Directory(path);
       if(!gnomDirectory.existsSync()){
@@ -481,20 +482,24 @@ class _HistoryInfoState extends State<HistoryInfo> {
                                                     Directory newPath= await getApplicationDocumentsDirectory();
                                                     print(newPath.path);
                                                     if(Platform.isIOS){
-                                                      final _externalPathIosMacPlugin = ExternalPathIosMac();
-                                                      final path = (await _externalPathIosMacPlugin.getDirectoryPath(directory: ExternalPathIosMac.DIRECTORY_PICTURES))??"Unknow";
-                                                      print(path);
-                                                      final DIRECTORY_PICTURES = Directory(path);
-                                                      if(!DIRECTORY_PICTURES.existsSync()){
-                                                        DIRECTORY_PICTURES.create();
-                                                      }
+                                                      await ImageGallerySaver.saveImage(file.readAsBytesSync());
+                                                      return;
+                                                      // final _externalPathIosMacPlugin = ExternalPathIosMac();
+                                                      // final path = (await _externalPathIosMacPlugin.getDirectoryPath(directory: ExternalPathIosMac.DIRECTORY_PICTURES))??"Unknow";
+                                                      // print(path);
+                                                      // final DIRECTORY_PICTURES = Directory(path);
+                                                      // if(!DIRECTORY_PICTURES.existsSync()){
+                                                      //   DIRECTORY_PICTURES.create();
+                                                      // }
                                                       
                                                       
-                                                      String id= Uuid().v4();
-                                                      final file = File(DIRECTORY_PICTURES.path+"/${id}.${"png"}");
-                                                      await file.create();
-                                                      file.writeAsBytesSync(file.readAsBytesSync());
-                                                      
+                                                      // String id= Uuid().v4();
+                                                      // final file = File(DIRECTORY_PICTURES.path+"/${id}.${"png"}");
+                                                      // print(file.path);
+                                                      // await file.create();
+                                                      // file.writeAsBytesSync(file.readAsBytesSync());
+                                                      // final DIRECTORY_PICTURESb= File(file.path);
+                                                      // print(await DIRECTORY_PICTURESb.exists());
                                                     }
                                                   },
                                                   child: Container(

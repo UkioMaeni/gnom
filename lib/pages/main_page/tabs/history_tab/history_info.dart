@@ -329,8 +329,19 @@ class _HistoryInfoState extends State<HistoryInfo> {
                                                     try {
                                                       print('open');
                                                       print(model.Apath);
-                                                      final result=await OpenFile.open(model.Apath);
-                                                      print(result.type);
+                                                      if(Platform.isIOS){
+                                                        Directory newPath= await getApplicationDocumentsDirectory();
+                                                        print(newPath);
+                                                        final file = File(model.Apath);
+                                                        if( !(await file.exists())){
+                                                          await file.create();
+                                                        }
+
+                                                        file.writeAsBytesSync(model.answerBuffer!);
+                                                        final result=await OpenFile.open(model.Apath);
+                                                      }
+                                                      
+                                                      
                                                     } catch (e) {
                                                       print(e);
                                                     }

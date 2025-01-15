@@ -399,7 +399,17 @@ class _HistoryInfoState extends State<HistoryInfo> {
                                                 ),
                                                 GestureDetector(
                                                   onTap: () async{
-                                                    await OpenFile.open(model.Apath);
+                                                    if(Platform.isIOS){
+                                                        Directory newPath= await getApplicationDocumentsDirectory();
+                                                        print(newPath);
+                                                        final file = File(model.Apath);
+                                                        if( !(await file.exists())){
+                                                          await file.create();
+                                                        }
+
+                                                        file.writeAsBytesSync(model.answerBuffer!);
+                                                        final result=await OpenFile.open(model.Apath);
+                                                      }
                                                   },
                                                   child: Container(
                                                     width: 250,
@@ -455,7 +465,17 @@ class _HistoryInfoState extends State<HistoryInfo> {
                                                 ),
                                                 GestureDetector(
                                                   onTap: () async{
-                                                    await OpenFile.open(model.Apath);
+                                                    if(Platform.isIOS){
+                                                        Directory newPath= await getApplicationDocumentsDirectory();
+                                                        print(newPath);
+                                                        final file = File(model.Apath);
+                                                        if( !(await file.exists())){
+                                                          await file.create();
+                                                        }
+
+                                                        file.writeAsBytesSync(model.answerBuffer!);
+                                                        final result=await OpenFile.open(model.Apath);
+                                                      }
                                                   },
                                                   child: Container(
                                                     width: 250,

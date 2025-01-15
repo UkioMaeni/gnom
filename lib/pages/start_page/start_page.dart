@@ -96,28 +96,36 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin{
   }
 
   checkLanguage()async{
-    await Future.delayed(Duration(seconds: 4));
-    Locale? locale =await localeStorage.appLanguage;
-    await instanceDb.getPath();
-    
-    //await instanceDb.dropDatabase();
-    
-    await instanceDb.createDB();
-    await instanceDb.checkIntegrity();
-    if(locale!=null){
-      if(locale.languageCode=="ru"){
-        context.read<LocalizationBloc>().add(LocalizationSetLocaleEvent(locale: RuLocale()));
-      }else if(locale.languageCode=="en"){
-        context.read<LocalizationBloc>().add(LocalizationSetLocaleEvent(locale: EnLocale()));
-      }else if(locale.languageCode=="ar"){
-        context.read<LocalizationBloc>().add(LocalizationSetLocaleEvent(locale: ArLocale()));
-      }else{
-        context.read<LocalizationBloc>().add(LocalizationSetLocaleEvent(locale: EnLocale()));
-      }
+    try {
+      await Future.delayed(Duration(seconds: 4));
+      Locale? locale =await localeStorage.appLanguage;
+      await instanceDb.getPath();
       
-      toMainPage();
-    }else{
-      toLangPage();
+      //await instanceDb.dropDatabase();
+      
+      await instanceDb.createDB();
+      await instanceDb.checkIntegrity();
+      if(locale!=null){
+        if(locale.languageCode=="ru"){
+          context.read<LocalizationBloc>().add(LocalizationSetLocaleEvent(locale: RuLocale()));
+        }else if(locale.languageCode=="en"){
+          context.read<LocalizationBloc>().add(LocalizationSetLocaleEvent(locale: EnLocale()));
+        }else if(locale.languageCode=="ar"){
+          context.read<LocalizationBloc>().add(LocalizationSetLocaleEvent(locale: ArLocale()));
+        }else{
+          context.read<LocalizationBloc>().add(LocalizationSetLocaleEvent(locale: EnLocale()));
+        }
+        
+        toMainPage();
+      }else{
+        toLangPage();
+      }
+    } catch (e) {
+      showDialog(context: context, builder: (context) {
+        return Dialog(
+          child: Text(e.toString()),
+        );
+      },);
     }
   }
 

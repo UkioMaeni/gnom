@@ -35,7 +35,11 @@ class _HistoryTabState extends State<HistoryTab> with TickerProviderStateMixin {
 
   bool isGenerated=false;
 
+  String generateVersion=Uuid().v4();
   void startGenerate()async{
+    
+    final currentGenerateVersion=Uuid().v4();
+    generateVersion=currentGenerateVersion;
     if(!mounted){
       return;
     }
@@ -50,7 +54,7 @@ class _HistoryTabState extends State<HistoryTab> with TickerProviderStateMixin {
     //final completedList= histories.where((element) => element.progress=="completed").toList();
     print(processList.length);
     for(int i=0;i<processList.length;i++){
-      if(!mounted || currentType!=type) return;
+      if(!mounted || currentType!=type ||currentGenerateVersion!=generateVersion) return;
       setState(() {
         final state = (context.read<LocalizationBloc>().state as LocalizationLocaleState);
         widgets.add(
@@ -174,6 +178,7 @@ class _HistoryTabState extends State<HistoryTab> with TickerProviderStateMixin {
                       type: "completed",
                       currentType: type,
                       updater: () {
+                        if(type=="completed") return;
                           setState(() {
                             type="completed";
                             startGenerate();

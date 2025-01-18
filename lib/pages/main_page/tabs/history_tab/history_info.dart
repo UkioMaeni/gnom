@@ -529,26 +529,7 @@ class _HistoryInfoState extends State<HistoryInfo> {
                                                         backgroundColor: const Color.fromARGB(255, 52, 55, 52),
                                                         textColor: Colors.white,
                                                       );
-                                                    if(Platform.isIOS){
-                                                      await ImageGallerySaver.saveImage(file!);
-                                                      return;
-                                                      // final _externalPathIosMacPlugin = ExternalPathIosMac();
-                                                      // final path = (await _externalPathIosMacPlugin.getDirectoryPath(directory: ExternalPathIosMac.DIRECTORY_PICTURES))??"Unknow";
-                                                      // print(path);
-                                                      // final DIRECTORY_PICTURES = Directory(path);
-                                                      // if(!DIRECTORY_PICTURES.existsSync()){
-                                                      //   DIRECTORY_PICTURES.create();
-                                                      // }
-                                                      
-                                                      
-                                                      // String id= Uuid().v4();
-                                                      // final file = File(DIRECTORY_PICTURES.path+"/${id}.${"png"}");
-                                                      // print(file.path);
-                                                      // await file.create();
-                                                      // file.writeAsBytesSync(file.readAsBytesSync());
-                                                      // final DIRECTORY_PICTURESb= File(file.path);
-                                                      // print(await DIRECTORY_PICTURESb.exists());
-                                                    }
+                                                    
                                                   },
                                                   child: Container(
                                                     height: 40,
@@ -643,6 +624,16 @@ class _HistoryInfoState extends State<HistoryInfo> {
                                               onTap: ()async {
                                                 
                                                 await Clipboard.setData(ClipboardData(text: model.answer));
+                                                if(Platform.isIOS){
+                                                  Fluttertoast.showToast(
+                                                    msg: "OK",
+                                                    toastLength: Toast.LENGTH_SHORT,
+                                                    gravity: ToastGravity.BOTTOM,
+                                                    timeInSecForIosWeb: 1,
+                                                    backgroundColor: const Color.fromARGB(255, 52, 55, 52),
+                                                    textColor: Colors.white,
+                                                  );
+                                                }
                                               },
                                               child: Container(
                                                 height: 40,

@@ -36,9 +36,15 @@ class _HistoryTabState extends State<HistoryTab> with TickerProviderStateMixin {
   bool isGenerated=false;
 
   void startGenerate()async{
+    if(!mounted){
+      return;
+    }
     isGenerated=true;
     String currentType=type;
     widgets=[];
+    setState(() {
+      
+    });
     final histories= chatStore.history;
     final processList= histories.where((element) => element.progress==type).toList();
     //final completedList= histories.where((element) => element.progress=="completed").toList();

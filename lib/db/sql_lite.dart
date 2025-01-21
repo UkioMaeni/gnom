@@ -115,7 +115,8 @@ class SQLLite{
         Apath: element["apath"],
         Qpath: element["qpath"],
         answerBuffer:element["answerBuffer"],
-        type: element["type"]
+        type: element["type"],
+        fileBuffer: element["fileBuffer"]
         );
       historyes.add(his);
     }

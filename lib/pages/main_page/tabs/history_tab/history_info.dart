@@ -225,9 +225,11 @@ class _HistoryInfoState extends State<HistoryInfo> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Container(
-                                    child: Image.memory(model.fileBuffer!,fit: BoxFit.cover,),
-                                    width: 250,
-                                    height: 250,
+                                    child: Image.memory(model.fileBuffer!,fit: BoxFit.contain,),
+                                    constraints: BoxConstraints(
+                                      minWidth: 100,
+                                      minHeight: 400
+                                    ),
                                   ),
                                   SizedBox(width: 10,),
                                   Container(

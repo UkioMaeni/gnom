@@ -18,15 +18,20 @@ class _ClientMessageState extends State<ClientMessage> {
      return Container(
         margin: EdgeInsets.symmetric(vertical: 10),
         padding: EdgeInsets.only(right: 20),
-        width: 160,
-        height: 200,
+        constraints: BoxConstraints(
+          minHeight: 200,
+          minWidth: 300,
+          maxWidth: 300
+        ),
+        // width: 160,
+        // height: 200,
         child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.end,
          children: [
            SizedBox(
-            width: MediaQuery.of(context).size.width-100,
-            child: Image.memory(widget.message.fileBuffer!)
+            //width: MediaQuery.of(context).size.width-100,
+            child: Image.memory(widget.message.fileBuffer!,fit: BoxFit.cover,)
           ),
             SizedBox(width: 10,),
             Container(

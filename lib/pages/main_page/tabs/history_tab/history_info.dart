@@ -228,7 +228,10 @@ class _HistoryInfoState extends State<HistoryInfo> {
                                     child: Image.memory(model.fileBuffer!,fit: BoxFit.contain,),
                                     constraints: BoxConstraints(
                                       minWidth: 100,
-                                      minHeight: 400
+                                      minHeight: 100,
+                                      maxWidth: 300,
+                                      maxHeight: 300
+
                                     ),
                                   ),
                                   SizedBox(width: 10,),

@@ -71,12 +71,13 @@ class _TransactionPageState extends State<TransactionPage> {
         }
         final result= await SubjectsHttp().sendRequest(formData);
         if(result!=null){
+          DateTime currentDate = DateTime.now();
           if(type=="photo"){
-            final historyModel = HistoryModel(icon: SizedBox.shrink(), favorite: false, question: "image", type: widget.type.name, progress: "process", messageId: newTransactionId, answer: "", answerMessageId: newTransactionId,QisDocument: true,AisDocument: false,Qpath: photo!.path,Apath: "",fileBuffer: await photo!.readAsBytes());
+            final historyModel = HistoryModel(icon: SizedBox.shrink(), favorite: false, question: "image", type: widget.type.name, progress: "process", messageId: newTransactionId, answer: "", answerMessageId: newTransactionId,QisDocument: true,AisDocument: false,Qpath: photo!.path,Apath: "",fileBuffer: await photo!.readAsBytes(),date: currentDate);
             await instanceDb.addHistory(historyModel);
             chatStore.addHistory(historyModel);
           }else if(type=="keyboard"){
-              final historyModel = HistoryModel(icon: SizedBox.shrink(), favorite: false, question: _controller.text, type: widget.type.name, progress: "process", messageId: newTransactionId, answer: "", answerMessageId: newTransactionId,QisDocument: false,AisDocument: false,Apath: "",Qpath: "");
+              final historyModel = HistoryModel(icon: SizedBox.shrink(), favorite: false, question: _controller.text, type: widget.type.name, progress: "process", messageId: newTransactionId, answer: "", answerMessageId: newTransactionId,QisDocument: false,AisDocument: false,Apath: "",Qpath: "",date: currentDate);
             instanceDb.addHistory(historyModel);
             chatStore.addHistory(historyModel);
           }

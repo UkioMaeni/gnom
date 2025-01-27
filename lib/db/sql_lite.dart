@@ -18,8 +18,12 @@ class SQLLite{
     final columnNames = results.map((row) => row['name']).toList();
     print(columnNames);
     bool fileBufferColumntExist =   columnNames.contains("answerBuffer");
+    bool dateColumntExist =   columnNames.contains("date");
     if(!fileBufferColumntExist){
       await db.execute('ALTER TABLE favorite ADD COLUMN answerBuffer TEXT');
+    }
+    if(!dateColumntExist){
+      await db.execute('ALTER TABLE favorite ADD COLUMN date TEXT');
     }
   }
   Future<bool> createDB() async {
@@ -62,7 +66,8 @@ class SQLLite{
             answer TEXT,
             fileBuffer TEXT, 
             answerBuffer TEXT, 
-            answerMessageId TEXT
+            answerMessageId TEXT,
+            date TEXT
             )
           ''',
         );
@@ -116,7 +121,8 @@ class SQLLite{
         Qpath: element["qpath"],
         answerBuffer:element["answerBuffer"],
         type: element["type"],
-        fileBuffer: element["fileBuffer"]
+        fileBuffer: element["fileBuffer"],
+        date: element["date"]!=null?DateTime.parse(element["date"]):DateTime(1920),
         );
       historyes.add(his);
     }
@@ -159,6 +165,24 @@ class SQLLite{
           "favorite",
           {
             "progress":progress,
+            
+          },
+          where: 'messageId = ?',
+          whereArgs: [messageId],
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+  Future<bool> updateHistoryDate(String messageId,DateTime date)async{
+    try {
+      final Database db = await openDatabase(path);
+      await db.update(
+          "favorite",
+          {
+            "date":date.toString(),
             
           },
           where: 'messageId = ?',

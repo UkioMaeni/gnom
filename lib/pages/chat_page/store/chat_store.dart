@@ -199,16 +199,21 @@ abstract class _ChatStore with Store {
         for(var h in history){
           print(h.messageId);
           if(h.messageId==element.message.id){
+            DateTime currentDate= DateTime.now();
             if(element.message.link!.contains("er/")){
               h.progress="error";
               h.answer=element.message.link!.split("/")[1];
+              h.date=currentDate;
               await instanceDb.updateHistoryAnswer(element.message.id,element.message.link!);
               await instanceDb.updateHistoryProgress(element.message.id,"error");
+              await instanceDb.updateHistoryDate(element.message.id,currentDate);
             }else{
               h.progress="completed";
               h.answer=element.message.link!;
+              h.date=currentDate;
               await instanceDb.updateHistoryAnswer(element.message.id,element.message.link!);
               await instanceDb.updateHistoryProgress(element.message.id,"completed");
+              await instanceDb.updateHistoryDate(element.message.id,currentDate);
             }
             
             _computationCompleted.add("update");

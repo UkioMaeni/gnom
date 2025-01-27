@@ -67,6 +67,8 @@ LText LocaleText = LText();
     String get question;
     String get copy;
     String get saveToGalery;
+    String get today;
+    String get yesterday;
 } 
 
 
@@ -274,6 +276,14 @@ class RuLocale implements LocaleLibrary{
   @override
   // TODO: implement saveToGalery
   String get saveToGalery => "Сохранить в галерею";
+  
+  @override
+  // TODO: implement today
+  String get today => "Сегодня";
+  
+  @override
+  // TODO: implement yesterday
+  String get yesterday => "Вчера";
 }
 
 class EnLocale implements LocaleLibrary{
@@ -484,6 +494,14 @@ class EnLocale implements LocaleLibrary{
   @override
   // TODO: implement saveToGalery
   String get saveToGalery => "Save to galery";
+  
+  @override
+  // TODO: implement today
+  String get today => "Today";
+  
+  @override
+  // TODO: implement yesterday
+  String get yesterday => "Yesterday";
 }
 
 class ArLocale implements LocaleLibrary{
@@ -692,5 +710,13 @@ class ArLocale implements LocaleLibrary{
   @override
   // TODO: implement saveToGalery
   String get saveToGalery => "حفظ في المعرض";
+  
+  @override
+  // TODO: implement today
+  String get today => "اليوم";
+  
+  @override
+  // TODO: implement yesterday
+  String get yesterday => "أمس";
  
 }

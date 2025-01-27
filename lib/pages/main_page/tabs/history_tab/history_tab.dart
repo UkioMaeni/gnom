@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:typed_data';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -50,15 +51,17 @@ class _HistoryTabState extends State<HistoryTab> with TickerProviderStateMixin {
       
     });
     final histories= chatStore.history;
-    final processList= histories.where((element) => element.progress==type).toList();
+    List<HistoryModel> processList= histories.where((element) => element.progress==type).toList();
+    processList.sort((a, b) => b.date.compareTo(a.date),);
     //final completedList= histories.where((element) => element.progress=="completed").toList();
     print(processList.length);
     for(int i=0;i<processList.length;i++){
+      print(processList[i].date);
       if(!mounted || currentType!=type ||currentGenerateVersion!=generateVersion) return;
       setState(() {
         final state = (context.read<LocalizationBloc>().state as LocalizationLocaleState);
         widgets.add(
-          HistoryElement(topOffset: (i)*105+paddingOffset+50, model:processList[i],)
+          HistoryElement(topOffset: (i)*135+paddingOffset+50, model:processList[i],)
         );
       });
       await Future.delayed(Duration(milliseconds: 300));
@@ -234,7 +237,7 @@ class _HistoryTabState extends State<HistoryTab> with TickerProviderStateMixin {
                   width: MediaQuery.of(context).size.width,
                   child: SingleChildScrollView(
                       child:  SizedBox(
-                          height: widgets.length*105+100,
+                          height: widgets.length*135+100,
                           child: Stack(
                             children: [
                               
@@ -481,7 +484,7 @@ class _HistoryElementState extends State<HistoryElement> with TickerProviderStat
             return  Transform.scale(
                 scale: _scaleAnimation.value,
                 child: SizedBox(
-                  height: 95,
+                  height: 125,
                   width: width-20,
                   child:  Row(
                     children: [
@@ -494,196 +497,244 @@ class _HistoryElementState extends State<HistoryElement> with TickerProviderStat
                           ),
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 5),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Opacity(
-                                    opacity: 1,
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisAlignment: widget.model.type=="maths"? MainAxisAlignment.center:MainAxisAlignment.start,
-                                      children: [
-                                        Builder(
-                                          builder: (context) {
-                                            final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
-                                            String name=state.locale.error;
-                                            if(widget.model.type=="reduce"){
-                                              name=state.locale.shortcut;
-                                            }else if(widget.model.type=="math"){
-                                              name=state.locale.mathematics;
-                                            }
-                                            else if(widget.model.type=="referat"){
-                                              name=state.locale.paper;
-                                            }
-                                            else if(widget.model.type=="generation"){
-                                              name=state.locale.imageGeneration;
-                                            }
-                                            else if(widget.model.type=="essay"){
-                                              name=state.locale.essay;
-                                            }
-                                            else if(widget.model.type=="presentation"){
-                                              name=state.locale.presentation;
-                                            }
-                                            else if(widget.model.type=="parafrase"){
-                                              name=state.locale.paraphrasing;
-                                            }
-                                            else if(widget.model.type=="sovet"){
-                                              name=state.locale.adviseOn;
-                                            }
-                                            return Opacity(
-                                              opacity: widget.model.progress=="error"?0.3:1,
-                                              child: Text(
-                                               StringTools.firstUpperOfString(name),
-                                              textAlign: TextAlign.left,
-                                              style: const TextStyle(
-                                                fontSize: 28,
-                                                fontWeight: FontWeight.w500,
-                                                fontFamily: "NoirPro",
-                                                height: 1,
-                                                color: Color.fromRGBO(254, 222,181, 1)
-                                                ),
-                                              ),
-                                            );
-                                          }
-                                        ),
-                                      const SizedBox(height: 5,),
-                                      
-                                      if(widget.model.type!="math") Builder(
-                                        builder: (context) {
-                                          final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
-                                          return Opacity(
-                                            opacity: widget.model.progress=="error"?0.3:1,
-                                            child: RichText(
-                                              text: TextSpan(
-                                                children: [
-                                                   TextSpan(
-                                                    text: "${ StringTools.firstUpperOfString(state.locale.topic)} ",
-                                                    style: TextStyle(
-                                                      fontSize: 15,
-                                                      fontWeight: FontWeight.w500,
-                                                      fontFamily: "NoirPro",
-                                                      height: 1,
-                                                      color: Colors.white
-                                                      ),
-                                                  ),
-                                                  TextSpan(
-                                                    text:"\"${widget.model.question.length>10?widget.model.question.substring(0,10)+"...":widget.model.question}\"",
-                                                    style: const TextStyle(
-                                                      fontSize: 18,
-                                                      fontWeight: FontWeight.w500,
-                                                      fontFamily: "NoirPro",
-                                                      height: 1,
-                                                      letterSpacing: 1,
-                                                      color:Colors.white
-                                                      ),
-                                                  )
-                                                ]
-                                              ),
-                                            ),
-                                          );
-                                        }
-                                      ),
-                                      if(widget.model.progress=="error")
-                                        Container(
-                                          margin: EdgeInsets.only(top: 5),
-                                          padding: EdgeInsets.all(3),
-                                          decoration: BoxDecoration(
-                                            color: const Color.fromRGBO(196, 114, 137, 0.8),
-                                            borderRadius: BorderRadius.circular(5)
-                                          ),
-                                          child: Builder(
-                                            builder: (context) {
-                                              final state = context.watch<LocalizationBloc>().state as LocalizationLocaleState;
-                                              String name=state.locale.error;
-                                              if(widget.model.type=="reduce"){
-                                                name=state.locale.error;
-                                              }else if(widget.model.type=="math"){
-                                                name=state.locale.mathError;
-                                              }
-                                              else if(widget.model.type=="referat"){
-                                                name=state.locale.reportError;
-                                              }
-                                              else if(widget.model.type=="generation"){
-                                                name=state.locale.error;
-                                              }
-                                              else if(widget.model.type=="essay"){
-                                                name=state.locale.essayError;
-                                              }
-                                              else if(widget.model.type=="presentation"){
-                                                name=state.locale.presentationError;
-                                              }
-                                              else if(widget.model.type=="parafrase"){
-                                                name=state.locale.error;
-                                              }
-                                              else if(widget.model.type=="sovet"){
-                                                name=state.locale.error;
-                                              }
-                                              return Text(
-                                                 name,
-                                                textAlign: TextAlign.left,
-                                                style: const TextStyle(
-                                                  fontSize: 13,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontFamily: "NoirPro",
-                                                  height: 1,
-                                                  color: Color.fromRGBO(254, 222,181, 1)
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Opacity(
+                                        opacity: 1,
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          mainAxisAlignment: widget.model.type=="maths"? MainAxisAlignment.center:MainAxisAlignment.start,
+                                          children: [
+                                            Builder(
+                                              builder: (context) {
+                                                final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
+                                                String name=state.locale.error;
+                                                if(widget.model.type=="reduce"){
+                                                  name=state.locale.shortcut;
+                                                }else if(widget.model.type=="math"){
+                                                  name=state.locale.mathematics;
+                                                }
+                                                else if(widget.model.type=="referat"){
+                                                  name=state.locale.paper;
+                                                }
+                                                else if(widget.model.type=="generation"){
+                                                  name=state.locale.imageGeneration;
+                                                }
+                                                else if(widget.model.type=="essay"){
+                                                  name=state.locale.essay;
+                                                }
+                                                else if(widget.model.type=="presentation"){
+                                                  name=state.locale.presentation;
+                                                }
+                                                else if(widget.model.type=="parafrase"){
+                                                  name=state.locale.paraphrasing;
+                                                }
+                                                else if(widget.model.type=="sovet"){
+                                                  name=state.locale.adviseOn;
+                                                }
+                                                return Opacity(
+                                                  opacity: widget.model.progress=="error"?0.3:1,
+                                                  child: Text(
+                                                   StringTools.firstUpperOfString(name),
+                                                  textAlign: TextAlign.left,
+                                                  style: const TextStyle(
+                                                    fontSize: 28,
+                                                    fontWeight: FontWeight.w500,
+                                                    fontFamily: "NoirPro",
+                                                    height: 1,
+                                                    color: Color.fromRGBO(254, 222,181, 1)
+                                                    ),
                                                   ),
                                                 );
+                                              }
+                                            ),
+                                          const SizedBox(height: 5,),
+                                          
+                                          if(widget.model.type!="math") Builder(
+                                            builder: (context) {
+                                              final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
+                                              return Opacity(
+                                                opacity: widget.model.progress=="error"?0.3:1,
+                                                child: RichText(
+                                                  text: TextSpan(
+                                                    children: [
+                                                       TextSpan(
+                                                        text: "${ StringTools.firstUpperOfString(state.locale.topic)} ",
+                                                        style: TextStyle(
+                                                          fontSize: 15,
+                                                          fontWeight: FontWeight.w500,
+                                                          fontFamily: "NoirPro",
+                                                          height: 1,
+                                                          color: Colors.white
+                                                          ),
+                                                      ),
+                                                      TextSpan(
+                                                        text:"\"${widget.model.question.length>10?widget.model.question.substring(0,10)+"...":widget.model.question}\"",
+                                                        style: const TextStyle(
+                                                          fontSize: 18,
+                                                          fontWeight: FontWeight.w500,
+                                                          fontFamily: "NoirPro",
+                                                          height: 1,
+                                                          letterSpacing: 1,
+                                                          color:Colors.white
+                                                          ),
+                                                      )
+                                                    ]
+                                                  ),
+                                                ),
+                                              );
                                             }
                                           ),
+                                          if(widget.model.progress=="error")
+                                            Container(
+                                              margin: EdgeInsets.only(top: 5),
+                                              padding: EdgeInsets.all(3),
+                                              decoration: BoxDecoration(
+                                                color: const Color.fromRGBO(196, 114, 137, 0.8),
+                                                borderRadius: BorderRadius.circular(5)
+                                              ),
+                                              child: Builder(
+                                                builder: (context) {
+                                                  final state = context.watch<LocalizationBloc>().state as LocalizationLocaleState;
+                                                  String name=state.locale.error;
+                                                  if(widget.model.type=="reduce"){
+                                                    name=state.locale.error;
+                                                  }else if(widget.model.type=="math"){
+                                                    name=state.locale.mathError;
+                                                  }
+                                                  else if(widget.model.type=="referat"){
+                                                    name=state.locale.reportError;
+                                                  }
+                                                  else if(widget.model.type=="generation"){
+                                                    name=state.locale.error;
+                                                  }
+                                                  else if(widget.model.type=="essay"){
+                                                    name=state.locale.essayError;
+                                                  }
+                                                  else if(widget.model.type=="presentation"){
+                                                    name=state.locale.presentationError;
+                                                  }
+                                                  else if(widget.model.type=="parafrase"){
+                                                    name=state.locale.error;
+                                                  }
+                                                  else if(widget.model.type=="sovet"){
+                                                    name=state.locale.error;
+                                                  }
+                                                  return Text(
+                                                     name,
+                                                    textAlign: TextAlign.left,
+                                                    style: const TextStyle(
+                                                      fontSize: 13,
+                                                      fontWeight: FontWeight.w500,
+                                                      fontFamily: "NoirPro",
+                                                      height: 1,
+                                                      color: Color.fromRGBO(254, 222,181, 1)
+                                                      ),
+                                                    );
+                                                }
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                      ],
-                                    ),
-                                  ),
-                                  Align(
-                                    alignment: Alignment.topCenter,
-                                    child: SizedBox(
-                                      width: 70,
-                                      height: 80,
-                                      child: Builder(
-                                        builder: (context) {
-                                          Widget wid = SvgPicture.asset("assets/svg/math.svg",fit: BoxFit.contain,color: Color.fromRGBO(254, 222,181, 1),);
-                                          
-                                          if(widget.model.type=="reduce"){
-                                           wid= Image.asset("assets/png/reduce1.png",fit: BoxFit.contain,);
-                                            
-                                          }else if(widget.model.type=="math"){
-                                            wid=Image.asset("assets/png/math.png");
-                                          }else if(widget.model.type=="referat"){
-                                            wid=Image.asset("assets/png/referer.png",fit: BoxFit.contain,);
-                                          }
-                                          else if(widget.model.type=="essay"){
-                                             wid=Image.asset("assets/png/essay.png");
-                                          }
-                                          
-                                          else if(widget.model.type=="parafrase"){
-                                            wid=Image.asset("assets/png/paraphrase1.png",fit: BoxFit.contain,);
-                                          }
-                                          else if(widget.model.type=="generation"){
-                                            wid=Image.asset("assets/png/generation.png");
-                                          }
-                                          else if(widget.model.type=="sovet"){
-                                            wid=Image.asset("assets/png/sovet.png",fit: BoxFit.contain,);
-                                          }
-                                          else if(widget.model.type=="presentation"){
-                                            wid=Image.asset("assets/png/presentation.png");
-                                          }
-                                          return wid;
-                                        }
+                                      ),
+                                      Align(
+                                        alignment: Alignment.topCenter,
+                                        child: SizedBox(
+                                          width: 70,
+                                          height: 80,
+                                          child: Builder(
+                                            builder: (context) {
+                                              Widget wid = SvgPicture.asset("assets/svg/math.svg",fit: BoxFit.contain,color: Color.fromRGBO(254, 222,181, 1),);
+                                              
+                                              if(widget.model.type=="reduce"){
+                                               wid= Image.asset("assets/png/reduce1.png",fit: BoxFit.contain,);
+                                                
+                                              }else if(widget.model.type=="math"){
+                                                wid=Image.asset("assets/png/math.png");
+                                              }else if(widget.model.type=="referat"){
+                                                wid=Image.asset("assets/png/referer.png",fit: BoxFit.contain,);
+                                              }
+                                              else if(widget.model.type=="essay"){
+                                                 wid=Image.asset("assets/png/essay.png");
+                                              }
+                                              
+                                              else if(widget.model.type=="parafrase"){
+                                                wid=Image.asset("assets/png/paraphrase1.png",fit: BoxFit.contain,);
+                                              }
+                                              else if(widget.model.type=="generation"){
+                                                wid=Image.asset("assets/png/generation.png");
+                                              }
+                                              else if(widget.model.type=="sovet"){
+                                                wid=Image.asset("assets/png/sovet.png",fit: BoxFit.contain,);
+                                              }
+                                              else if(widget.model.type=="presentation"){
+                                                wid=Image.asset("assets/png/presentation.png");
+                                              }
+                                              return wid;
+                                            }
+                                          )
+                                        ),
                                       )
-                                    ),
+                                      // Container(
+                                      //     width: 140,
+                                      //     height: 60,
+                                      //     color: Colors.amber,
+                                      //     alignment: Alignment.centerRight,
+                                      //     child:  widget.model.icon,
+                                      //   ),
+                                      
+                                     
+                                    ],
+                                  ),
+                                  SizedBox(height: 10,),
+                                  Builder(
+                                    builder: (context) {
+                                      print(widget.model.date);
+                                      DateTime date=widget.model.date;
+                                      DateTime currentDate=DateTime.now();
+                                      int day=date.day;
+                                      String stringDay=day<10?"0"+day.toString():day.toString();
+                                      int month=date.month;
+                                      String stringMonth=month<10?"0"+month.toString():month.toString();
+                                      String stringYear=date.year.toString();
+                                      int hour=date.hour;
+                                      String stringHour=hour<10?"0"+hour.toString():hour.toString();
+                                      int minute=date.minute;
+                                      String stringMinute=minute<10?"0"+minute.toString():minute.toString();
+                                      
+                                      String formattedDate="";
+                                      if(date.year<2000){
+                                        formattedDate= "";
+                                      }
+                                      else if(currentDate.year==date.year&&currentDate.month==date.month&&currentDate.day==date.day){
+                                        final today = context.read<LocalizationBloc>().state.locale.today;
+                                        formattedDate=today+", "+stringHour+":"+stringMinute;
+                                      }else if(currentDate.year==date.year&&currentDate.month==date.month&&currentDate.day-1==date.day){
+                                        final yesterday = context.read<LocalizationBloc>().state.locale.yesterday;
+                                        formattedDate=yesterday+", "+stringHour+":"+stringMinute;
+                                      }else{
+                                        formattedDate=stringDay+"."+stringMonth+"."+stringYear+", "+stringHour+":"+stringMinute;
+                                      }
+                                      
+                                      return Text(
+                                      formattedDate,
+                                      textAlign: TextAlign.left,
+                                      style: const TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w500,
+                                        fontFamily: "NoirPro",
+                                        height: 1,
+                                        color: Color.fromRGBO(254, 222,181, 1)
+                                        ),
+                                      );
+                                    }
                                   )
-                                  // Container(
-                                  //     width: 140,
-                                  //     height: 60,
-                                  //     color: Colors.amber,
-                                  //     alignment: Alignment.centerRight,
-                                  //     child:  widget.model.icon,
-                                  //   ),
-                                  
-                                 
-                                ],
-                              ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -731,6 +782,7 @@ class HistoryModel{
   String answerMessageId;
   Uint8List? fileBuffer;
   String? reply;
+  DateTime date;
   HistoryModel({
     required this.icon,
     required this.favorite,
@@ -746,7 +798,8 @@ class HistoryModel{
     required this.QisDocument,
     required this.AisDocument,
     required this.Qpath,
-    required this.Apath
+    required this.Apath,
+    required this.date
 
   });
   Map<String,dynamic> toMap(){
@@ -763,6 +816,7 @@ class HistoryModel{
       "answer":answer,
       "fileBuffer":fileBuffer,
       "answerMessageId":answerMessageId,
+      "date":date.toString()
     };
   }
 }

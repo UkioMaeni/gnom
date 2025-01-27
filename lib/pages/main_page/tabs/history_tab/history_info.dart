@@ -38,6 +38,8 @@ class _HistoryInfoState extends State<HistoryInfo> {
     return mess;
   }
 
+  String error="";
+
   Future downloadFile()async{
 
     if(Platform.isAndroid){
@@ -105,35 +107,52 @@ class _HistoryInfoState extends State<HistoryInfo> {
                                   }
       print(widget.model.answer);
       //String url= widget.model.answer.contains("http")?widget.model.answer:"http://45.12.237.135/"+widget.model.answer;
-                                    String domain= widget.model.type=="presentation"? "http://31.129.106.28:8000/":"http://45.12.237.135/";
-                                    String url= widget.model.answer.contains("http")?widget.model.answer:domain+widget.model.answer;
-                                    print(url);
-                                    final response=await Dio().get(
-                                      url,
-                                      options: Options(responseType: ResponseType.bytes)
-                                    );
-                                    print(response.headers["content-type"]);
-                                    String fileExchange=response.headers["content-type"]?[0].replaceAll("application/", "")??"none";
-                                    if(fileExchange.contains("vnd.openxmlformats-officedocument.presentationml.presentation")){
-                                      fileExchange="pptx";
-                                    }
-                                    if(fileExchange.contains("vnd.openxmlformats-officedocument.wordprocessingml.document")){
-                                      fileExchange="docx";
-                                    }
-                                    if(fileExchange.contains("image/png")){
-                                      fileExchange="png";
-                                    }
+      String domain= widget.model.type=="presentation"? "http://31.129.106.28:8000/":"http://45.12.237.135/";
+      String url= widget.model.answer.contains("http")?widget.model.answer:domain+widget.model.answer;
+      print(url);
+      Response response;
+      try {
+        response=await Dio().get(
+          url,
+          options: Options(responseType: ResponseType.bytes)
+        );
+        print(response.headers["content-type"]);
+        String fileExchange=response.headers["content-type"]?[0].replaceAll("application/", "")??"none";
+        if(fileExchange.contains("vnd.openxmlformats-officedocument.presentationml.presentation")){
+          fileExchange="pptx";
+        }
+        if(fileExchange.contains("vnd.openxmlformats-officedocument.wordprocessingml.document")){
+          fileExchange="docx";
+        }
+        if(fileExchange.contains("image/png")){
+          fileExchange="png";
+        }
 
-                                    print(fileExchange);
-                                    String id= Uuid().v4();
-                                    final file = File(gnomDirectory.path+"/${id}.${fileExchange}");
-                                    await file.create();
-                                    file.writeAsBytesSync(response.data);
-                                    print(response.data);
-                                    await chatStore.updateHistoryAsDocument(widget.model.messageId,gnomDirectory.path+"/${id}.${fileExchange}",fileExchange,response.data);
-                                    setState(() {
-                                      
-                                    });
+        print(fileExchange);
+        String id= Uuid().v4();
+        final file = File(gnomDirectory.path+"/${id}.${fileExchange}");
+        await file.create();
+        file.writeAsBytesSync(response.data);
+        print(response.data);
+        await chatStore.updateHistoryAsDocument(widget.model.messageId,gnomDirectory.path+"/${id}.${fileExchange}",fileExchange,response.data);
+        setState(() {
+          
+        });
+      } catch (e) {
+        if(e is DioException){
+          int statusCode = (e as DioException).response?.statusCode??0;
+          if(statusCode==400){
+            error="File not found";
+          }else{
+            error="unhundled error";
+          }
+        }
+        setState(() {
+          
+        });
+      }
+      
+      
     }
                                   
                                     
@@ -311,6 +330,33 @@ class _HistoryInfoState extends State<HistoryInfo> {
                                         return CircularProgressIndicator();
                                       }
                                       if(model.AisDocument){
+                                        if(error.isNotEmpty){
+                                          return Container(
+                                                // constraints: BoxConstraints(
+                                                //   maxWidth: width*3/4,
+                                                //   minWidth:  width*2/3
+                                                // ),
+                                                width: width*2/3,
+                                                padding: EdgeInsets.all(5),
+                                                decoration: BoxDecoration(
+                                                  color:Color.fromARGB(157, 43, 42, 42),
+                                                  borderRadius: BorderRadius.only(
+                                                    bottomLeft: Radius.circular(10),
+                                                    bottomRight: Radius.circular(10)
+                                                  )
+                                                ),
+                                                child: Text(
+                                                    error,
+                                                    style: const TextStyle(
+                                                            fontSize: 20,
+                                                            fontWeight: FontWeight.w400,
+                                                            fontFamily: "NoirPro",
+                                                            height: 1,
+                                                            color: Colors.white
+                                                            ),
+                                                  ),
+                                              );
+                                        }
                                         if(model.answer=="pdf"){
                                           return ClipRRect(
                                             borderRadius: BorderRadius.circular(10),

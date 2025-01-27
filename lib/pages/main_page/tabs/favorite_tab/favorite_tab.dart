@@ -271,9 +271,9 @@ class _HistoryElementState extends State<HistoryElement> with TickerProviderStat
                       Expanded(
                         child: DecoratedBox(
                           decoration: BoxDecoration(
-                            color: widget.model.type=="math"?Color.fromARGB(80, 196, 114, 137): const Color.fromRGBO(196, 114, 137, 0.8),
+                            color: widget.model.type=="maths"?Color.fromARGB(80, 196, 114, 137): const Color.fromRGBO(196, 114, 137, 0.8),
                             borderRadius: BorderRadius.circular(15),
-                            border: widget.model.type=="math"?Border.all(color: const Color.fromRGBO(196, 114, 137, 0.8),width: 3):null
+                            border: widget.model.type=="maths"?Border.all(color: const Color.fromRGBO(196, 114, 137, 0.8),width: 3):null
                           ),
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 5),
@@ -282,7 +282,7 @@ class _HistoryElementState extends State<HistoryElement> with TickerProviderStat
                                 children: [
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
-                                    mainAxisAlignment: widget.model.type=="math"? MainAxisAlignment.center:MainAxisAlignment.start,
+                                    mainAxisAlignment: widget.model.type=="maths"? MainAxisAlignment.center:MainAxisAlignment.start,
                                     children: [
                                       Builder(
                                         builder: (context) {

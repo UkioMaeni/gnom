@@ -61,6 +61,9 @@ class _TransactionPageState extends State<TransactionPage> {
     FormData formData=FormData();
         formData.fields.add(MapEntry("type", widget.model.type.name));
         formData.fields.add(MapEntry("messageId",newTransactionId ));
+        String lang= context.read<LocalizationBloc>().state.locale.locale;
+        print(lang);
+        formData.fields.add(MapEntry("lang",lang));
         if(type=="photo"){
           formData.files.add(MapEntry("file", MultipartFile.fromBytes(await photo!.readAsBytes(),filename: "file.${photo!.mimeType??"png"}", )));
         }else if(type=="keyboard"){
@@ -639,11 +642,12 @@ class _TransactionPageState extends State<TransactionPage> {
           controller: controller,
           style: TextStyle(
               fontFamily: "NoirPro",
-              color: const Color.fromARGB(123, 255, 255, 255),
+              color: Colors.white,
               height: 1,
               fontWeight: FontWeight.w400,
               fontSize: 20
             ),
+            textCapitalization: TextCapitalization.sentences,
           decoration: InputDecoration(
             constraints: BoxConstraints(
               minHeight: 40,

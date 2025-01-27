@@ -2,11 +2,9 @@ part of 'localization_bloc.dart';
 
 
 
-abstract class LocalizationState{
-  const LocalizationState();
-}
 
-class LocalizationLocaleState extends LocalizationState{
+
+class LocalizationLocaleState {
   final LocaleLibrary locale;
   const LocalizationLocaleState({required this.locale});
 }

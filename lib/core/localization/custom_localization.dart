@@ -90,13 +90,13 @@ class RuLocale implements LocaleLibrary{
   String get choose => "выбери";
 
   @override
-  String get done => "выполнено";
+  String get done => "готово";
 
   @override
   String get education => "учёба";
 
   @override
-  String get error => "произошла ошибка";
+  String get error => "ошибка";
 
   @override
   String get essay => "сочинение";

@@ -108,159 +108,169 @@ class _FriendsTabState extends State<FriendsTab> with TickerProviderStateMixin {
         ),
       );
     }
-    return Padding(
-      padding: EdgeInsets.only(
-        top: MediaQuery.of(context).padding.top,
-        left: 0,
-        right: 0,
-      ),
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Column(
-            children: [
-              SizedBox(height: 40,),
-               SizedBox(
-                  height: 30,
-                  width: MediaQuery.of(context).size.width -100,
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      color: Color.fromARGB(157, 0, 0, 0),
-                      borderRadius: BorderRadius.circular(10)
-                    ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          child: SizedBox(
-                            height: 30,
-                            child: TextField(
-                              controller: _searchController,
-                              onChanged: (value) {
-                                setState(() {
-                                  users=[];
-                                  notFind=false;
-                                });
-                              },
-                              maxLength: 9,
-                              style: TextStyle(
-                                            fontFamily: "NoirPro",
-                                            color: Color.fromARGB(144, 209, 204, 204),
-                                            height: 1,
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 14
-                                          ),
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                contentPadding: EdgeInsets.only(bottom: 13,left: 10,right: 10),
-                                counter: SizedBox.shrink(),
-                                //hintText: "USER ID",
-                                hintStyle: TextStyle(
-                                            fontFamily: "NoirPro",
-                                            color: Color.fromARGB(144, 209, 204, 204),
-                                            height: 1,
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 14
-                                          ),
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) {
+        if(_showDetails){
+          setState(() {
+            _showDetails=false;
+          });
+        }
+      },
+      child: Padding(
+        padding: EdgeInsets.only(
+          top: MediaQuery.of(context).padding.top,
+          left: 0,
+          right: 0,
+        ),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Column(
+              children: [
+                SizedBox(height: 40,),
+                 SizedBox(
+                    height: 30,
+                    width: MediaQuery.of(context).size.width -100,
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: Color.fromARGB(157, 0, 0, 0),
+                        borderRadius: BorderRadius.circular(10)
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: SizedBox(
+                              height: 30,
+                              child: TextField(
+                                controller: _searchController,
+                                onChanged: (value) {
+                                  setState(() {
+                                    users=[];
+                                    notFind=false;
+                                  });
+                                },
+                                maxLength: 9,
+                                style: TextStyle(
+                                              fontFamily: "NoirPro",
+                                              color: Color.fromARGB(144, 209, 204, 204),
+                                              height: 1,
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 14
+                                            ),
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  contentPadding: EdgeInsets.only(bottom: 13,left: 10,right: 10),
+                                  counter: SizedBox.shrink(),
+                                  //hintText: "USER ID",
+                                  hintStyle: TextStyle(
+                                              fontFamily: "NoirPro",
+                                              color: Color.fromARGB(144, 209, 204, 204),
+                                              height: 1,
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 14
+                                            ),
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        GestureDetector(
-                          onTap: search,
-                          child: SizedBox(
-                            width: 25,
-                            height: 20,
-                            child: SvgPicture.asset("assets/svg/search.svg",color: Color.fromARGB(255, 255, 255, 255),)
+                          GestureDetector(
+                            onTap: search,
+                            child: SizedBox(
+                              width: 25,
+                              height: 20,
+                              child: SvgPicture.asset("assets/svg/search.svg",color: Color.fromARGB(255, 255, 255, 255),)
+                            ),
                           ),
+                          SizedBox(width: 10,)
+                        ],
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    key: _friendsListKey,
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                       notFind? 
+                       Text(
+                          "НЕ НАЙДЕНО",
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500,
+                            fontFamily: "NoirPro",
+                            height: 1,
+                            color: Color.fromRGBO(254, 222, 181, 1),
+                          ),
+                        )
+                       :ListView.separated(
+                          separatorBuilder: (context, index) {
+                            return SizedBox(height: 5,);
+                          },
+                          itemCount: users.length,
+                          itemBuilder: (context, index) {
+                            final Duration animationDuration =
+                            Duration(milliseconds: 1000);
+                            final Duration delay =
+                            Duration(milliseconds: 200 * index);
+                            return DelayedAnimation(
+                              delay: delay,
+                              child: FriendsElement(
+                                  user: users[index],
+                                  onDetailsPressed: (user) {
+                                    setState(() {
+                                      _selectedUser = user;
+                                      _showDetails = true;
+                                    });
+                                  },
+                                  showList: _showList,
+                                  showDetails: _showDetails,
+                                ),
+                              // child: Padding(
+                              //   padding: EdgeInsets.symmetric(
+                              //       vertical: 10, horizontal: 20),
+                              //   child: FriendsElement(
+                              //     user: users[index],
+                              //     onDetailsPressed: (user) {
+                              //       setState(() {
+                              //         _selectedUser = user;
+                              //         _showDetails = true;
+                              //       });
+                              //     },
+                              //     showList: _showList,
+                              //     showDetails: _showDetails,
+                              //   ),
+                              // ),
+                              duration: animationDuration,
+                            );
+                          },
                         ),
-                        SizedBox(width: 10,)
+                        if (_showDetails)
+                          Positioned.fill(
+                            child: BackdropFilter(
+                              filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                              child: Center(
+                                child: FormContainer(
+                                  user: _selectedUser,
+                                  onClose: () {
+                                    setState(() {
+                                      _showDetails = false;
+                                    });
+                                  },
+                                ),
+                              ),
+                            ),
+                          ),
                       ],
                     ),
                   ),
-                ),
-                Expanded(
-                  key: _friendsListKey,
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                     notFind? 
-                     Text(
-                        "НЕ НАЙДЕНО",
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500,
-                          fontFamily: "NoirPro",
-                          height: 1,
-                          color: Color.fromRGBO(254, 222, 181, 1),
-                        ),
-                      )
-                     :ListView.separated(
-                        separatorBuilder: (context, index) {
-                          return SizedBox(height: 5,);
-                        },
-                        itemCount: users.length,
-                        itemBuilder: (context, index) {
-                          final Duration animationDuration =
-                          Duration(milliseconds: 1000);
-                          final Duration delay =
-                          Duration(milliseconds: 200 * index);
-                          return DelayedAnimation(
-                            delay: delay,
-                            child: FriendsElement(
-                                user: users[index],
-                                onDetailsPressed: (user) {
-                                  setState(() {
-                                    _selectedUser = user;
-                                    _showDetails = true;
-                                  });
-                                },
-                                showList: _showList,
-                                showDetails: _showDetails,
-                              ),
-                            // child: Padding(
-                            //   padding: EdgeInsets.symmetric(
-                            //       vertical: 10, horizontal: 20),
-                            //   child: FriendsElement(
-                            //     user: users[index],
-                            //     onDetailsPressed: (user) {
-                            //       setState(() {
-                            //         _selectedUser = user;
-                            //         _showDetails = true;
-                            //       });
-                            //     },
-                            //     showList: _showList,
-                            //     showDetails: _showDetails,
-                            //   ),
-                            // ),
-                            duration: animationDuration,
-                          );
-                        },
-                      ),
-                      if (_showDetails)
-                        Positioned.fill(
-                          child: BackdropFilter(
-                            filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                            child: Center(
-                              child: FormContainer(
-                                user: _selectedUser,
-                                onClose: () {
-                                  setState(() {
-                                    _showDetails = false;
-                                  });
-                                },
-                              ),
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
+                ],
+            )
               ],
-          )
-            ],
-          ),
+            ),
+      ),
     );
   }
 
@@ -546,8 +556,7 @@ class _FormContainerState extends State<FormContainer> {
 
   @override
   Widget build(BuildContext context) {
-    return Positioned.fill(
-      child: ConstrainedBox(
+    return ConstrainedBox(
         constraints:
         BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
         child: AnimatedContainer(
@@ -606,7 +615,7 @@ class _FormContainerState extends State<FormContainer> {
             ),
           ),
         ),
-      ),
+      
     );
   }
 }

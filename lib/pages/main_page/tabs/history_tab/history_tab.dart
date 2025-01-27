@@ -170,7 +170,7 @@ class _HistoryTabState extends State<HistoryTab> with TickerProviderStateMixin {
             ),
             child: Builder(
               builder: (context) {
-                final state = context.watch<LocalizationBloc>().state as LocalizationLocaleState;
+                final state = context.watch<LocalizationBloc>().state;
                 return Row(
                   children: [
                     NavigationElement(

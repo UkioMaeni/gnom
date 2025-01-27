@@ -193,7 +193,7 @@ class _PlaneInfoState extends State<PlaneInfo> {
             if(widget.openTypeIndex==0){
               return Positioned(
                 bottom: 92,
-                left: 45,
+                left: 40,
                 child: FirstElementPlaning(onTap: (_){},color: Colors.amber,scaleView: 1,price: prices[0])
 
               );
@@ -208,7 +208,7 @@ class _PlaneInfoState extends State<PlaneInfo> {
             if(widget.openTypeIndex==2){
               return Positioned(
                 bottom: 92,
-                right: 45,
+                right: 40,
                 child: FirstElementPlaning(onTap: (_){},color: Colors.amber,scaleView: 1,price: prices[2])
 
               );

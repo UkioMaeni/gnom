@@ -122,7 +122,7 @@ class _ProfileplaningSubcribtionState extends State<ProfileplaningSubcribtion> w
                       ),
                       SizedBox(height: 20,),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           FirstElementPlaning(
                             color: Colors.amber,

@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 import 'dart:ui';
 
@@ -8,6 +9,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gnom/core/localization/localization_bloc.dart';
 import 'package:gnom/core/tools/string_tool.dart';
 import 'package:gnom/pages/auth_page/auth_page.dart';
@@ -416,6 +418,16 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                   GestureDetector(
                                 onTap: () async{
                                   await Clipboard.setData(ClipboardData(text: userStore.profile?.login??""));
+                                  if(Platform.isIOS){
+                                    Fluttertoast.showToast(
+                                      msg: "OK",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.BOTTOM,
+                                      timeInSecForIosWeb: 1,
+                                      backgroundColor: const Color.fromARGB(255, 52, 55, 52),
+                                      textColor: Colors.white,
+                                    );
+                                  }
                                 },
                                 child: Container(
                                   height: 30,

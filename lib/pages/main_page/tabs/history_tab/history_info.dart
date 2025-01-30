@@ -141,7 +141,7 @@ class _HistoryInfoState extends State<HistoryInfo> {
       } catch (e) {
         if(e is DioException){
           int statusCode = (e as DioException).response?.statusCode??0;
-          if(statusCode==400){
+          if(statusCode==404){
             error="File not found";
           }else{
             error="unhundled error";
@@ -324,7 +324,7 @@ class _HistoryInfoState extends State<HistoryInfo> {
                                           model.answer.contains("presentation")||
                                           model.answer.contains("http")
                                         ) && 
-                                        model.Apath.isEmpty
+                                        model.Apath.isEmpty&&error.isEmpty
                                         ){
                                         downloadFile();
                                         return CircularProgressIndicator();
@@ -738,7 +738,7 @@ class _HistoryInfoState extends State<HistoryInfo> {
                                                   )
                                                 ),
                                                 child: Text(
-                                                    model.answer,
+                                                    error.isNotEmpty?error:model.answer,
                                                     style: const TextStyle(
                                                             fontSize: 20,
                                                             fontWeight: FontWeight.w400,

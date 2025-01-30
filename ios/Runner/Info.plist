@@ -18,6 +18,8 @@
 	<array>
 		<string>com.gnom.helper.backgroundTaskIdentifier</string>
 	</array>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<string>NO</string>
 	<key>CFBundleName</key>
 	<string>gnom</string>
 	<key>CFBundlePackageType</key>

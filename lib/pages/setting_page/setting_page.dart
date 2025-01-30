@@ -416,7 +416,7 @@ class _DeleteAccountWarningDialogState extends State<DeleteAccountWarningDialog>
                                       style: TextStyle(
                                         color: Color.fromRGBO(254, 222,181, 1),
                                         fontFamily: "NoirPro",
-                                        fontSize: 30,
+                                        fontSize: 25,
                                         height: 1,
                                         fontWeight: FontWeight.w500
                                       ),
@@ -428,29 +428,34 @@ class _DeleteAccountWarningDialogState extends State<DeleteAccountWarningDialog>
                           SizedBox(
                             width: 20,
                           ),
-                          Container(
-                            width: 120,
-                            height: 40,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: Color.fromARGB(255, 93, 81, 81),
-                              borderRadius: BorderRadius.circular(5)
-                            ),
-                            //padding: EdgeInsets.symmetric(horizontal: 10),
-                            child: Builder(
-                              builder: (context) {
-                                final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
-                                return Text(
-                                    StringTools.firstUpperOfString(state.locale.cancel),
-                                    style: TextStyle(
-                                      color: Color.fromRGBO(254, 222,181, 1),
-                                      fontFamily: "NoirPro",
-                                      fontSize: 30,
-                                      height: 1,
-                                      fontWeight: FontWeight.w500
-                                    ),
-                                  );
-                              }
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                              width: 120,
+                              height: 40,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: Color.fromARGB(255, 93, 81, 81),
+                                borderRadius: BorderRadius.circular(5)
+                              ),
+                              //padding: EdgeInsets.symmetric(horizontal: 10),
+                              child: Builder(
+                                builder: (context) {
+                                  final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
+                                  return Text(
+                                      StringTools.firstUpperOfString(state.locale.cancel),
+                                      style: TextStyle(
+                                        color: Color.fromRGBO(254, 222,181, 1),
+                                        fontFamily: "NoirPro",
+                                        fontSize: 25,
+                                        height: 1,
+                                        fontWeight: FontWeight.w500
+                                      ),
+                                    );
+                                }
+                              ),
                             ),
                           ),
                         ],

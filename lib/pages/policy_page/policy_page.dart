@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gnom/repositories/policy_repo.dart';
-import 'package:webview_flutter/webview_flutter.dart';
-
+import "package:webview_universal/webview_universal.dart";
 class PolicyPage extends StatefulWidget {
   const PolicyPage({super.key});
 
@@ -11,33 +10,42 @@ class PolicyPage extends StatefulWidget {
 
 class _PolicyPageState extends State<PolicyPage> {
 
-  final controller = WebViewController()
-  ..setJavaScriptMode(JavaScriptMode.unrestricted)
+  // final controller = WebViewController()
+  // ..setJavaScriptMode(JavaScriptMode.unrestricted)
   
-  ..setNavigationDelegate(
-    NavigationDelegate(
-      onProgress: (int progress) {
-        // Update loading bar.
-      },
+  // ..setNavigationDelegate(
+  //   NavigationDelegate(
+  //     onProgress: (int progress) {
+  //       // Update loading bar.
+  //     },
       
-      onPageStarted: (String url) {},
-      onPageFinished: (String url) {},
-      onHttpError: (HttpResponseError error) {},
-      onWebResourceError: (WebResourceError error) {
-        print(error);
-      },
-      onNavigationRequest: (NavigationRequest request) {
-        if (request.url.startsWith('https://gnom-pomoshnik-game.ru/index')) {
-          return NavigationDecision.prevent;
-        }
-        return NavigationDecision.navigate;
-      },
-    ),
-  )
-  ..loadRequest(Uri.parse('https://gnom-pomoshnik-game.ru/index'));
+  //     onPageStarted: (String url) {},
+  //     onPageFinished: (String url) {},
+  //     onHttpError: (HttpResponseError error) {},
+  //     onWebResourceError: (WebResourceError error) {
+  //       print(error);
+  //     },
+  //     onNavigationRequest: (NavigationRequest request) {
+  //       if (request.url.startsWith('https://gnom-pomoshnik-game.ru/index')) {
+  //         return NavigationDecision.prevent;
+  //       }
+  //       return NavigationDecision.navigate;
+  //     },
+  //   ),
+  // )
+  // ..loadRequest(Uri.parse('https://gnom-pomoshnik-game.ru/index'));
+  WebViewController webViewController = WebViewController();
 
   bool agree=false;
-
+  @override
+  void initState() {
+    webViewController.init(
+      context: context, 
+      setState: setState,
+      uri: Uri.parse("https://gnom-pomoshnik-game.ru/index")
+    );
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -45,7 +53,7 @@ class _PolicyPageState extends State<PolicyPage> {
       child: Container(
         child: Column(
           children: [
-            Expanded(child: WebViewWidget(controller: controller,)),
+            Expanded(child: WebView(controller: webViewController,)),
             Container(
               height: 140,
               decoration: BoxDecoration(

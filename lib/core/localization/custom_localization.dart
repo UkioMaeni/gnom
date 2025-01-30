@@ -73,6 +73,8 @@ LText LocaleText = LText();
     String get delete;
     String get cancel;
     String get deleteAccountWarning;
+    //policy
+    
 } 
 
 

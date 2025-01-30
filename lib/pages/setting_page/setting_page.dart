@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,6 +11,7 @@ import 'package:gnom/core/tools/string_tool.dart';
 import 'package:gnom/pages/chat_support_page/chat_support_page.dart';
 import 'package:gnom/pages/language_page/language_page.dart';
 import 'package:gnom/pages/main_page/main_page.dart';
+import 'package:gnom/pages/start_page/start_page.dart';
 import 'package:gnom/repositories/locale_storage.dart';
 import 'package:gnom/repositories/token_repo.dart';
 import 'package:gnom/store/user_store.dart';
@@ -51,6 +54,21 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   int page=0;
+
+  viewDeleteAccountWarning(){
+  showDialog(
+    context: context,
+    useSafeArea: false,
+    builder: (context) {
+      return Dialog(
+        elevation: 100,
+        insetPadding: EdgeInsets.zero,
+        backgroundColor: Colors.transparent,
+        child: DeleteAccountWarningDialog()
+      );
+    },
+    ); 
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -182,13 +200,44 @@ class _SettingPageState extends State<SettingPage> {
                                           fontWeight: FontWeight.w400,
                                           fontSize: 25
                                         ),
-                                                                      );
+                                      );
                                     }
                                   ),
                                 
                                 ],
                               ),
                             ),
+                            Expanded(child: SizedBox.shrink()),
+                            GestureDetector(
+                              onTap: () {
+                                viewDeleteAccountWarning();
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                   border: Border(
+                                    bottom: BorderSide(
+                                      color: Color.fromRGBO(254, 222,181, 1)
+                                    )
+                                   )
+                                ),
+                                child:Builder(
+                                  builder: (context) {
+                                    final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
+                                    return Text(
+                                              " "+StringTools.firstUpperOfString(state.locale.deleteAccount),
+                                              style: TextStyle(
+                                                fontFamily: "NoirPro",
+                                                color: Color.fromRGBO(254, 222,181, 1),
+                                                height: 1.4,
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: 25
+                                              ),
+                                            );
+                                  }
+                                )
+                              ),
+                            ),
+                            SizedBox(height: 50,)
                   ],
                 ),
               ),
@@ -258,3 +307,162 @@ Widget setLanguageButton(){
 
 }
 
+
+
+class DeleteAccountWarningDialog extends StatefulWidget {
+  const DeleteAccountWarningDialog({super.key});
+
+  @override
+  State<DeleteAccountWarningDialog> createState() => _DeleteAccountWarningDialogState();
+}
+
+class _DeleteAccountWarningDialogState extends State<DeleteAccountWarningDialog> {
+
+
+  bool deleting=false;
+  bool succesDelete=false;
+  deleteAccount()async{
+    if(deleting)return;
+    setState(() {
+      deleting=true;
+      
+    });
+    await Future.delayed(Duration(seconds: 2));
+    if(mounted){
+      setState(() {
+        succesDelete=true;
+      });
+    }
+    resetData();
+  }
+  resetData()async{
+    await Future.delayed(Duration(seconds: 2));
+    await localeStorage.saveRefreshUserToken("");
+    tokenRepo.accessUserToken="";
+    // userStore.role="guest";
+    // userStore.selectedIndex=1;
+    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => StartPage(),),(route) => false,);
+  }
+  @override
+  Widget build(BuildContext context) {
+    return PopScope(
+      canPop: !deleting,
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+        child: Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: Color.fromARGB(170, 0, 0, 0),
+            
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Center(
+              child: Builder(
+                builder: (context) {
+                  if(succesDelete){
+                    return Text(
+                      StringTools.firstUpperOfString("OK"),
+                      style: TextStyle(
+                        color: Color.fromRGBO(254, 222,181, 1),
+                        fontFamily: "NoirPro",
+                        fontSize: 30,
+                        height: 1,
+                        fontWeight: FontWeight.w500
+                      ),
+                    );
+                  }
+                  if(deleting){
+                    return CircularProgressIndicator();
+                  }
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Builder(
+                        builder: (context) {
+                          final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
+                          return Text(
+                                    " "+StringTools.firstUpperOfString(state.locale.deleteAccountWarning),
+                                    style: TextStyle(
+                                      fontFamily: "NoirPro",
+                                      color: Color.fromRGBO(254, 222,181, 1),
+                                      height: 1,
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 18
+                                    ),
+                                  );
+                        }
+                      ),
+                      SizedBox(height: 40,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: deleteAccount,
+                            child: Container(
+                              width: 120,
+                              height: 40,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: Color.fromARGB(255, 93, 81, 81),
+                                borderRadius: BorderRadius.circular(5)
+                              ),
+                              //padding: EdgeInsets.symmetric(horizontal: 10),
+                              child: Builder(
+                                builder: (context) {
+                                  final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
+                                  return Text(
+                                      StringTools.firstUpperOfString(state.locale.delete),
+                                      style: TextStyle(
+                                        color: Color.fromRGBO(254, 222,181, 1),
+                                        fontFamily: "NoirPro",
+                                        fontSize: 30,
+                                        height: 1,
+                                        fontWeight: FontWeight.w500
+                                      ),
+                                    );
+                                }
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 20,
+                          ),
+                          Container(
+                            width: 120,
+                            height: 40,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: Color.fromARGB(255, 93, 81, 81),
+                              borderRadius: BorderRadius.circular(5)
+                            ),
+                            //padding: EdgeInsets.symmetric(horizontal: 10),
+                            child: Builder(
+                              builder: (context) {
+                                final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
+                                return Text(
+                                    StringTools.firstUpperOfString(state.locale.cancel),
+                                    style: TextStyle(
+                                      color: Color.fromRGBO(254, 222,181, 1),
+                                      fontFamily: "NoirPro",
+                                      fontSize: 30,
+                                      height: 1,
+                                      fontWeight: FontWeight.w500
+                                    ),
+                                  );
+                              }
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
+                  );
+                }
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

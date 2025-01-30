@@ -69,6 +69,10 @@ LText LocaleText = LText();
     String get saveToGalery;
     String get today;
     String get yesterday;
+    String get deleteAccount;
+    String get delete;
+    String get cancel;
+    String get deleteAccountWarning;
 } 
 
 
@@ -284,6 +288,28 @@ class RuLocale implements LocaleLibrary{
   @override
   // TODO: implement yesterday
   String get yesterday => "Вчера";
+  
+  @override
+  // TODO: implement cancel
+  String get cancel => "отмена";
+  
+  @override
+  // TODO: implement delete
+  String get delete => "удалить";
+  
+  @override
+  // TODO: implement deleteAccount
+  String get deleteAccount => "удалить аккаунт";
+  
+  @override
+  // TODO: implement deleteAccountWarning
+  String get deleteAccountWarning =>
+  '''Мы будем скучать по вам! Если у вас есть предложения, как мы можем улучшить наше приложение, чтобы оно стало для вас полезнее, напишите нам перед удалением.
+
+Если вы всё же решили уйти, помните, что вы всегда можете вернуться – двери Гнома всегда открыты!
+
+Ваши данные будут полностью удалены и не подлежат восстановлению.
+Нажмите “Удалить”, если уверены в своём решении.''';
 }
 
 class EnLocale implements LocaleLibrary{
@@ -502,6 +528,27 @@ class EnLocale implements LocaleLibrary{
   @override
   // TODO: implement yesterday
   String get yesterday => "Yesterday";
+  
+  @override
+  // TODO: implement cancel
+  String get cancel => "cancel";
+  
+  @override
+  // TODO: implement delete
+  String get delete => "delete";
+  
+  @override
+  // TODO: implement deleteAccount
+  String get deleteAccount => "delete account";
+  
+  @override
+  // TODO: implement deleteAccountWarning
+  String get deleteAccountWarning => '''We will miss you! If you have any suggestions on how we can improve our app to make it more useful for you, please let us know before deleting your account.
+
+If you still decide to leave, remember that you can always come back – the Gnome doors are always open!
+
+Your data will be completely deleted and cannot be recovered.
+Click “Delete” if you’re sure about your decision.''';
 }
 
 class ArLocale implements LocaleLibrary{
@@ -718,5 +765,26 @@ class ArLocale implements LocaleLibrary{
   @override
   // TODO: implement yesterday
   String get yesterday => "أمس";
+  
+  @override
+  // TODO: implement cancel
+  String get cancel => "إلغاء";
+  
+  @override
+  // TODO: implement delete
+  String get delete => "يمسح";
+  
+  @override
+  // TODO: implement deleteAccount
+  String get deleteAccount =>" حذف الحساب";
+  
+  @override
+  // TODO: implement deleteAccountWarning
+  String get deleteAccountWarning => '''سنفتقدك! إذا كانت لديك أي اقتراحات حول كيفية تحسين تطبيقنا ليكون أكثر فائدة لك، يرجى إخبارنا قبل حذف حسابك.
+
+إذا قررت المغادرة، تذكر أنك دائمًا مرحب بك للعودة – أبواب القزم مفتوحة دائمًا!
+
+سيتم حذف بياناتك بالكامل ولن يمكن استعادتها.
+اضغط على “حذف” إذا كنت متأكدًا من قرارك.''';
  
 }

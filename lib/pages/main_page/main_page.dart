@@ -96,6 +96,7 @@ class _MainPageState extends State<MainPage>  with WidgetsBindingObserver{
       await showDialog(
         barrierDismissible: true,
         context: context,
+        useSafeArea: false,
         builder: (context) {
           return Dialog(
             insetPadding: EdgeInsets.zero,

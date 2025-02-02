@@ -64,7 +64,7 @@ dependencies:
   external_path_ios_mac: ^0.0.5
   image_gallery_saver: ^2.0.3
   fluttertoast: ^8.2.8
-  webview_universal: ^0.0.5
+  #webview_universal: ^0.0.5
   # open_file: ^3.5.4
 dev_dependencies:
   flutter_test:

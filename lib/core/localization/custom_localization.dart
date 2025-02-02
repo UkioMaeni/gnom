@@ -74,7 +74,21 @@ LText LocaleText = LText();
     String get cancel;
     String get deleteAccountWarning;
     //policy
-    
+    String get h1_title;
+    String get h1_body;
+    String get h2_title;
+    String get h2_body;
+    String get h3_title;
+    String get h3_body;
+    String get h4_title;
+    String get h4_body;
+    String get h5_title;
+    String get h5_body;
+    String get h6_title;
+    String get h6_body;
+    String get support;
+    String get mailCompany;
+    String get agree;
 } 
 
 
@@ -312,6 +326,66 @@ class RuLocale implements LocaleLibrary{
 
 Ваши данные будут полностью удалены и не подлежат восстановлению.
 Нажмите “Удалить”, если уверены в своём решении.''';
+
+  @override
+  // TODO: implement h1_body
+  String get h1_body => "Политика конфиденциальности мобильного приложения «Gnom Helper»";
+
+  @override
+  // TODO: implement h1_title
+  String get h1_title =>"Администрация мобильного приложения «Gnom Helper» обязуется сохранять вашу конфиденциальность в Интернете. Мы уделяем большое значение охране предоставленных вами данных. Наша политика конфиденциальности основана на требованиях Общего регламента о защите персональных данных Европейского Союза (GDPR). Мы собираем персональные данные в целях: улучшения работы нашего сервиса.";
+
+  @override
+  // TODO: implement h2_body
+  String get h2_body => "Сбор и использование персональных данных";
+
+  @override
+  // TODO: implement h2_title
+  String get h2_title => "Мы собираем и используем ваши персональные данные только в случае вашего добровольного согласия. При согласии с этим вы разрешаете нам собирать и использовать следующие данные: имя и фамилия, электронная почта.. Сбор и обработка ваших данных проводится соответствии с законами, действующими на территории Европейского Союза и в Российской Федерации.";
+
+  @override
+  // TODO: implement h3_body
+  String get h3_body => "Хранение данных, изменение и удаление";
+
+  @override
+  // TODO: implement h3_title
+  String get h3_title => "Пользователь, предоставивший свои персональные данные мобильному приложению «Gnom Helper» Пользователь имеет право на их изменение и удаление, а так же на отзыв своего согласия с их использованием. Ваши персональные данные будут хранится в течении времени, необходимого для использования данных для основной деятельности приложения, при завершении использования ваших данных администрация приложения удаляет их. Для доступа к своим персональным данным вы можете связаться с администрацией приложения «Gnom Helper» по вопросам, связанным с политикой конфиденциальности, можно с помощью формы обратной связи, указанной в разделе «Поддержка». Мы можем передавать ваши личные данные третьей стороне только с вашего добровольного согласия, если они были переданы, то изменение данных в других организациях, не связанных с нами, мы осуществить не можем.";
+
+  @override
+  // TODO: implement h4_body
+  String get h4_body => "Предоставление информации детям";
+
+  @override
+  // TODO: implement h4_title
+  String get h4_title => "Если Вы являетесь родителем или опекуном, и вы знаете, что ваши дети предоставили нам свои личные данные без вашего согласия, то свяжитесь с нами. В нашем приложении запрещено оставлять личные данные несовершеннолетних, без согласия родителей или опекунов.";
+
+  @override
+  // TODO: implement h5_body
+  String get h5_body => "Изменения в политике конфиденциальности";
+
+  @override
+  // TODO: implement h5_title
+  String get h5_title => "В нашем приложении может обновляться политика конфиденциальности время от времени. Мы сообщаем о любых изменениях, разместив новую политику конфиденциальности в телеграм канале https://t.me/+DAWR9qopOeAwMGVi или в самом приложении в разделе обновления. Мы отслеживаем изменения законодательства, касающегося персональных данных в Европейском Союзе и в Российской Федерации. Если вы оставили персональные данные у нас, то мы оповестим вас об изменении в политике конфиденциальности. Если ваши персональные данные были введены не корректно, то мы не сможем с вами связаться.";
+
+  @override
+  // TODO: implement h6_body
+  String get h6_body => "Обратная связь, заключительные положения";
+
+  @override
+  // TODO: implement h6_title
+  String get h6_title => "Если у вас есть вопросы по поводу политики конфиденциальности, вы можете связаться с администрацией приложения «Gnom Helper» через форму обратной связи, размещенную в разделе «Поддержка». В случае несогласия с данной политикой, пожалуйста, воздержитесь от использования нашего приложения и его услуг.";
+
+  @override
+  // TODO: implement mailCompany
+  String get mailCompany => "Поддержка";
+
+  @override
+  // TODO: implement support
+  String get support => "gnom2024@gnom-pomoshnik.com";
+  
+  @override
+  // TODO: implement agree
+  String get agree => "ПРИНЯТЬ";
 }
 
 class EnLocale implements LocaleLibrary{
@@ -551,6 +625,66 @@ If you still decide to leave, remember that you can always come back – the Gno
 
 Your data will be completely deleted and cannot be recovered.
 Click “Delete” if you’re sure about your decision.''';
+
+  @override
+  // TODO: implement h1_body
+  String get h1_body => "Privacy Policy for the mobile application «Gnom Helper»";
+
+  @override
+  // TODO: implement h1_title
+  String get h1_title => "The administration of the mobile application «Gnom Helper» is committed to preserving your privacy on the Internet. We place a high priority on protecting the data you provide to us. Our privacy policy is based on the requirements of the General Data Protection Regulation (GDPR) of the European Union. We collect personal data for the purpose of improving our service.";
+
+  @override
+  // TODO: implement h2_body
+  String get h2_body => "Collection and use of personal data";
+
+  @override
+  // TODO: implement h2_title
+  String get h2_title => "We collect and use your personal data only with your voluntary consent. By agreeing to this, you allow us to collect and use the following data: name and surname, email address. The collection and processing of your data is carried out in accordance with the laws in force in the European Union and the Russian Federation.";
+
+  @override
+  // TODO: implement h3_body
+  String get h3_body => "Data storage, modification, and deletion";
+
+  @override
+  // TODO: implement h3_title
+  String get h3_title => "The user who has provided their personal data to the mobile application «Gnom Helper» has the right to modify and delete them, as well as to withdraw their consent to their use. Your personal data will be stored for the period necessary to use the data for the main activities of the application. After the use of your data is completed, the application administration will delete them. To access your personal data, you can contact the administration of the «Gnom Helper» application through the feedback form provided in the «Support» section. We can transfer your personal data to a third party only with your voluntary consent. If they are transferred, we cannot modify the data in other organizations not associated with us.";
+
+  @override
+  // TODO: implement h4_body
+  String get h4_body => "Providing information to children";
+
+  @override
+  // TODO: implement h4_title
+  String get h4_title => "If you are a parent or guardian and you know that your children have provided us with their personal data without your consent, please contact us. It is prohibited in our application to leave personal data of minors without the consent of parents or guardians.";
+
+  @override
+  // TODO: implement h5_body
+  String get h5_body => "Changes to the privacy policy";
+
+  @override
+  // TODO: implement h5_title
+  String get h5_title => "Our application may update the privacy policy from time to time. We will notify you of any changes by posting the new privacy policy in the Telegram channel https://t.me/+DAWR9qopOeAwMGVi or in the application itself in the «Updates» section. We monitor changes in legislation regarding personal data in the European Union and the Russian Federation. If you have provided us with personal data, we will notify you of changes to the privacy policy. If your personal data has been entered incorrectly, we will not be able to contact you.";
+
+  @override
+  // TODO: implement h6_body
+  String get h6_body => "Feedback and final provisions";
+
+  @override
+  // TODO: implement h6_title
+  String get h6_title => "If you have any questions regarding the privacy policy, you can contact the administration of the «Gnom Helper» application through the feedback form located in the «Support» section. If you do not agree with this privacy policy, please refrain from using our application and its services.";
+
+  @override
+  // TODO: implement mailCompany
+  String get mailCompany => "gnom2024@gnom-pomoshnik.com";
+
+  @override
+  // TODO: implement support
+  String get support => "Support";
+  
+  @override
+  // TODO: implement agree
+  String get agree => "AGREE";
 }
 
 class ArLocale implements LocaleLibrary{
@@ -788,5 +922,65 @@ class ArLocale implements LocaleLibrary{
 
 سيتم حذف بياناتك بالكامل ولن يمكن استعادتها.
 اضغط على “حذف” إذا كنت متأكدًا من قرارك.''';
+
+  @override
+  // TODO: implement h1_body
+  String get h1_body => "سياسة الخصوصية لتطبيق «Gnom Helper»";
+
+  @override
+  // TODO: implement h1_title
+  String get h1_title => "تلتزم إدارة تطبيق «Gnom Helper» بالحفاظ على خصوصيتك على الإنترنت. نحن نولي أهمية كبيرة لحماية البيانات التي تقدمها لنا. تعتمد سياسة الخصوصية لدينا على متطلبات اللائحة العامة لحماية البيانات (GDPR) الخاصة بالاتحاد الأوروبي. نحن نجمع البيانات الشخصية بهدف تحسين خدماتنا.";
+
+  @override
+  // TODO: implement h2_body
+  String get h2_body => "جمع واستخدام البيانات الشخصية";
+
+  @override
+  // TODO: implement h2_title
+  String get h2_title => "قوم بجمع واستخدام بياناتك الشخصية فقط بموافقتك الطوعية. عند الموافقة على ذلك، فإنك تسمح لنا بجمع واستخدام البيانات التالية: الاسم واللقب، البريد الإلكتروني. يتم جمع ومعالجة بياناتك وفقًا للقوانين المعمول بها في الاتحاد الأوروبي والاتحاد الروسي.";
+
+  @override
+  // TODO: implement h3_body
+  String get h3_body => "تخزين البيانات وتغييرها وحذفها";
+
+  @override
+  // TODO: implement h3_title
+  String get h3_title => "للمستخدم الذي قدم بياناته الشخصية لتطبيق «Gnom Helper» الحق في تغييرها وحذفها وكذلك سحب موافقته على استخدامها. سيتم تخزين بياناتك الشخصية خلال الفترة الزمنية اللازمة لاستخدامها في الأنشطة الرئيسية للتطبيق. عند الانتهاء من استخدام بياناتك، ستقوم إدارة التطبيق بحذفها. للوصول إلى بياناتك الشخصية، يمكنك الاتصال بإدارة التطبيق «Gnom Helper» عبر نموذج الاتصال الموجود في قسم «الدعم». يمكننا نقل بياناتك الشخصية إلى طرف ثالث فقط بموافقتك الطوعية. إذا تم نقلها، لا يمكننا تعديل البيانات في المنظمات الأخرى غير المرتبطة بنا.";
+
+  @override
+  // TODO: implement h4_body
+  String get h4_body => "توفير المعلومات للأطفال";
+
+  @override
+  // TODO: implement h4_title
+  String get h4_title => "إذا كنت أحد الوالدين أو الوصي وتعلم أن أطفالك قدموا لنا بياناتهم الشخصية دون موافقتك، يرجى الاتصال بنا. في تطبيقنا، يُحظر تقديم البيانات الشخصية للقُصر دون موافقة الوالدين أو الأوصياء.";
+
+  @override
+  // TODO: implement h5_body
+  String get h5_body => "تغييرات في سياسة الخصوصية";
+
+  @override
+  // TODO: implement h5_title
+  String get h5_title => "قد يتم تحديث سياسة الخصوصية في تطبيقنا من وقت لآخر. سنعلمك بأي تغييرات من خلال نشر سياسة الخصوصية الجديدة في قناة التلغرام https://t.me/+DAWR9qopOeAwMGVi أو في التطبيق نفسه في قسم التحديثات. نحن نتابع التغييرات في التشريعات المتعلقة بالبيانات الشخصية في الاتحاد الأوروبي والاتحاد الروسي. إذا كنت قد قدمت بياناتك الشخصية لنا، فسنبلغك بتغييرات في سياسة الخصوصية. إذا تم إدخال بياناتك الشخصية بشكل غير صحيح، فلن نتمكن من الاتصال بك.";
+
+  @override
+  // TODO: implement h6_body
+  String get h6_body => "الاتصال وإخلاء المسؤولية";
+
+  @override
+  // TODO: implement h6_title
+  String get h6_title => "إذا كانت لديك أي أسئلة بخصوص سياسة الخصوصية، يمكنك الاتصال بإدارة تطبيق «Gnom Helper» من خلال نموذج الاتصال الموجود في قسم «الدعم». في حالة عدم موافقتك على هذه السياسة، يُرجى الامتناع عن استخدام تطبيقنا وخدماته.";
+
+  @override
+  // TODO: implement mailCompany
+  String get mailCompany => "gnom2024@gnom-pomoshnik.com";
+
+  @override
+  // TODO: implement support
+  String get support => "الدعم";
+  
+  @override
+  // TODO: implement agree
+  String get agree => "يوافق";
  
 }

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -46,144 +48,170 @@ class _PlaneInfoState extends State<PlaneInfo> {
           top: 80,
           left: 30,
           right: 30,
-          child: Container(
-            width: 200,
-            
-            constraints: BoxConstraints(
-              minHeight: 440
-            ),
-            decoration: BoxDecoration(
-              color:widget.openTypeIndex==1?Colors.red: Colors.white,
-              image:widget.openTypeIndex==1? DecorationImage(
-                  image: AssetImage("assets/png/app_bg.png"),
-                  fit: BoxFit.cover
-                ):null,
-              borderRadius: BorderRadius.circular(20)
-            ),
-            child: Column(
-              children: [
-                SizedBox(height: 20,),
-                Text(
-                  widget.openTypeIndex==0?"BRONZE": widget.openTypeIndex==1?"GOLD":"SILVER",
-                  style: TextStyle(
-                    fontFamily: "NoirPro",
-                    color:widget.openTypeIndex==1?Colors.white: Color.fromARGB(255, 82, 81, 81),
-                    height: 1,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 35
-                  ),
-                ),
-                SizedBox(height: 10,),
-                Builder(
-                  builder: (context) {
-                    final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
-                    return Text(
-                      "1 "+StringTools.firstUpperOfString(state.locale.month),
-                      style: TextStyle(
-                        fontFamily: "NoirPro",
-                        color:widget.openTypeIndex==1?Colors.white: Color.fromARGB(255, 82, 81, 81),
-                        height: 1,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 15
-                      ),
-                    );
-                  }
-                ),
-                SizedBox(height: 10,),
-                Stack(
-                  alignment: Alignment.center,
-                    children: [
-                      SizedBox(height: 30,),
-                      Container(
-                        width: double.infinity,
-                        height: 5,
-                        color: Color.fromARGB(255, 218, 217, 217),
-                      ),
-                      Positioned(
-                        left: -15,
-                        top: 0,
-                        child: Container(
-                          width: 30,
-                          height: 30,
-                          decoration: BoxDecoration(
-                            color: Color.fromARGB(255, 218, 217, 217),
-                            borderRadius: BorderRadius.circular(15)
-                          ),
-                        )
-                      ),
-                      Positioned(
-                        right: -15,
-                        top: 0,
-                        child: Container(
-                          width: 30,
-                          height: 30,
-                          decoration: BoxDecoration(
-                            color: Color.fromARGB(255, 218, 217, 217),
-                            borderRadius: BorderRadius.circular(15)
-                          ),
-                        )
-                      ),
-                    ],
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 0, sigmaY: 0),
+            child: Container(
+              width: 200,
+              
+              constraints: BoxConstraints(
+                minHeight: 440
+              ),
+              decoration: BoxDecoration(
+                color:widget.openTypeIndex==1?Colors.red: Colors.white,
+                image:widget.openTypeIndex==1? DecorationImage(
+                    image: AssetImage("assets/png/app_bg.png"),
+                    fit: BoxFit.cover
+                  ):null,
+                borderRadius: BorderRadius.circular(20)
+              ),
+              child: Column(
+                children: [
+                  SizedBox(height: 20,),
+                  Text(
+                    widget.openTypeIndex==0?"BRONZE": widget.openTypeIndex==1?"GOLD":"SILVER",
+                    style: TextStyle(
+                      fontFamily: "NoirPro",
+                      color:widget.openTypeIndex==1?Colors.white: Color.fromARGB(255, 82, 81, 81),
+                      height: 1,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 35
+                    ),
                   ),
                   SizedBox(height: 10,),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        "${widget.price.toInt()}Р",
+                  Builder(
+                    builder: (context) {
+                      final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
+                      return Text(
+                        "1 "+StringTools.firstUpperOfString(state.locale.month),
                         style: TextStyle(
                           fontFamily: "NoirPro",
                           color:widget.openTypeIndex==1?Colors.white: Color.fromARGB(255, 82, 81, 81),
                           height: 1,
                           fontWeight: FontWeight.w700,
-                          fontSize: 35
+                          fontSize: 15
                         ),
-                      ),
-                      Builder(
-                        builder: (context) {
-                          final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
-                          return Text(
-                            "/${StringTools.firstUpperOfString(state.locale.month)}",
-                            style: TextStyle(
-                              fontFamily: "NoirPro",
-                              color:widget.openTypeIndex==1?Colors.white: Color.fromARGB(255, 82, 81, 81),
-                              height: 1,
-                              fontWeight: FontWeight.w700,
-                              fontSize: 17
-                            ),
-                          );
-                        }
-                      ),
-                      
-                    ],
-                  ),
-                  SizedBox(height: 30,),
-                  Builder(
-                    builder: (context) {
-                      final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
-                      return Column(
-                        children: [
-                          punkt("${StringTools.firstUpperOfString(state.locale.mathematics)} - ${options[widget.openTypeIndex%3][0]}"),
-                          punkt("${StringTools.firstUpperOfString(state.locale.essay)} - ${options[widget.openTypeIndex%3][1]}"),
-                          punkt("${StringTools.firstUpperOfString(state.locale.presentation)} - ${options[widget.openTypeIndex%3][2]}"),
-                          punkt("${StringTools.firstUpperOfString(state.locale.adviseOn)} - ${options[widget.openTypeIndex%3][3]}"),
-                          punkt("${StringTools.firstUpperOfString(state.locale.shortcut)} - ${options[widget.openTypeIndex%3][4]}"),
-                          punkt("${StringTools.firstUpperOfString(state.locale.paper)} - ${options[widget.openTypeIndex%3][5]}"),
-                          punkt("${StringTools.firstUpperOfString(state.locale.paraphrasing)} - ${options[widget.openTypeIndex%3][6]}"),
-                          punkt("${StringTools.firstUpperOfString(state.locale.imageGeneration)} - ${options[widget.openTypeIndex%3][7]}"),
-                          // punkt("СОЧИНЕНИЕ - 80"),
-                          // punkt("ПЕРЕЗЕНТАЦИИ - 80"),
-                          // punkt("ДАЙ СОВЕТ - 80"),
-                          // punkt("СОКРАЩЕНИЕ - 80"),
-                          // punkt("РЕФЕРАТ - 80"),
-                          // punkt("ПЕРЕФРАЗИРОВАНИЕ - 80"),
-                        ],
                       );
                     }
-                  )
-                  
-              ],
+                  ),
+                  SizedBox(height: 10,),
+                  Stack(
+                    alignment: Alignment.center,
+                      children: [
+                        SizedBox(height: 30,),
+                        Container(
+                          width: double.infinity,
+                          height: 5,
+                          
+                          decoration: BoxDecoration(
+                            color: Color.fromARGB(255, 218, 217, 217),
+                            backgroundBlendMode: BlendMode.clear
+                          ),
+                        ),
+                        Positioned(
+                          left: -15,
+                          top: 0,
+                          child: Container(
+                            width: 30,
+                            height: 30,
+                            decoration: BoxDecoration(
+                              color: Color.fromARGB(255, 218, 217, 217),
+                              borderRadius: BorderRadius.circular(15),
+                              backgroundBlendMode: BlendMode.clear
+                            ),
+                          )
+                        ),
+                        Positioned(
+                          right: -15,
+                          top: 0,
+                          child: Container(
+                            width: 30,
+                            height: 30,
+                            decoration: BoxDecoration(
+                              color: Color.fromARGB(255, 218, 217, 217),
+                              borderRadius: BorderRadius.circular(15),
+                              backgroundBlendMode: BlendMode.clear
+                            ),
+                          )
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          "${widget.price.toInt()}",
+                          style: TextStyle(
+                            fontFamily: "NoirPro",
+                            color:widget.openTypeIndex==1?Colors.white: Color.fromARGB(255, 82, 81, 81),
+                            height: 1,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 35
+                          ),
+                        ),
+                        Builder(
+                          builder: (context) {
+                            final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
+                            return Text(
+                              state.locale.valuta,
+                              style: TextStyle(
+                                fontFamily: "NoirPro",
+                                color:widget.openTypeIndex==1?Colors.white: Color.fromARGB(255, 82, 81, 81),
+                                height: 1,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 35
+                              ),
+                            );
+                          }
+                        ),
+                        Builder(
+                          builder: (context) {
+                            final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
+                            return Text(
+                              "/${StringTools.firstUpperOfString(state.locale.month)}",
+                              style: TextStyle(
+                                fontFamily: "NoirPro",
+                                color:widget.openTypeIndex==1?Colors.white: Color.fromARGB(255, 82, 81, 81),
+                                height: 1,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 17
+                              ),
+                            );
+                          }
+                        ),
+                        
+                      ],
+                    ),
+                    SizedBox(height: 30,),
+                    Builder(
+                      builder: (context) {
+                        final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            punkt("${StringTools.firstUpperOfString(state.locale.mathematics)} - ${options[widget.openTypeIndex%3][0]}"),
+                            punkt("${StringTools.firstUpperOfString(state.locale.essay)} - ${options[widget.openTypeIndex%3][1]}"),
+                            punkt("${StringTools.firstUpperOfString(state.locale.presentation)} - ${options[widget.openTypeIndex%3][2]}"),
+                            punkt("${StringTools.firstUpperOfString(state.locale.adviseOn)} - ${options[widget.openTypeIndex%3][3]}"),
+                            punkt("${StringTools.firstUpperOfString(state.locale.shortcut)} - ${options[widget.openTypeIndex%3][4]}"),
+                            punkt("${StringTools.firstUpperOfString(state.locale.paper)} - ${options[widget.openTypeIndex%3][5]}"),
+                            punkt("${StringTools.firstUpperOfString(state.locale.paraphrasing)} - ${options[widget.openTypeIndex%3][6]}"),
+                            punkt("${StringTools.firstUpperOfString(state.locale.imageGeneration)} - ${options[widget.openTypeIndex%3][7]}"),
+                            SizedBox(height: 20,)
+                            // punkt("СОЧИНЕНИЕ - 80"),
+                            // punkt("ПЕРЕЗЕНТАЦИИ - 80"),
+                            // punkt("ДАЙ СОВЕТ - 80"),
+                            // punkt("СОКРАЩЕНИЕ - 80"),
+                            // punkt("РЕФЕРАТ - 80"),
+                            // punkt("ПЕРЕФРАЗИРОВАНИЕ - 80"),
+                          ],
+                        );
+                      }
+                    )
+                    
+                ],
+              ),
             ),
           ),
         ),
@@ -232,10 +260,10 @@ class _PlaneInfoState extends State<PlaneInfo> {
       child: SizedBox(
         child: Row(
           children: [
-            SizedBox(width: 20,),
+            SizedBox(width: 30,),
             SizedBox(
-              width: 10,
-              height: 10,
+              width: 8,
+              height: 8,
               child: DecoratedBox(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(5),
@@ -251,7 +279,7 @@ class _PlaneInfoState extends State<PlaneInfo> {
                 color:widget.openTypeIndex==1?Colors.white: Color.fromARGB(255, 82, 81, 81),
                 height: 1,
                 fontWeight: FontWeight.w700,
-                fontSize: 17
+                fontSize: 18
               ),
             ),
           ],

@@ -78,15 +78,20 @@ class _FirstElementPlaningState extends State<FirstElementPlaning> with SingleTi
                                     fontSize: 18
                                   ),
                                 ),
-                                Text(
-                                  "\u20BD",
-                                  style: TextStyle(
-                                    
-                                    color: Colors.white,
-                                    height: 1,
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 18
-                                  ),
+                                Builder(
+                                  builder: (context) {
+                                    final state = (context.watch<LocalizationBloc>().state as LocalizationLocaleState);
+                                    return Text(
+                                      state.locale.valuta,
+                                      style: TextStyle(
+                                        
+                                        color: Colors.white,
+                                        height: 1,
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 18
+                                      ),
+                                    );
+                                  }
                                 ),
                               ],
                             ),

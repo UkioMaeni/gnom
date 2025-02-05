@@ -89,6 +89,7 @@ LText LocaleText = LText();
     String get support;
     String get mailCompany;
     String get agree;
+    String get valuta;
 } 
 
 
@@ -386,6 +387,10 @@ class RuLocale implements LocaleLibrary{
   @override
   // TODO: implement agree
   String get agree => "ПРИНЯТЬ";
+  
+  @override
+  // TODO: implement valuta
+  String get valuta => "₽";
 }
 
 class EnLocale implements LocaleLibrary{
@@ -685,6 +690,10 @@ Click “Delete” if you’re sure about your decision.''';
   @override
   // TODO: implement agree
   String get agree => "AGREE";
+  
+  @override
+  // TODO: implement valuta
+  String get valuta => "\$";
 }
 
 class ArLocale implements LocaleLibrary{
@@ -982,5 +991,9 @@ class ArLocale implements LocaleLibrary{
   @override
   // TODO: implement agree
   String get agree => "يوافق";
+  
+  @override
+  // TODO: implement valuta
+  String get valuta => "\$";
  
 }

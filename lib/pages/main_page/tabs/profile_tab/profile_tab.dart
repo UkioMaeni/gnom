@@ -212,7 +212,7 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                 child: BackdropFilter(
                   filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
                   child: Center(
-                    child: PlaneInfo(
+                    child: PlaneInfo( 
                       openTypeIndex:openTypeIndex-1,
                       price: prices[openTypeIndex-1],
                       setOpen:(_){

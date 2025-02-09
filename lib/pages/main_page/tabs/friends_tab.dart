@@ -130,7 +130,7 @@ class _FriendsTabState extends State<FriendsTab> with TickerProviderStateMixin {
               children: [
                 SizedBox(height: 40,),
                  SizedBox(
-                    height: 30,
+                    height: 40,
                     width: MediaQuery.of(context).size.width -100,
                     child: DecoratedBox(
                       decoration: BoxDecoration(
@@ -141,8 +141,10 @@ class _FriendsTabState extends State<FriendsTab> with TickerProviderStateMixin {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Expanded(
-                            child: SizedBox(
-                              height: 30,
+                            child: Container(
+                              height: 40,
+                              alignment:Alignment.center,
+                              width: double.infinity,
                               child: TextField(
                                 controller: _searchController,
                                 onChanged: (value) {
@@ -157,11 +159,13 @@ class _FriendsTabState extends State<FriendsTab> with TickerProviderStateMixin {
                                               color: Color.fromARGB(144, 209, 204, 204),
                                               height: 1,
                                               fontWeight: FontWeight.w600,
-                                              fontSize: 14
+                                              fontSize: 18
                                             ),
+                                            
                                 decoration: InputDecoration(
+                                  
                                   border: InputBorder.none,
-                                  contentPadding: EdgeInsets.only(bottom: 13,left: 10,right: 10),
+                                  contentPadding: EdgeInsets.only(bottom: 6,left: 10,right: 10),
                                   counter: SizedBox.shrink(),
                                   //hintText: "USER ID",
                                   hintStyle: TextStyle(
@@ -169,7 +173,7 @@ class _FriendsTabState extends State<FriendsTab> with TickerProviderStateMixin {
                                               color: Color.fromARGB(144, 209, 204, 204),
                                               height: 1,
                                               fontWeight: FontWeight.w600,
-                                              fontSize: 14
+                                              fontSize: 18
                                             ),
                                 ),
                               ),

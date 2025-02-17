@@ -7,6 +7,7 @@ import 'package:gnom/UIKit/permision_modal.dart';
 import 'package:gnom/core/app_localization.dart';
 import 'package:gnom/core/localization/localization_bloc.dart';
 import 'package:gnom/pages/language_page/language_page.dart';
+import 'package:gnom/pages/policy_page/policy_page.dart';
 import 'package:gnom/pages/start_page/start_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -52,7 +53,8 @@ class _MyAppState extends State<MyApp> {
       },
       routes: {
         "/start":(context) => const StartPage(),
-        "/language":(context) => const LanguagePage(initial: true,)
+        "/language":(context) => const LanguagePage(initial: true,),
+        "/policy":(context) => const PolicyPage()
       },
     );
   }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -43,6 +45,10 @@ class _PolicyPageState extends State<PolicyPage> {
   @override
   void initState() {
     _scrollController.addListener(scrollListener);
+    Timer.periodic(Duration(seconds: 0), (timer){
+      scrollListener();
+      timer.cancel();
+    },);
     // webViewController.init(
     //   context: context, 
     //   setState: setState,
@@ -51,12 +57,22 @@ class _PolicyPageState extends State<PolicyPage> {
     super.initState();
   }
 
+  final key=GlobalKey();
+
   void scrollListener(){
-    if(_scrollController.position.atEdge&&_scrollController.position.pixels > 0){
+    if(_scrollController.position.extentAfter==0&&_scrollController.position.atEdge){
       setState(() {
         _opacity=1;
       });
     }
+    // }else{
+    //   if(_scrollController.position.atEdge&&_scrollController.position.pixels){
+    //   setState(() {
+    //     _opacity=1;
+    //   });
+    // }
+    // }
+    
   }
 
   double _opacity=0;
@@ -80,6 +96,7 @@ class _PolicyPageState extends State<PolicyPage> {
                   child: SingleChildScrollView(
                     controller: _scrollController,
                     child: Column(
+                      key: key,
                       children: [
                         Builder(
                             builder: (context) {
